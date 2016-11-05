@@ -2,9 +2,8 @@
   "name": "expenses",
   "version": "1.0.0",
   "description": "simple expenses tracker application",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js",
     "stop": "pkill --signal SIGINT expenses",
     "start_test_env": "NODE_ENV=test npm start",
     "test": "mocha tests"
