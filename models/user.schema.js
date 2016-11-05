@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const SALT_WORK_FACTOR = 10;
 
+/**
+ * Mongoose model for a user
+ *
+ * @typedef {model} User
+ */
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
