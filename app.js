@@ -35,5 +35,6 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/users', userController.createUser);
+app.post('/users/login', userController.login);
 
 app.listen(3000, () => console.log('listening on port 3000'));

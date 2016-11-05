@@ -1,17 +1,34 @@
 const User = require('models/user.schema');
 const bcrypt = require('bcrypt');
 
+/**
+ *
+ * @param {string} mail
+ * @param {string} password - unencrypted user's password
+ * @returns {Promise.<boolean, Error>}
+ */
 function getByMailAndPassword(mail, password) {
-  const user = User.findOne({ mail });
+  return new Promise((resolve, reject) => {
+    User.findOne({ mail }).then(
+      result => {
+        // user not found
+        if (!result) {
+          return resolve(false);
+        }
 
-  user.then(
-    result => {
-      bcrypt.compare(password, result.password, (err, same) => {
-        console.log('bcrypt compare', err, same);
-      })
-    },
-    err => console.log('getByMailAndPassword err', err)
-  )
+        bcrypt.compare(password, result.password, (err, same) => {
+          if (err) {
+            return reject(err);
+          }
+
+          return resolve(same);
+        })
+      },
+
+      err => reject(err)
+    );
+
+  });
 }
 
 module.exports = { getByMailAndPassword };

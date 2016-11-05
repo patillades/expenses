@@ -1,4 +1,5 @@
-const User = require('models/users.model');
+const User = require('models/user.schema');
+const usersModel = require('models/users.model');
 
 function createUser(req, res) {
   const user = new User(Object.assign(
@@ -35,4 +36,19 @@ function createUser(req, res) {
   })
 }
 
-module.exports = { createUser };
+function login(req, res) {
+  usersModel.getByMailAndPassword(req.body.mail, req.body.password).then(
+    result => {
+      if (result) {
+        return res.status(201).send('ok');
+      }
+
+      return res.status(400).send({ msg: 'wrong combination of user and password' });
+    },
+
+    // @todo add log
+    err => res.status(500).send({ msg: 'Internal Server Error' })
+  );
+}
+
+module.exports = { createUser, login };
