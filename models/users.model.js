@@ -41,12 +41,13 @@ function create(params, role) {
 }
 
 /**
+ * Verify that the given mail/password pair match to a user in the db
  *
  * @param {string} mail
  * @param {string} password - unencrypted user's password
  * @returns {Promise.<boolean, Error>}
  */
-function getByMailAndPassword(mail, password) {
+function authenticate(mail, password) {
   const user = User.findOne({ mail });
 
   return new Promise((resolve, reject) => {
@@ -101,4 +102,4 @@ function signToken(sub) {
   });
 }
 
-module.exports = { create, getByMailAndPassword, signToken };
+module.exports = { create, authenticate, signToken };

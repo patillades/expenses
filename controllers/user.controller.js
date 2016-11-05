@@ -13,7 +13,7 @@ function create(req, res) {
 }
 
 function login(req, res) {
-  usersModel.getByMailAndPassword(req.body.mail, req.body.password).then(
+  usersModel.authenticate(req.body.mail, req.body.password).then(
     result => {
       if (result) {
         return usersModel.signToken(req.body.mail);
