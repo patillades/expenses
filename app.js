@@ -1,15 +1,19 @@
 // add this file's directory to the node modules search path
 require('app-module-path').addPath(__dirname);
 
+// add a title so we can easily kill the process
+process.title = 'expenses';
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const config = require('config');
 
 const userController = require('controllers/user.controller');
 
 // Use native promises
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/expenses');
+mongoose.connect(`mongodb://localhost/${config.get('db')}`);
 
 // set mongoose debugging ON
 mongoose.set('debug', true);
