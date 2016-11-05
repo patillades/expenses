@@ -1,42 +1,17 @@
-const mongoose = require('mongoose');
+const User = require('models/user.schema');
 const bcrypt = require('bcrypt');
-const SALT_WORK_FACTOR = 10;
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, '{PATH} is required!'],
-  },
-  mail: {
-    type: String,
-    required: [true, '{PATH} is required!'],
-    index: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: [true, '{PATH} is required!'],
-  },
-  role: {
-    type: Number,
-  },
-});
+function getByMailAndPassword(mail, password) {
+  const user = User.findOne({ mail });
 
-userSchema.pre('save', function (next) {
-  // only hash the password if it has been modified (or is new)
-  if (!this.isModified('password')) {
-    return next();
-  }
+  user.then(
+    result => {
+      bcrypt.compare(password, result.password, (err, same) => {
+        console.log('bcrypt compare', err, same);
+      })
+    },
+    err => console.log('getByMailAndPassword err', err)
+  )
+}
 
-  bcrypt.hash(this.password, SALT_WORK_FACTOR, (err, hash) => {
-    if (err) {
-      return next(err);
-    }
-
-    this.password = hash;
-
-    next();
-  });
-});
-
-module.exports = mongoose.model('User', userSchema);
+module.exports = { getByMailAndPassword };
