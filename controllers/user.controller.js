@@ -16,7 +16,7 @@ function login(req, res) {
   usersModel.getByMailAndPassword(req.body.mail, req.body.password).then(
     result => {
       if (result) {
-        return res.status(201).send('ok');
+        return res.status(201).send({ msg: 'ok' });
       }
 
       return res.status(400).send({ msg: 'wrong combination of user and password' });
