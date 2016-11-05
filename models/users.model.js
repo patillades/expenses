@@ -1,5 +1,8 @@
-const User = require('models/user.schema');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const config = require('config');
+
+const User = require('models/user.schema');
 
 /**
  * Create a user with the given params and role
@@ -22,13 +25,17 @@ function create(params, role) {
         return resolve(result);
       }
 
+      let msg;
+
       if (err.name === 'MongoError' && err.code === 11000) {
-        // errors de to "unique" schema constraint
-        reject('mail already registered');
+        // errors due to "unique" schema constraint
+        msg = 'mail already registered';
       } else {
         // return the message belonging to the first error key
-        reject(err.errors[Object.keys(err.errors)[0]].message);
+        msg = err.errors[Object.keys(err.errors)[0]].message;
       }
+
+      return reject(msg);
     })
   });
 }
@@ -61,8 +68,37 @@ function getByMailAndPassword(mail, password) {
 
       err => reject(err)
     );
-
   });
 }
 
-module.exports = { create, getByMailAndPassword };
+/**
+ * Internal Server Error response object
+ *
+ * @typedef {object} InternalErrorResp
+ * @property {number} status
+ * @property {{msg: string}} body
+ */
+
+/**
+ * Sign a JSON Web Token for the given user
+ *
+ * @param {string} sub - The user's mail, used as the "subject" of the token
+ * @returns {Promise.<string, InternalErrorResp>}
+ */
+function signToken(sub) {
+  return new Promise((resolve, reject) => {
+    jwt.sign({ sub }, config.get('secret'), { expiresIn: '1d' }, (err, token) => {
+      // @todo add log
+      if (err) {
+        return reject({
+          status: 500,
+          body: { msg: 'Internal Server Error' }
+        });
+      }
+
+      return resolve(token);
+    });
+  });
+}
+
+module.exports = { create, getByMailAndPassword, signToken };

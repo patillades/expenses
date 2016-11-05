@@ -1,3 +1,4 @@
 {
-  "db": "expenses"
+  "db": "expenses",
+  "secret": "HkePmy55FX9MEg0DiZQc"
 }

@@ -16,14 +16,24 @@ function login(req, res) {
   usersModel.getByMailAndPassword(req.body.mail, req.body.password).then(
     result => {
       if (result) {
-        return res.status(201).json({ msg: 'ok' });
+        return usersModel.signToken(req.body.mail);
       }
 
-      return res.status(400).json({ msg: 'wrong combination of user and password' });
+      return Promise.reject({
+        status: 400,
+        body: { msg: 'wrong combination of user and password' }
+      });
     },
 
     // @todo add log
-    err => res.status(500).json({ msg: 'Internal Server Error' })
+    err => Promise.reject({
+      status: 500,
+      body: { msg: 'Internal Server Error' }
+    })
+  ).then(
+    token => res.status(201).json({ token }),
+
+    obj => res.status(obj.status).json(obj.body)
   );
 }
 
