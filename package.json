@@ -2,9 +2,12 @@
   "name": "expenses",
   "version": "1.0.0",
   "description": "simple expenses tracker application",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "stop": "pkill --signal SIGINT expenses",
+    "start_test_env": "NODE_ENV=test npm start",
+    "test": "mocha tests"
   },
   "author": "gorkamunya@hotmail.com",
   "license": "ISC",
