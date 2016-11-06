@@ -18,6 +18,16 @@ function getRespObj(status, msg) {
 }
 
 /**
+ * Get a bad request response with the given message
+ *
+ * @param {string} msg
+ * @returns {RespObj}
+ */
+function getBadReqResp(msg) {
+  return getRespObj(400, msg);
+}
+
+/**
  * Get an unauthorized response with the given message
  *
  * @param {string} msg
@@ -27,4 +37,14 @@ function getUnauthorizedResp(msg = 'Format is Authorization: Bearer [token]') {
   return getRespObj(401, msg);
 }
 
-module.exports = { getUnauthorizedResp };
+/**
+ * Get an internal server error response with the given message
+ *
+ * @param {string} msg
+ * @returns {RespObj}
+ */
+function getInternalErrResp(msg = 'Internal Server Error') {
+  return getRespObj(500, msg);
+}
+
+module.exports = { getBadReqResp, getUnauthorizedResp, getInternalErrResp };

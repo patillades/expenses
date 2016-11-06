@@ -1,5 +1,7 @@
 const usersModel = require('models/users.model');
 
+const respObj = require('utils/respObj');
+
 function create(req, res) {
   let user;
 
@@ -10,10 +12,7 @@ function create(req, res) {
       return usersModel.signToken(user.mail);
     },
 
-    msg => Promise.reject({
-      status: 400,
-      body: { msg }
-    })
+    msg => Promise.reject(respObj.getBadReqResp(msg))
   ).then(
     token => {
       const { id, name, mail } = user;
@@ -21,7 +20,7 @@ function create(req, res) {
       return res.status(201).json({ id, name, mail, token })
     },
 
-    obj => res.status(obj.status).json(obj.body)
+    resp => res.status(resp.status).json({ msg: resp.msg })
   );
 }
 
@@ -32,21 +31,15 @@ function login(req, res) {
         return usersModel.signToken(req.body.mail);
       }
 
-      return Promise.reject({
-        status: 400,
-        body: { msg: 'wrong combination of user and password' }
-      });
+      return Promise.reject(respObj.getBadReqResp('wrong combination of user and password'));
     },
 
     // @todo add log
-    err => Promise.reject({
-      status: 500,
-      body: { msg: 'Internal Server Error' }
-    })
+    err => Promise.reject(respObj.getInternalErrResp())
   ).then(
     token => res.status(201).json({ token }),
 
-    obj => res.status(obj.status).json(obj.body)
+    resp => res.status(resp.status).json({ msg: resp.msg })
   );
 }
 

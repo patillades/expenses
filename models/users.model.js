@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 
 const User = require('models/user.schema');
+const respObj = require('utils/respObj');
 
 /**
  * Create a user with the given params and role
@@ -73,28 +74,17 @@ function authenticate(mail, password) {
 }
 
 /**
- * Internal Server Error response object
- *
- * @typedef {object} InternalErrorResp
- * @property {number} status
- * @property {{msg: string}} body
- */
-
-/**
  * Sign a JSON Web Token for the given user
  *
  * @param {string} sub - The user's mail, used as the "subject" of the token
- * @returns {Promise.<string, InternalErrorResp>}
+ * @returns {Promise.<string, RespObj>}
  */
 function signToken(sub) {
   return new Promise((resolve, reject) => {
     jwt.sign({ sub }, config.get('secret'), { expiresIn: '1d' }, (err, token) => {
       // @todo add log
       if (err) {
-        return reject({
-          status: 500,
-          body: { msg: 'Internal Server Error' }
-        });
+        return reject(respObj.getInternalErrResp());
       }
 
       return resolve(token);
