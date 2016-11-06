@@ -52,6 +52,14 @@ describe('Expense controller', function () {
       }, { Authorization: 'Bearer token' });
     });
 
+    it('should return 401 if the token subject does not match the user id', done => {
+      testUtils.request('POST', `/users/notanid/expenses`, {}, status => {
+        expect(status).toBe(401);
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
     it('should go through if Authorization header is ok', done => {
       testUtils.request('POST', `/users/${id}/expenses`, {}, (status, body) => {
         expect(status).toBe(201);
