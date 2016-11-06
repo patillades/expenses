@@ -31,25 +31,16 @@ db.on('error', e => {
 });
 db.once('open', () => console.log('db connection established'));
 
-
 const app = express();
+const apiRoutes = express.Router();
 
 app.use(bodyParser.urlencoded({ extended: false }));
+// add prefix to API routes
+app.use('/api', apiRoutes);
 
-app.post('/users', userController.create);
-app.post('/users/login', userController.login);
+apiRoutes.post('/users', userController.create);
+apiRoutes.post('/users/login', userController.login);
 
-// all rules below this middleware call need a JSON Web Token Authorization header
-// app.use((req, res, next) => {
-//   console.log('middleware', req.path);
-//   console.log('middleware', req.params);
-//   verifyToken(req, req.params.userId).then(
-//     resolved => next(),
-//
-//     resp => res.status(resp.status).json({ msg: resp.msg })
-//   );
-// });
-
-app.post('/users/:userId/expenses', authorize, expenseController.create);
+apiRoutes.post('/users/:userId/expenses', authorize, expenseController.create);
 
 app.listen(3000, () => console.log('listening on port 3000'));

@@ -10,7 +10,7 @@ describe('Expense controller', function () {
   before(done => {
     testUser = testUtils.getTestUser();
 
-    testUtils.request('POST', '/users', testUser, (status, body) => {
+    testUtils.request('POST', '/api/users', testUser, (status, body) => {
       expect(status).toBe(201);
 
       ({ id, token } = body );
@@ -21,7 +21,7 @@ describe('Expense controller', function () {
 
   describe('JWT access', function () {
     it('should return 401 if no Authorization header', done => {
-      testUtils.request('POST', `/users/${id}/expenses`, {}, status => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {}, status => {
         expect(status).toBe(401);
 
         done();
@@ -29,7 +29,7 @@ describe('Expense controller', function () {
     });
 
     it('should return 401 if Authorization header has wrong scheme', done => {
-      testUtils.request('POST', `/users/${id}/expenses`, {}, status => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {}, status => {
         expect(status).toBe(401);
 
         done();
@@ -37,7 +37,7 @@ describe('Expense controller', function () {
     });
 
     it('should return 401 if Authorization header has wrong scheme', done => {
-      testUtils.request('POST', `/users/${id}/expenses`, {}, status => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {}, status => {
         expect(status).toBe(401);
 
         done();
@@ -45,7 +45,7 @@ describe('Expense controller', function () {
     });
 
     it('should return 401 if Authorization header has wrong token', done => {
-      testUtils.request('POST', `/users/${id}/expenses`, {}, status => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {}, status => {
         expect(status).toBe(401);
 
         done();
@@ -53,7 +53,7 @@ describe('Expense controller', function () {
     });
 
     it('should return 401 if the token subject does not match the user id', done => {
-      testUtils.request('POST', `/users/notanid/expenses`, {}, status => {
+      testUtils.request('POST', `/api/users/notanid/expenses`, {}, status => {
         expect(status).toBe(401);
 
         done();
@@ -61,7 +61,7 @@ describe('Expense controller', function () {
     });
 
     it('should go through if Authorization header is ok', done => {
-      testUtils.request('POST', `/users/${id}/expenses`, {}, (status, body) => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {}, (status, body) => {
         expect(status).toBe(201);
 
         done();
