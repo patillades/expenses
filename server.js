@@ -10,6 +10,8 @@ const mongoose = require('mongoose');
 const config = require('config');
 
 const userController = require('controllers/user.controller');
+const expenseController = require('controllers/expense.controller');
+const verifyToken = require('rules/verifyToken');
 
 // Use native promises
 mongoose.Promise = global.Promise;
@@ -36,5 +38,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/users', userController.create);
 app.post('/users/login', userController.login);
+
+// all rules below this middleware call need a JSON Web Token Authorization header
+app.use((req, res, next) => {
+  verifyToken(req).then(
+    resolved => next(),
+
+    resp => res.status(resp.status).json({ msg: resp.msg })
+  );
+});
+
+app.post('/users/:userId/expenses', expenseController.create);
 
 app.listen(3000, () => console.log('listening on port 3000'));

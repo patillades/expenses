@@ -16,11 +16,14 @@ const querystring = require('querystring');
  * @param {string} path
  * @param {object} params
  * @param {requestCb} cb
+ * @param {object.<string, string>} additionalHeaders
  */
-function request(method, path, params, cb) {
-  const headers = method === 'POST'
+function request(method, path, params, cb, additionalHeaders = {}) {
+  const content = method === 'POST'
     ? { 'Content-Type': 'application/x-www-form-urlencoded' }
     : {};
+
+  const headers = Object.assign({}, content, additionalHeaders);
 
   const req = http.request({
     port: 3000,
