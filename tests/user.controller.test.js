@@ -29,6 +29,7 @@ describe('User controller', function () {
         expect(body.name).toBe(testUser.name);
         expect(body.mail).toBe(testUser.mail);
         expect(body.token).toBeA('string');
+        expect(body.id).toBeA('string');
 
         done();
       });
