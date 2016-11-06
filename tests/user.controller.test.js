@@ -8,11 +8,7 @@ describe('User controller', function () {
   let password;
 
   before(() => {
-    testUser = {
-      name: 'patxi',
-      mail: `test_${Date.now()}@mail.com`,
-      password: 'someEasyPw',
-    };
+    testUser = testUtils.getTestUser();
 
     ({ mail, password } = testUser);
   });
@@ -27,11 +23,12 @@ describe('User controller', function () {
       });
     });
 
-    it('should return 201 and the user if it worked', done => {
+    it('should return 201 and the user and token if it worked', done => {
       testUtils.request('POST', '/users', testUser, (status, body) => {
         expect(status).toBe(201);
         expect(body.name).toBe(testUser.name);
         expect(body.mail).toBe(testUser.mail);
+        expect(body.token).toBeA('string');
 
         done();
       });

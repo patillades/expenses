@@ -1,14 +1,24 @@
 const usersModel = require('models/users.model');
 
 function create(req, res) {
+  let name;
+  let mail;
+
   usersModel.create(req.body, 0).then(
     result => {
-      const { name, mail } = result;
+      ({ name, mail } = result);
 
-      return res.status(201).json({ name, mail });
+      return usersModel.signToken(mail);
     },
 
-    msg => res.status(400).json({ msg })
+    msg => Promise.reject({
+      status: 400,
+      body: { msg }
+    })
+  ).then(
+    token => res.status(201).json({ name, mail, token }),
+
+    obj => res.status(obj.status).json(obj.body)
   );
 }
 

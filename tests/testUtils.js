@@ -40,4 +40,17 @@ function request(method, path, params, cb) {
   req.end();
 }
 
-module.exports = { request };
+/**
+ * Get a test user whose mail is timestamped to avoid "unique" validation issues on the db
+ *
+ * @returns {{name: string, mail: string, password: string}}
+ */
+function getTestUser() {
+  return {
+    name: 'patxi',
+    mail: `test_${Date.now()}@mail.com`,
+    password: 'someEasyPw',
+  };
+}
+
+module.exports = { request, getTestUser };
