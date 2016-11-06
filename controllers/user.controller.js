@@ -15,9 +15,13 @@ function create(req, res) {
     msg => Promise.reject(respObj.getBadReqResp(msg))
   ).then(
     token => {
-      const { id, name, mail } = user;
+      const result = Object.assign(
+        {},
+        user.toObject(),
+        { token }
+      );
 
-      return res.status(201).json({ id, name, mail, token })
+      return res.status(201).json(result);
     },
 
     resp => res.status(resp.status).json({ msg: resp.msg })

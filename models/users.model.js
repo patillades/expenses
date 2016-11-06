@@ -8,14 +8,15 @@ const respObj = require('utils/respObj');
 /**
  * Create a user with the given params and role
  *
- * @param {object} params
+ * @param {{name: string, mail: string, password: string}} params
  * @param {number} role
  * @returns {Promise.<User, string>}
  */
 function create(params, role) {
   const user = new User(Object.assign(
-    { role },
-    params
+    {},
+    params,
+    { role }
   ));
 
   return new Promise((resolve, reject) => {
