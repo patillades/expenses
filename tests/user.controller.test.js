@@ -30,6 +30,7 @@ describe('User controller', function () {
         expect(body.mail).toBe(testUser.mail);
         expect(body.token).toBeA('string');
         expect(body.id).toBeA('string');
+        expect(body).toExcludeKey('password');
 
         done();
       });

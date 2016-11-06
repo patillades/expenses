@@ -60,9 +60,60 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${token}` });
     });
 
-    it('should go through if Authorization header is ok', done => {
-      testUtils.request('POST', `/api/users/${id}/expenses`, {}, (status, body) => {
+    it('should return 400 if Authorization header is ok but missing params', done => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {}, status => {
+        expect(status).toBe(400);
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
+    it('should return 400 if Authorization header is ok but amount is not number', done => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {
+        amount: 'notnumber',
+        description: 'some stuff',
+        date: Date.now()
+      }, status => {
+        expect(status).toBe(400);
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
+    it('should return 400 if Authorization header is ok but date is not a date', done => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {
+        amount: 20,
+        description: 'some stuff',
+        date: 'yesterday'
+      }, status => {
+        expect(status).toBe(400);
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
+    it('should return 201 if everything ok', done => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {
+        amount: 20,
+        description: 'some stuff',
+        date: Date.now()
+      }, (status, body) => {
         expect(status).toBe(201);
+        expect(body).toExcludeKey('comment');
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
+    it('should return 201 and comment if everything ok', done => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {
+        amount: 20,
+        description: 'some stuff',
+        date: Date.now(),
+        comment: 'cool!'
+      }, (status, body) => {
+        expect(status).toBe(201);
+        expect(body).toIncludeKey('comment');
 
         done();
       }, { Authorization: `Bearer ${token}` });

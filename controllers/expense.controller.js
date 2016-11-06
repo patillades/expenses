@@ -6,7 +6,7 @@ function create(req, res) {
   expensesModel.create(req.body, req.params.userId).then(
     expense => res.status(201).json(expense.toObject()),
 
-    msg => res.status(404).json({ msg })
+    msg => res.status(400).json({ msg })
   );
 }
 
