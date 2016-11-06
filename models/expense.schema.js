@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 
+/**
+ * Mongoose model for an expense
+ *
+ * @typedef {model} Expense
+ */
 const expenseSchema = new mongoose.Schema({
   date: {
     type: Date,
