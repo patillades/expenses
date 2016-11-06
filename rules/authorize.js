@@ -34,8 +34,13 @@ function verifyToken(req, userId) {
 
     jwt.verify(token, config.get('secret'), { subject: userId }, err => {
       if (err) {
-        console.log('verify err', err);
-        return reject(respObj.getUnauthorizedResp());
+        let msg;
+
+        if (err.name === 'TokenExpiredError') {
+          msg = err.name;
+        }
+
+        return reject(respObj.getUnauthorizedResp(msg));
       }
 
       return resolve(true);
