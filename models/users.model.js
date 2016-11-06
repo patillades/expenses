@@ -46,7 +46,8 @@ function create(params, role) {
  *
  * @param {string} mail
  * @param {string} password - unencrypted user's password
- * @returns {Promise.<boolean, Error>}
+ * @returns {Promise.<string|boolean, Error>} Resolve to the user's id if the authentication worked,
+ * false otherwise; reject with an Error if there's any
  */
 function authenticate(mail, password) {
   const user = User.findOne({ mail });
@@ -64,7 +65,7 @@ function authenticate(mail, password) {
             return reject(err);
           }
 
-          return resolve(same);
+          return resolve(same ? result.id : false);
         })
       },
 
@@ -76,7 +77,7 @@ function authenticate(mail, password) {
 /**
  * Sign a JSON Web Token for the given user
  *
- * @param {string} sub - The user's mail, used as the "subject" of the token
+ * @param {string} sub - The user's id, used as the "subject" of the token
  * @returns {Promise.<string, RespObj>}
  */
 function signToken(sub) {

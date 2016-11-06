@@ -7,9 +7,11 @@ const respObj = require('utils/respObj');
  * Verify that the provided request has a valid JSON Web Token in its Authorization header
  *
  * @param {Request} req
+ * @param {string} userId - The id of the user making the request, it's provided as a named route
+ * parameter
  * @returns {Promise.<boolean, RespObj>}
  */
-function verifyToken(req) {
+function verifyToken(req, userId) {
   const auth = req.get('Authorization');
 
   return new Promise((resolve, reject) => {
@@ -30,16 +32,30 @@ function verifyToken(req) {
       return reject(respObj.getUnauthorizedResp());
     }
 
-    jwt.verify(token, config.get('secret'), (err, decoded) => {
+    jwt.verify(token, config.get('secret'), { subject: userId }, err => {
       if (err) {
-        console.log(err);
+        console.log('verify err', err);
         return reject(respObj.getUnauthorizedResp());
       }
 
-      console.log(decoded);
       return resolve(true);
     })
   });
 }
 
-module.exports = verifyToken;
+/**
+ * Middleware call that verifies the presence of a JSON Web Token Authorization header
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+function authorize(req, res, next) {
+  verifyToken(req, req.params.userId).then(
+    resolved => next(),
+
+    resp => res.status(resp.status).json({ msg: resp.msg })
+  );
+}
+
+module.exports = authorize;

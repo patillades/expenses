@@ -9,7 +9,7 @@ function create(req, res) {
     result => {
       user = result;
 
-      return usersModel.signToken(user.mail);
+      return usersModel.signToken(user.id);
     },
 
     msg => Promise.reject(respObj.getBadReqResp(msg))
@@ -28,7 +28,7 @@ function login(req, res) {
   usersModel.authenticate(req.body.mail, req.body.password).then(
     result => {
       if (result) {
-        return usersModel.signToken(req.body.mail);
+        return usersModel.signToken(result);
       }
 
       return Promise.reject(respObj.getBadReqResp('wrong combination of user and password'));
