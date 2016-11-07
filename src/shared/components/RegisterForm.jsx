@@ -3,7 +3,7 @@ import React from 'react';
 import Input from './Input.jsx';
 import Button from './Button.jsx';
 
-function RegisterForm() {
+function RegisterForm(props) {
   return (
     <div className="panel panel-primary">
       <div className="panel-heading">Sign up with your email address</div>
@@ -15,6 +15,7 @@ function RegisterForm() {
             label="Your name"
             type="text"
             placeholder="Name"
+            changeHandler={props.inputChangeHandler}
           />
 
           <Input
@@ -22,6 +23,7 @@ function RegisterForm() {
             label="Email address"
             type="email"
             placeholder="Email"
+            changeHandler={props.inputChangeHandler}
           />
 
           <Input
@@ -29,6 +31,7 @@ function RegisterForm() {
             label="Password"
             type="password"
             placeholder="Password"
+            changeHandler={props.inputChangeHandler}
           />
 
           <Button txt="Sign up" />

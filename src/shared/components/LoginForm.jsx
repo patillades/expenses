@@ -3,7 +3,7 @@ import React from 'react';
 import Input from './Input.jsx';
 import Button from './Button.jsx';
 
-function LoginForm() {
+function LoginForm(props) {
   return (
     <div className="panel panel-default">
       <div className="panel-heading">Sign in if you already have an account</div>
@@ -15,6 +15,7 @@ function LoginForm() {
             label="Email address"
             type="email"
             placeholder="Email"
+            changeHandler={props.inputChangeHandler}
           />
 
           <Input
@@ -22,6 +23,7 @@ function LoginForm() {
             label="Password"
             type="password"
             placeholder="Password"
+            changeHandler={props.inputChangeHandler}
           />
 
           <Button txt="Sign in" />
