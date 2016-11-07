@@ -8,6 +8,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const config = require('config');
+const path = require('path');
 
 const userController = require('controllers/user.controller');
 const expenseController = require('controllers/expense.controller');
@@ -19,9 +20,7 @@ mongoose.connect(`mongodb://localhost/${config.get('db')}`);
 
 // set mongoose debugging ON
 mongoose.set('debug', true);
-mongoose.connection.on('error', function(err) {
-  console.error('MongoDB error: %s', err);
-});
+mongoose.connection.on('error', err=> console.error('MongoDB error: %s', err));
 
 const db = mongoose.connection;
 db.on('error', e => {
@@ -35,6 +34,10 @@ const app = express();
 const apiRoutes = express.Router();
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(__dirname + '/../../static'));
+
+app.get('/', (req, res) => res.sendFile(path.resolve(__dirname + '/../../static/index.html')));
+
 // add prefix to API routes
 app.use('/api', apiRoutes);
 
