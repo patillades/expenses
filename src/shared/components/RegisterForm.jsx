@@ -34,7 +34,10 @@ function RegisterForm(props) {
             changeHandler={props.inputChangeHandler}
           />
 
-          <Button txt="Sign up" />
+          <Button
+            txt="Sign up"
+            clickHandler={props.registerBtnHandler}
+          />
         </form>
       </div>
     </div>

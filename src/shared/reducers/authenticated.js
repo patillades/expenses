@@ -1,6 +1,13 @@
 import merge from 'lodash/merge';
 
-import { INPUT_CHANGE, LOG_IN, LOG_OUT } from 'constants/actionTypes';
+import {
+  INPUT_CHANGE,
+  REGISTRATION_REQUEST,
+  REGISTRATION_REQUEST_ERR,
+  CLOSE_MODAL,
+  LOG_IN,
+  LOG_OUT
+} from 'constants/actionTypes';
 
 const initialState = {
   id: null,
@@ -14,10 +21,38 @@ const initialState = {
     mail: '',
     password: '',
   },
+  isFetching: false,
+  modal: {
+    isOpen: false,
+    msg: null,
+  },
 };
 
 function authenticated(state = initialState, action) {
   switch (action.type) {
+    case INPUT_CHANGE:
+      const [form, field] = action.id.split('_');
+
+      return merge({}, state, {
+        [form]: { [field]: action.value },
+      });
+
+    case REGISTRATION_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      });
+
+    case REGISTRATION_REQUEST_ERR:
+      return merge({}, state, {
+        isFetching: false,
+        modal: { isOpen: true, msg: action.msg },
+      });
+
+    case CLOSE_MODAL:
+      return merge({}, state, {
+        modal: { isOpen: false, msg: null },
+      });
+
     case LOG_OUT:
       return initialState;
 
@@ -26,13 +61,6 @@ function authenticated(state = initialState, action) {
         id: action.id,
         token: action.token,
       };
-
-    case INPUT_CHANGE:
-      const [form, field] = action.id.split('_');
-
-      return merge({}, state, {
-        [form]: { [field]: action.value },
-      });
 
     default:
       return state;

@@ -6,7 +6,10 @@ const propTypes = {
 
 function Button(props) {
   return (
-    <button className="btn btn-primary center-block">
+    <button
+      className="btn btn-primary center-block"
+      onClick={props.clickHandler}
+    >
       {props.txt}
     </button>
   );

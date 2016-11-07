@@ -1,4 +1,5 @@
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import React from 'react';
 import { render } from 'react-dom';
 import Provider from 'react-redux/lib/components/Provider';
@@ -13,7 +14,8 @@ import authenticated from 'reducers/authenticated';
 const store = createStore(
   combineReducers({
     authenticated,
-  })
+  }),
+  applyMiddleware(thunk)
 );
 
 render(
