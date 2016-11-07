@@ -2,22 +2,29 @@ import React from 'react';
 
 import Input from './Input.jsx';
 
-function LoginForm() {
+function RegisterForm() {
   return (
-    <div className="panel panel-default">
-      <div className="panel-heading">Sign in if you already have an account</div>
+    <div className="panel panel-primary">
+      <div className="panel-heading">Sign up with your email address</div>
 
       <div className="panel-body">
         <form>
           <Input
-            id="login_mail"
+            id="register_name"
+            label="Your name"
+            type="text"
+            placeholder="Name"
+          />
+
+          <Input
+            id="register_mail"
             label="Email address"
             type="email"
             placeholder="Email"
           />
 
           <Input
-            id="login_password"
+            id="register_password"
             label="Password"
             type="password"
             placeholder="Password"
@@ -28,4 +35,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default RegisterForm;
