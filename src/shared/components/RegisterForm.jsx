@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Input from './Input.jsx';
+import Button from './Button.jsx';
 
 function RegisterForm() {
   return (
@@ -29,6 +30,8 @@ function RegisterForm() {
             type="password"
             placeholder="Password"
           />
+
+          <Button txt="Sign up" />
         </form>
       </div>
     </div>

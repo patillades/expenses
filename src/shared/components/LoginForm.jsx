@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Input from './Input.jsx';
+import Button from './Button.jsx';
 
 function LoginForm() {
   return (
@@ -22,6 +23,8 @@ function LoginForm() {
             type="password"
             placeholder="Password"
           />
+
+          <Button txt="Sign in" />
         </form>
       </div>
     </div>
