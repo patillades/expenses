@@ -20,7 +20,7 @@ function mapDispatchToProps(dispatch) {
       e.target.value
     )),
 
-    registerBtnHandler: () => {
+    registerSubmitHandler: () => {
       dispatch(registrationRequest());
       dispatch(registerUser());
     },

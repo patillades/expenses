@@ -38,7 +38,7 @@ function RegisterForm(props) {
             <Button
               txt="Sign up"
               isLoading={props.isDisabled}
-              clickHandler={props.registerBtnHandler}
+              clickHandler={props.submitHandler}
             />
           </fieldset>
         </form>
