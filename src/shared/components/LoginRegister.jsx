@@ -11,11 +11,13 @@ function LoginRegister(props) {
       <Header />
 
       <RegisterForm
+        isDisabled={props.authenticated.isFetching}
         inputChangeHandler={props.inputChangeHandler}
         registerBtnHandler={props.registerBtnHandler}
       />
 
       <LoginForm
+        isDisabled={props.authenticated.isFetching}
         inputChangeHandler={props.inputChangeHandler}
       />
 

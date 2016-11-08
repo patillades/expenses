@@ -10,23 +10,25 @@ function LoginForm(props) {
 
       <div className="panel-body">
         <form>
-          <Input
-            id="login_mail"
-            label="Email address"
-            type="email"
-            placeholder="Email"
-            changeHandler={props.inputChangeHandler}
-          />
+          <fieldset disabled={props.isDisabled}>
+            <Input
+              id="login_mail"
+              label="Email address"
+              type="email"
+              placeholder="Email"
+              changeHandler={props.inputChangeHandler}
+            />
 
-          <Input
-            id="login_password"
-            label="Password"
-            type="password"
-            placeholder="Password"
-            changeHandler={props.inputChangeHandler}
-          />
+            <Input
+              id="login_password"
+              label="Password"
+              type="password"
+              placeholder="Password"
+              changeHandler={props.inputChangeHandler}
+            />
 
-          <Button txt="Sign in" />
+            <Button txt="Sign in" />
+          </fieldset>
         </form>
       </div>
     </div>

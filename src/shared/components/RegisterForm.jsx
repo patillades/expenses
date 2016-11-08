@@ -10,34 +10,36 @@ function RegisterForm(props) {
 
       <div className="panel-body">
         <form>
-          <Input
-            id="register_name"
-            label="Your name"
-            type="text"
-            placeholder="Name"
-            changeHandler={props.inputChangeHandler}
-          />
+          <fieldset disabled={props.isDisabled}>
+            <Input
+              id="register_name"
+              label="Your name"
+              type="text"
+              placeholder="Name"
+              changeHandler={props.inputChangeHandler}
+            />
 
-          <Input
-            id="register_mail"
-            label="Email address"
-            type="email"
-            placeholder="Email"
-            changeHandler={props.inputChangeHandler}
-          />
+            <Input
+              id="register_mail"
+              label="Email address"
+              type="email"
+              placeholder="Email"
+              changeHandler={props.inputChangeHandler}
+            />
 
-          <Input
-            id="register_password"
-            label="Password"
-            type="password"
-            placeholder="Password"
-            changeHandler={props.inputChangeHandler}
-          />
+            <Input
+              id="register_password"
+              label="Password"
+              type="password"
+              placeholder="Password"
+              changeHandler={props.inputChangeHandler}
+            />
 
-          <Button
-            txt="Sign up"
-            clickHandler={props.registerBtnHandler}
-          />
+            <Button
+              txt="Sign up"
+              clickHandler={props.registerBtnHandler}
+            />
+          </fieldset>
         </form>
       </div>
     </div>
