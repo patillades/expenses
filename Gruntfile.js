@@ -13,9 +13,17 @@ module.exports = function (grunt) {
         },
       },
     },
+    uglify: {
+      default: {
+        files: {
+          'static/app.min.js': 'static/app.js',
+        },
+      },
+    },
   });
 
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('default', ['dev']);
 
