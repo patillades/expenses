@@ -6,6 +6,7 @@ import {
   INPUT_CHANGE,
   REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,
+  REGISTRATION_REQUEST_SUCC,
   CLOSE_MODAL
 } from 'constants/actionTypes';
 
@@ -46,16 +47,32 @@ function registerUser() {
     },
     body: objToQueryString(getState().authenticated.register),
   }).then(
-    response => {
-      if (response.status === 200) {
-        return;
-      }
+    response => response.json().then(
+      resp => {
+        if (response.status === 201) {
+          return dispatch(registrationRequestSucc(resp));
+        }
 
-      return response.json().then(
-        resp => dispatch(registrationRequestErr(resp.msg))
-      );
-    }
+        return dispatch(registrationRequestErr(resp.msg));
+      }
+    )
   );
+}
+
+/**
+ * The registration request ended successfully
+ *
+ * @param {{id: string, token: string}} user
+ * @returns {{type: string, id: string, token: string}}
+ */
+function registrationRequestSucc(user) {
+  const { id, token } = user;
+
+  return {
+    type: REGISTRATION_REQUEST_SUCC,
+    id,
+    token,
+  };
 }
 
 /**

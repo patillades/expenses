@@ -4,6 +4,7 @@ import {
   INPUT_CHANGE,
   REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,
+  REGISTRATION_REQUEST_SUCC,
   CLOSE_MODAL,
   LOG_IN,
   LOG_OUT
@@ -46,6 +47,14 @@ function authenticated(state = initialState, action) {
       return merge({}, state, {
         isFetching: false,
         modal: { isOpen: true, msg: action.msg },
+      });
+
+    case REGISTRATION_REQUEST_SUCC:
+      return merge({}, state, {
+        isFetching: false,
+        id: action.id,
+        token: action.token,
+        modal: { isOpen: true, msg: 'registration successful' },
       });
 
     case CLOSE_MODAL:
