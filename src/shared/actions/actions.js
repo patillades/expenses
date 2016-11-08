@@ -55,7 +55,11 @@ function registerUser() {
 
         return dispatch(registrationRequestErr(resp.msg));
       }
-    )
+    ),
+
+    rejected => dispatch(registrationRequestErr(
+      'something wrong happened, please try again later'
+    ))
   );
 }
 
