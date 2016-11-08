@@ -4,7 +4,7 @@ import {
   inputChange,
   registrationRequest,
   registerUser,
-  closeModal
+  modalBtnClick
 } from 'actions/actions';
 
 import LoginRegister from 'components/LoginRegister.jsx';
@@ -25,7 +25,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(registerUser());
     },
 
-    modalBtnHandler: e => dispatch(closeModal()),
+    modalBtnHandler: () => dispatch(modalBtnClick()),
   };
 }
 

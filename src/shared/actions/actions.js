@@ -1,4 +1,5 @@
 import 'whatwg-fetch';
+import hashHistory from 'react-router/lib/hashHistory';
 
 import objToQueryString from 'utils/objToQueryString';
 
@@ -9,6 +10,7 @@ import {
   REGISTRATION_REQUEST_SUCC,
   CLOSE_MODAL
 } from 'constants/actionTypes';
+import { MODAL_REGISTRATION_SUCC } from 'constants/messages';
 
 /**
  * Change event on one of the login/register forms' inputs
@@ -93,6 +95,24 @@ function registrationRequestErr(msg) {
 }
 
 /**
+ * Handle the click of the button on the modal dialog, checking if the state requires a navigation
+ * to another page before closing the dialog
+ *
+ * @returns {function}
+ */
+function modalBtnClick() {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    if (state.authenticated.modal.msg === MODAL_REGISTRATION_SUCC) {
+      hashHistory.push('/');
+    }
+
+    return dispatch(closeModal());
+  };
+}
+
+/**
  * Close modal dialog
  *
  * @returns {{type: string}}
@@ -105,5 +125,6 @@ export {
   inputChange,
   registrationRequest,
   registerUser,
+  modalBtnClick,
   closeModal
 };

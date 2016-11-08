@@ -8,6 +8,7 @@ import hashHistory from 'react-router/lib/hashHistory';
 import Route from 'react-router/lib/Route';
 
 import LoginRegisterContainer from 'containers/LoginRegisterContainer.jsx';
+import UserExpensesContainer from 'containers/UserExpensesContainer.jsx';
 
 import authenticated, { initialState as initialAuthenticatedState } from 'reducers/authenticated';
 
@@ -54,7 +55,8 @@ store.subscribe(() => {
 render(
   <Provider store={store}>
     <Router history={hashHistory}>
-      <Route path="/" component={LoginRegisterContainer} />
+      <Route path="/" component={UserExpensesContainer} />
+      <Route path="/login" component={LoginRegisterContainer} />
     </Router>
   </Provider>,
   document.getElementById('js-app')

@@ -9,6 +9,7 @@ import {
   LOG_IN,
   LOG_OUT
 } from 'constants/actionTypes';
+import { MODAL_REGISTRATION_SUCC } from 'constants/messages';
 
 const initialState = {
   id: null,
@@ -54,7 +55,7 @@ function authenticated(state = initialState, action) {
         isFetching: false,
         id: action.id,
         token: action.token,
-        modal: { isOpen: true, msg: 'registration successful' },
+        modal: { isOpen: true, msg: MODAL_REGISTRATION_SUCC },
       });
 
     case CLOSE_MODAL:
