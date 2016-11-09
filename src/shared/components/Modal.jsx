@@ -20,7 +20,7 @@ function Modal(props) {
       style={style}
       contentLabel="Modal"
     >
-      <h2>{props.msg}</h2>
+      <h2 className="text-center">{props.msg}</h2>
 
       <button
         className="btn btn-success center-block"
