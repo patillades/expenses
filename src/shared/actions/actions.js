@@ -66,9 +66,12 @@ function getActionTypeUri(type) {
       return '/api/users/login';
 
     case CREATE_EXPENSE:
-      const token = jwtDecode(localStorage.getItem('token'));
+      const token = localStorage.getItem('token');
+      const decoded = token
+        ? jwtDecode(localStorage.getItem('token'))
+        : { sub: '' };
 
-      return `/api/users/${token.sub}/expenses`;
+      return `/api/users/${decoded.sub}/expenses`;
   }
 }
 
