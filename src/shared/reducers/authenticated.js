@@ -31,6 +31,12 @@ const initialState = {
 
 function authenticated(state = initialState, action) {
   switch (action.type) {
+    case CLOSE_MODAL:
+      return merge({}, state, {
+        modal: { isOpen: false, msg: null },
+      });
+
+    // the id field on the login/register forms has the format "formName_fieldName"
     case INPUT_CHANGE:
       const [form, field] = action.id.split('_');
 
@@ -57,11 +63,6 @@ function authenticated(state = initialState, action) {
         isFetching: false,
         token: action.token,
         modal: { isOpen: true, msg: action.msg },
-      });
-
-    case CLOSE_MODAL:
-      return merge({}, state, {
-        modal: { isOpen: false, msg: null },
       });
 
     default:
