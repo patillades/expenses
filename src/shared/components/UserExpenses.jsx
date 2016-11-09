@@ -11,6 +11,7 @@ function UserExpenses(props) {
       <NewExpense
         {...props.expenses.create}
         dateChangeHandler={props.dateChangeHandler}
+        timeChangeHandler={props.timeChangeHandler}
       />
     </div>
   );

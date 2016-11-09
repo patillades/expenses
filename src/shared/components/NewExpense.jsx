@@ -1,5 +1,6 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
+import TimePicker from 'rc-time-picker';
 
 import { InlineInput } from './Input.jsx';
 import { InlineButton } from './Button.jsx';
@@ -11,6 +12,13 @@ function NewExpense(props) {
         <DatePicker
           selected={props.date}
           onChange={props.dateChangeHandler}
+        />
+
+        <TimePicker
+          placeholder="Time"
+          showSecond={false}
+          value={props.time}
+          onChange={props.timeChangeHandler}
         />
 
         <InlineInput

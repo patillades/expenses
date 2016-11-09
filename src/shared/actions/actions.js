@@ -9,8 +9,7 @@ import {
   REGISTRATION_REQUEST_SUCC,
   LOGIN_REQUEST_ERR,
   LOGIN_REQUEST_SUCC,
-  CLOSE_MODAL,
-  CALENDAR_DATE_CHANGE
+  CLOSE_MODAL
 } from 'constants/actionTypes';
 import { MODAL_REGISTRATION_SUCC, MODAL_LOGIN_SUCC } from 'constants/messages';
 
@@ -149,14 +148,15 @@ function closeModal() {
  */
 
 /**
- * The date selected on the datepicker used to create expenses has been changed
+ * The date selected on the date or time pickers used to create expenses has been changed
  *
+ * @param {string} type
  * @param {MomentDate} date
  * @returns {{type: string, date: MomentDate}}
  */
-function calendarDateChange(date) {
+function createExpenseDatetimeChange(type, date) {
   return {
-    type: CALENDAR_DATE_CHANGE,
+    type,
     date,
   };
 }
@@ -167,5 +167,5 @@ export {
   sendRequest,
   modalBtnClick,
   closeModal,
-  calendarDateChange
+  createExpenseDatetimeChange
 };

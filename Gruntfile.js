@@ -27,7 +27,10 @@ module.exports = function (grunt) {
       },
       default: {
         files: {
-          'static/style.min.css': 'node_modules/react-datepicker/dist/react-datepicker.css',
+          'static/style.min.css': [
+            'node_modules/react-datepicker/dist/react-datepicker.css',
+            'node_modules/rc-time-picker/assets/index.css',
+          ],
         },
       },
     },
