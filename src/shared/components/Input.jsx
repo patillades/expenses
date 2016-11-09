@@ -8,6 +8,7 @@ const propTypes = {
   placeholder: PropTypes.string.isRequired,
   isRequired: PropTypes.bool.isRequired,
   changeHandler: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
 };
 
 function Input(props) {
@@ -27,6 +28,7 @@ function Input(props) {
         placeholder={props.placeholder}
         required={props.isRequired}
         onChange={props.changeHandler}
+        value={props.value}
       />
     </div>
   );

@@ -15,9 +15,9 @@ const initialState = {
   create: {
     date: moment(),
     time: moment().hour(0).minute(0),
-    description: null,
-    amount: null,
-    comment: null,
+    description: '',
+    amount: '',
+    comment: '',
   },
   isFetching: false,
   modal: {
@@ -60,8 +60,7 @@ function expenses(state = initialState, action) {
       });
 
     case CREATE_EXPENSE_REQUEST_SUCC:
-      return merge({}, state, {
-        isFetching: false,
+      return merge({}, initialState, {
         modal: { isOpen: true, msg: action.msg },
       });
 

@@ -28,6 +28,7 @@ function NewExpense(props) {
           label="Description"
           isRequired
           changeHandler={props.inputChangeHandler}
+          value={props.description}
         />
 
         <InlineInput
@@ -37,6 +38,7 @@ function NewExpense(props) {
           label="amount"
           isRequired
           changeHandler={props.inputChangeHandler}
+          value={props.amount}
         />
 
         <InlineInput
@@ -46,6 +48,7 @@ function NewExpense(props) {
           label="comment"
           isRequired={false}
           changeHandler={props.inputChangeHandler}
+          value={props.comment}
         />
 
         <InlineButton

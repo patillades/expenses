@@ -105,27 +105,32 @@ function initRequest(type) {
  * or the error message. If it was rejected, dispatch an error message.
  */
 function sendRequest(type) {
-  return (dispatch, getState) => fetch(getActionTypeUri(type), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: objToQueryString(getBodyObj(type, getState())),
-  }).then(
-    response => response.json().then(
-      resp => {
-        if (response.status === 201) {
-          return dispatch(requestSucceeded(type, resp.token));
-        }
+  return (dispatch, getState) => {
+    const token = localStorage.getItem('token');
 
-        return dispatch(requestFailed(type, resp.msg));
+    return fetch(getActionTypeUri(type), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: token ? ('Bearer ' + token) : null,
       },
+      body: objToQueryString(getBodyObj(type, getState())),
+    }).then(
+      response => response.json().then(
+        resp => {
+          if (response.status === 201) {
+            return dispatch(requestSucceeded(type, resp.token));
+          }
+
+          return dispatch(requestFailed(type, resp.msg));
+        },
+
+        rejected => dispatch(internalError(type))
+      ),
 
       rejected => dispatch(internalError(type))
-    ),
-
-    rejected => dispatch(internalError(type))
-  );
+    );
+  };
 }
 
 /**
