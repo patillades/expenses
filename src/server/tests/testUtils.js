@@ -29,7 +29,7 @@ function request(method, path, params, cb, additionalHeaders = {}) {
     port: 3000,
     method,
     path,
-    headers
+    headers,
   }, res => {
     res.setEncoding('utf8');
 

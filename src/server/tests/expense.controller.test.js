@@ -6,6 +6,7 @@ describe('Expense controller', function () {
   let testUser;
   let id;
   let token;
+  let userExpenseCount = 0;
 
   before(done => {
     testUser = testUtils.getTestUser();
@@ -72,7 +73,7 @@ describe('Expense controller', function () {
       testUtils.request('POST', `/api/users/${id}/expenses`, {
         amount: 'notnumber',
         description: 'some stuff',
-        date: Date.now()
+        date: Date.now(),
       }, status => {
         expect(status).toBe(400);
 
@@ -84,22 +85,27 @@ describe('Expense controller', function () {
       testUtils.request('POST', `/api/users/${id}/expenses`, {
         amount: 20,
         description: 'some stuff',
-        date: 'yesterday'
+        date: 'yesterday',
       }, status => {
         expect(status).toBe(400);
 
         done();
       }, { Authorization: `Bearer ${token}` });
     });
+  });
 
+  describe('create', function () {
     it('should return 201 if everything ok', done => {
       testUtils.request('POST', `/api/users/${id}/expenses`, {
         amount: 20,
         description: 'some stuff',
-        date: Date.now()
+        date: Date.now(),
       }, (status, body) => {
         expect(status).toBe(201);
+        expect(body).toIncludeKey('id');
         expect(body).toExcludeKey('comment');
+
+        userExpenseCount++;
 
         done();
       }, { Authorization: `Bearer ${token}` });
@@ -110,10 +116,24 @@ describe('Expense controller', function () {
         amount: 20,
         description: 'some stuff',
         date: Date.now(),
-        comment: 'cool!'
+        comment: 'cool!',
       }, (status, body) => {
         expect(status).toBe(201);
         expect(body).toIncludeKey('comment');
+
+        userExpenseCount++;
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+  });
+
+  describe('read', function () {
+    it('should return 200 and an array of expenses', done => {
+      testUtils.request('GET', `/api/users/${id}/expenses`, {}, (status, body) => {
+        expect(status).toBe(200);
+        expect(body).toBeAn('array');
+        expect(body.length).toBe(userExpenseCount);
 
         done();
       }, { Authorization: `Bearer ${token}` });
