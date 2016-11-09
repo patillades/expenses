@@ -1,11 +1,17 @@
 import React from 'react';
 
-import Header from 'components/Header.jsx';
+import Header from './Header.jsx';
+import NewExpense from './NewExpense.jsx';
 
 function UserExpenses(props) {
   return (
     <div>
       <Header />
+
+      <NewExpense
+        {...props.expenses.create}
+        dateChangeHandler={props.dateChangeHandler}
+      />
     </div>
   );
 }
