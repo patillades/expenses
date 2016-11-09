@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import authenticated, { initialState as initialAuthenticatedState } from 'reducers/authenticated';
+import expenses from 'reducers/expenses';
 
 // get stored token and use it as preloaded state for the store
 let storedToken = localStorage.getItem('token');
@@ -9,6 +10,7 @@ let storedToken = localStorage.getItem('token');
 const store = createStore(
   combineReducers({
     authenticated,
+    expenses,
   }),
   { authenticated: Object.assign({}, initialAuthenticatedState, { token: storedToken }) },
   applyMiddleware(thunk)

@@ -7,6 +7,8 @@ const LOGIN_REQUEST_ERR = 'login request error';
 const LOGIN_REQUEST_SUCC = 'login request success';
 const CLOSE_MODAL = 'close modal';
 
+const CALENDAR_DATE_CHANGE = 'date change';
+
 export {
   INPUT_CHANGE,
   REGISTRATION_REQUEST,
@@ -15,5 +17,6 @@ export {
   LOGIN_REQUEST,
   LOGIN_REQUEST_ERR,
   LOGIN_REQUEST_SUCC,
-  CLOSE_MODAL
+  CLOSE_MODAL,
+  CALENDAR_DATE_CHANGE
 };
