@@ -19,6 +19,7 @@ function LoginRegister(props) {
       <LoginForm
         isDisabled={props.authenticated.isFetching}
         inputChangeHandler={props.inputChangeHandler}
+        submitHandler={props.loginSubmitHandler}
       />
 
       <Modal

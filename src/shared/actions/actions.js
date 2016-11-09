@@ -5,12 +5,13 @@ import objToQueryString from 'utils/objToQueryString';
 
 import {
   INPUT_CHANGE,
-  REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,
   REGISTRATION_REQUEST_SUCC,
+  LOGIN_REQUEST_ERR,
+  LOGIN_REQUEST_SUCC,
   CLOSE_MODAL
 } from 'constants/actionTypes';
-import { MODAL_REGISTRATION_SUCC } from 'constants/messages';
+import { MODAL_REGISTRATION_SUCC, MODAL_LOGIN_SUCC } from 'constants/messages';
 
 /**
  * Change event on one of the login/register forms' inputs
@@ -28,70 +29,89 @@ function inputChange(id, value) {
 }
 
 /**
- * A user registration request has been sent to the API
+ * A request of the given type has been sent to the API
  *
+ * @param {string} type
  * @returns {{type: string}}
  */
-function registrationRequest() {
-  return { type: REGISTRATION_REQUEST };
+function initRequest(type) {
+  return { type };
 }
 
 /**
- * Send a user registration request to the API
+ * Send a user registration or login request to the API
  *
- * @returns {function: (Promise<Response>|Promise.<{msg: string}>)}
+ * @param {('register'|'login')} type
+ * @returns {function: (Promise)} If it worked, dispatch the token found on the response object,
+ * or the error message. If it was rejected, dispatch an error message.
  */
-function registerUser() {
-  return (dispatch, getState) => fetch('/api/users', {
+function sendRequest(type) {
+  const uri = '/api/users' + (type === 'login' ? '/login' : '');
+
+  return (dispatch, getState) => fetch(uri, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: objToQueryString(getState().authenticated.register),
+    body: objToQueryString(getState().authenticated[type]),
   }).then(
     response => response.json().then(
       resp => {
         if (response.status === 201) {
-          return dispatch(registrationRequestSucc(resp));
+          return dispatch(requestSucceeded(type, resp.token));
         }
 
-        return dispatch(registrationRequestErr(resp.msg));
-      }
+        return dispatch(requestFailed(type, resp.msg));
+      },
+
+      rejected => dispatch(internalError(type))
     ),
 
-    rejected => dispatch(registrationRequestErr(
-      'something wrong happened, please try again later'
-    ))
+    rejected => dispatch(internalError(type))
   );
 }
 
 /**
- * The registration request ended successfully
+ * The registration or login request ended successfully
  *
- * @param {{id: string, token: string}} user
- * @returns {{type: string, id: string, token: string}}
+ * @param {('register'|'login')} type
+ * @param {string} token
+ * @returns {{type: string, msg:string, token: string}}
  */
-function registrationRequestSucc(user) {
-  const { id, token } = user;
-
+function requestSucceeded(type, token) {
   return {
-    type: REGISTRATION_REQUEST_SUCC,
-    id,
+    type: type === 'login' ? LOGIN_REQUEST_SUCC : REGISTRATION_REQUEST_SUCC,
+    msg: type === 'login' ? MODAL_LOGIN_SUCC : MODAL_REGISTRATION_SUCC,
     token,
   };
 }
 
 /**
- * The registration request ended in an error
+ * The registration or login request ended in an error
  *
+ * @param {('register'|'login')} type
  * @param {string} msg
  * @returns {{type: string, msg: string}}
  */
-function registrationRequestErr(msg) {
+function requestFailed(type, msg) {
   return {
-    type: REGISTRATION_REQUEST_ERR,
+    type: type === 'login' ? LOGIN_REQUEST_ERR : REGISTRATION_REQUEST_ERR,
     msg,
   };
+}
+
+/**
+ * Handle request failure when the promises have been rejected for unexpected reasons (network
+ * error, JSON parse unexpected chars...)
+ *
+ * @param {('register'|'login')} type
+ * @returns {{type: string, msg: string}}
+ */
+function internalError(type) {
+  return requestFailed(
+    type,
+    'something wrong happened, please try again later'
+  );
 }
 
 /**
@@ -102,9 +122,9 @@ function registrationRequestErr(msg) {
  */
 function modalBtnClick() {
   return (dispatch, getState) => {
-    const state = getState();
+    const modalMsg = getState().authenticated.modal.msg;
 
-    if (state.authenticated.modal.msg === MODAL_REGISTRATION_SUCC) {
+    if ([MODAL_REGISTRATION_SUCC, MODAL_LOGIN_SUCC].includes(modalMsg)) {
       hashHistory.push('/');
     }
 
@@ -123,8 +143,8 @@ function closeModal() {
 
 export {
   inputChange,
-  registrationRequest,
-  registerUser,
+  initRequest,
+  sendRequest,
   modalBtnClick,
   closeModal
 };

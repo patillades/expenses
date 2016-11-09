@@ -5,9 +5,11 @@ import {
   REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,
   REGISTRATION_REQUEST_SUCC,
+  LOGIN_REQUEST,
+  LOGIN_REQUEST_ERR,
+  LOGIN_REQUEST_SUCC,
   CLOSE_MODAL
 } from 'constants/actionTypes';
-import { MODAL_REGISTRATION_SUCC } from 'constants/messages';
 
 const initialState = {
   token: null,
@@ -37,21 +39,24 @@ function authenticated(state = initialState, action) {
       });
 
     case REGISTRATION_REQUEST:
+    case LOGIN_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
       });
 
     case REGISTRATION_REQUEST_ERR:
+    case LOGIN_REQUEST_ERR:
       return merge({}, state, {
         isFetching: false,
         modal: { isOpen: true, msg: action.msg },
       });
 
     case REGISTRATION_REQUEST_SUCC:
+    case LOGIN_REQUEST_SUCC:
       return merge({}, state, {
         isFetching: false,
         token: action.token,
-        modal: { isOpen: true, msg: MODAL_REGISTRATION_SUCC },
+        modal: { isOpen: true, msg: action.msg },
       });
 
     case CLOSE_MODAL:

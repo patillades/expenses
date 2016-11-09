@@ -2,10 +2,14 @@ import connect from 'react-redux/lib/components/connect';
 
 import {
   inputChange,
-  registrationRequest,
-  registerUser,
+  initRequest,
+  sendRequest,
   modalBtnClick
 } from 'actions/actions';
+import {
+  REGISTRATION_REQUEST,
+  LOGIN_REQUEST
+} from 'constants/actionTypes';
 
 import LoginRegister from 'components/LoginRegister.jsx';
 
@@ -21,8 +25,13 @@ function mapDispatchToProps(dispatch) {
     )),
 
     registerSubmitHandler: () => {
-      dispatch(registrationRequest());
-      dispatch(registerUser());
+      dispatch(initRequest(REGISTRATION_REQUEST));
+      dispatch(sendRequest('register'));
+    },
+
+    loginSubmitHandler: () => {
+      dispatch(initRequest(LOGIN_REQUEST));
+      dispatch(sendRequest('login'));
     },
 
     modalBtnHandler: () => dispatch(modalBtnClick()),

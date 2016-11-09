@@ -27,7 +27,11 @@ function LoginForm(props) {
               changeHandler={props.inputChangeHandler}
             />
 
-            <Button txt="Sign in" />
+            <Button
+              txt="Sign in"
+              isLoading={props.isDisabled}
+              clickHandler={props.submitHandler}
+            />
           </fieldset>
         </form>
       </div>
