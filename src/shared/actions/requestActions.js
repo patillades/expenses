@@ -120,7 +120,17 @@ function getBodyObj(type, state) {
       return state.authenticated[type];
 
     case CREATE_EXPENSE:
-      return state.expenses.create;
+      const body = state.expenses.create;
+      const { time } = body;
+
+      body.date
+        .hours(time.hours())
+        .minutes(time.minutes())
+        .seconds(0);
+
+      delete body.time;
+
+      return body;
   }
 }
 

@@ -14,7 +14,7 @@ import {
 const initialState = {
   create: {
     date: moment(),
-    time: moment().hour(0).minute(0),
+    time: moment().hours(0).minutes(0),
     description: '',
     amount: '',
     comment: '',
