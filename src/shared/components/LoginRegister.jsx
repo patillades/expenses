@@ -13,7 +13,7 @@ function LoginRegister(props) {
       <RegisterForm
         isDisabled={props.authenticated.isFetching}
         inputChangeHandler={props.inputChangeHandler}
-        submitHandler={props.registerSubmitHandler}
+        submitHandler={props.registrationSubmitHandler}
       />
 
       <LoginForm
@@ -23,8 +23,7 @@ function LoginRegister(props) {
       />
 
       <Modal
-        isOpen={props.authenticated.modal.isOpen}
-        msg={props.authenticated.modal.msg}
+        {...props.authenticated.modal}
         clickHandler={props.modalBtnHandler}
       />
     </div>

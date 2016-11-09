@@ -1,22 +1,81 @@
 import 'whatwg-fetch';
 import hashHistory from 'react-router/lib/hashHistory';
+import jwtDecode from 'jwt-decode';
 
 import objToQueryString from 'utils/objToQueryString';
 
 import {
   INPUT_CHANGE,
+  REGISTRATION,
+  REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,
   REGISTRATION_REQUEST_SUCC,
+  LOGIN,
+  LOGIN_REQUEST,
   LOGIN_REQUEST_ERR,
   LOGIN_REQUEST_SUCC,
+  CREATE_EXPENSE,
+  CREATE_EXPENSE_REQUEST_ERR,
+  CREATE_EXPENSE_REQUEST_SUCC,
   CLOSE_MODAL
 } from 'constants/actionTypes';
-import { MODAL_REGISTRATION_SUCC, MODAL_LOGIN_SUCC } from 'constants/messages';
+import {
+  MODAL_REGISTRATION_SUCC,
+  MODAL_LOGIN_SUCC,
+  MODAL_CREATE_EXPENSE_SUCC
+} from 'constants/messages';
+
+const actionTypeConstants = {
+  requestSucc: {
+    type: {
+      [REGISTRATION]: REGISTRATION_REQUEST_SUCC,
+      [LOGIN]: LOGIN_REQUEST_SUCC,
+      [CREATE_EXPENSE]: CREATE_EXPENSE_REQUEST_SUCC,
+    },
+    msg: {
+      [REGISTRATION]: MODAL_REGISTRATION_SUCC,
+      [LOGIN]: MODAL_LOGIN_SUCC,
+      [CREATE_EXPENSE]: MODAL_CREATE_EXPENSE_SUCC,
+    },
+  },
+  requestErrType: {
+    [REGISTRATION]: REGISTRATION_REQUEST_ERR,
+    [LOGIN]: LOGIN_REQUEST_ERR,
+    [CREATE_EXPENSE]: CREATE_EXPENSE_REQUEST_ERR,
+  },
+};
 
 /**
- * Change event on one of the login/register forms' inputs
+ * Types of actions that can initializa an API call
  *
- * @param {string} id - ID belonging to a form input with the format "formName_fieldName"
+ * @typedef {('registration'|'login'|'create_expense')} ActionType
+ */
+
+/**
+ * Get the API endpoint URI related to the given action type
+ *
+ * @param {ActionType} type
+ * @returns {string}
+ */
+function getActionTypeUri(type) {
+  switch (type) {
+    case REGISTRATION:
+      return '/api/users';
+
+    case LOGIN:
+      return '/api/users/login';
+
+    case CREATE_EXPENSE:
+      const token = jwtDecode(localStorage.getItem('token'));
+
+      return `/api/users/${token.sub}/expenses`;
+  }
+}
+
+/**
+ * Change event on a form input
+ *
+ * @param {string} id - ID belonging to a form input
  * @param {string} value - value on the input
  * @returns {{type: string, id: string, value: string}}
  */
@@ -41,19 +100,17 @@ function initRequest(type) {
 /**
  * Send a user registration or login request to the API
  *
- * @param {('register'|'login')} type
+ * @param {ActionType} type
  * @returns {function: (Promise)} If it worked, dispatch the token found on the response object,
  * or the error message. If it was rejected, dispatch an error message.
  */
 function sendRequest(type) {
-  const uri = '/api/users' + (type === 'login' ? '/login' : '');
-
-  return (dispatch, getState) => fetch(uri, {
+  return (dispatch, getState) => fetch(getActionTypeUri(type), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: objToQueryString(getState().authenticated[type]),
+    body: objToQueryString(getBodyObj(type, getState())),
   }).then(
     response => response.json().then(
       resp => {
@@ -72,16 +129,35 @@ function sendRequest(type) {
 }
 
 /**
+ * Get the state object to be used as the body of an API request
+ *
+ * @param {ActionType} type
+ * @param {object} state
+ * @returns {object}
+ */
+function getBodyObj(type, state) {
+  switch (type) {
+    case REGISTRATION:
+    case LOGIN:
+      return state.authenticated[type];
+
+    case CREATE_EXPENSE:
+      return state.expenses.create;
+  }
+
+}
+
+/**
  * The registration or login request ended successfully
  *
- * @param {('register'|'login')} type
+ * @param {ActionType} type
  * @param {string} token
  * @returns {{type: string, msg:string, token: string}}
  */
 function requestSucceeded(type, token) {
   return {
-    type: type === 'login' ? LOGIN_REQUEST_SUCC : REGISTRATION_REQUEST_SUCC,
-    msg: type === 'login' ? MODAL_LOGIN_SUCC : MODAL_REGISTRATION_SUCC,
+    type: actionTypeConstants.requestSucc.type[type],
+    msg: actionTypeConstants.requestSucc.msg[type],
     token,
   };
 }
@@ -89,13 +165,13 @@ function requestSucceeded(type, token) {
 /**
  * The registration or login request ended in an error
  *
- * @param {('register'|'login')} type
+ * @param {ActionType} type
  * @param {string} msg
  * @returns {{type: string, msg: string}}
  */
 function requestFailed(type, msg) {
   return {
-    type: type === 'login' ? LOGIN_REQUEST_ERR : REGISTRATION_REQUEST_ERR,
+    type: actionTypeConstants.requestErrType[type],
     msg,
   };
 }
@@ -104,8 +180,8 @@ function requestFailed(type, msg) {
  * Handle request failure when the promises have been rejected for unexpected reasons (network
  * error, JSON parse unexpected chars...)
  *
- * @param {('register'|'login')} type
- * @returns {{type: string, msg: string}}
+ * @param {ActionType} type
+ * @returns {{type: ActionType, msg: string}}
  */
 function internalError(type) {
   return requestFailed(

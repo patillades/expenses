@@ -12,7 +12,7 @@ function RegisterForm(props) {
         <form>
           <fieldset disabled={props.isDisabled}>
             <Input
-              id="register_name"
+              id="registration_name"
               label="Your name"
               type="text"
               placeholder="Name"
@@ -21,7 +21,7 @@ function RegisterForm(props) {
             />
 
             <Input
-              id="register_mail"
+              id="registration_mail"
               label="Email address"
               type="email"
               placeholder="Email"
@@ -30,7 +30,7 @@ function RegisterForm(props) {
             />
 
             <Input
-              id="register_password"
+              id="registration_password"
               label="Password"
               type="password"
               placeholder="Password"

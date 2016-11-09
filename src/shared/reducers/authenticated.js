@@ -13,7 +13,7 @@ import {
 
 const initialState = {
   token: null,
-  register: {
+  registration: {
     name: '',
     mail: '',
     password: '',
@@ -36,7 +36,7 @@ function authenticated(state = initialState, action) {
         modal: { isOpen: false, msg: null },
       });
 
-    // the id field on the login/register forms has the format "formName_fieldName"
+    // the id field on the login/registration forms has the format "formName_fieldName"
     case INPUT_CHANGE:
       const [form, field] = action.id.split('_');
 

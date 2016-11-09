@@ -1,10 +1,18 @@
 import connect from 'react-redux/lib/components/connect';
 
 import UserExpenses from 'components/UserExpenses.jsx';
-import { createExpenseDatetimeChange } from 'actions/actions';
 import {
+  createExpenseDatetimeChange,
+  inputChange,
+  initRequest,
+  sendRequest,
+  modalBtnClick
+} from 'actions/actions';
+import {
+  CREATE_EXPENSE,
   CREATE_EXPENSE_DATE_CHANGE,
-  CREATE_EXPENSE_TIME_CHANGE
+  CREATE_EXPENSE_TIME_CHANGE,
+  CREATE_EXPENSE_REQUEST
 } from 'constants/actionTypes';
 
 function mapStateToProps(state) {
@@ -22,6 +30,18 @@ function mapDispatchToProps(dispatch) {
       CREATE_EXPENSE_TIME_CHANGE,
       date
     )),
+
+    inputChangeHandler: e => dispatch(inputChange(
+      e.target.id,
+      e.target.value
+    )),
+
+    createExpenseSubmitHandler: () => {
+      dispatch(initRequest(CREATE_EXPENSE_REQUEST));
+      dispatch(sendRequest(CREATE_EXPENSE));
+    },
+
+    modalBtnHandler: () => dispatch(modalBtnClick()),
   };
 }
 

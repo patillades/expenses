@@ -27,7 +27,7 @@ function NewExpense(props) {
           placeholder="description"
           label="Description"
           isRequired
-          onChange={props.changeHandler}
+          changeHandler={props.inputChangeHandler}
         />
 
         <InlineInput
@@ -36,7 +36,7 @@ function NewExpense(props) {
           placeholder="amount"
           label="amount"
           isRequired
-          onChange={props.changeHandler}
+          changeHandler={props.inputChangeHandler}
         />
 
         <InlineInput
@@ -45,7 +45,7 @@ function NewExpense(props) {
           placeholder="comment"
           label="comment"
           isRequired={false}
-          onChange={props.changeHandler}
+          changeHandler={props.inputChangeHandler}
         />
 
         <InlineButton
