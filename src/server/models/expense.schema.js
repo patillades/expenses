@@ -21,12 +21,12 @@ const expenseSchema = new mongoose.Schema({
   comment: {
     type: String,
   },
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-  }
+  },
 }, {
-  toObject: {
+  toJSON: {
     transform: (doc, ret) => {
       ret.id = doc._id;
 
@@ -35,7 +35,7 @@ const expenseSchema = new mongoose.Schema({
 
       return ret;
     }
-  }
+  },
 });
 
 module.exports = mongoose.model('Expense', expenseSchema);

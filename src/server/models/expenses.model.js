@@ -40,4 +40,17 @@ function create(params, userId) {
   );
 }
 
-module.exports = { create };
+/**
+ * Read a user's expenses
+ *
+ * @param {string} userId
+ * @returns {Promise.<Expense[], Error>}
+ */
+function read(userId) {
+  return Expense
+    .find({ userId })
+    .select('-__v -userId')
+    .sort('-date');
+}
+
+module.exports = { create, read };
