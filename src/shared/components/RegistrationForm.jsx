@@ -3,7 +3,7 @@ import React from 'react';
 import Input from './Input.jsx';
 import Button from './Button.jsx';
 
-function RegisterForm(props) {
+function RegistrationForm(props) {
   return (
     <div className="panel panel-primary">
       <div className="panel-heading">Sign up with your email address</div>
@@ -53,4 +53,4 @@ function RegisterForm(props) {
   );
 }
 
-export default RegisterForm;
+export default RegistrationForm;

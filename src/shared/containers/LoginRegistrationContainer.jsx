@@ -13,7 +13,7 @@ import {
   LOGIN_REQUEST
 } from 'constants/actionTypes';
 
-import LoginRegister from 'components/LoginRegister.jsx';
+import LoginRegistration from 'components/LoginRegistration.jsx';
 
 function mapStateToProps(state) {
   return state;
@@ -40,9 +40,9 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const LoginRegisterContainer = connect(
+const LoginRegistrationContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(LoginRegister);
+)(LoginRegistration);
 
-export default LoginRegisterContainer;
+export default LoginRegistrationContainer;

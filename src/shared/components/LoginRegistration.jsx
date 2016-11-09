@@ -1,16 +1,16 @@
 import React from 'react';
 
 import Header from './Header.jsx';
-import RegisterForm from './RegisterForm.jsx';
+import RegistrationForm from './RegistrationForm.jsx';
 import LoginForm from './LoginForm.jsx';
 import Modal from './Modal.jsx';
 
-function LoginRegister(props) {
+function LoginRegistration(props) {
   return (
     <div>
       <Header />
 
-      <RegisterForm
+      <RegistrationForm
         {...props.authenticated.registration}
         isDisabled={props.authenticated.isFetching}
         inputChangeHandler={props.inputChangeHandler}
@@ -32,4 +32,4 @@ function LoginRegister(props) {
   );
 }
 
-export default LoginRegister;
+export default LoginRegistration;

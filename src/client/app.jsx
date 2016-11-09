@@ -6,7 +6,7 @@ import hashHistory from 'react-router/lib/hashHistory';
 import Route from 'react-router/lib/Route';
 
 import store from 'store';
-import LoginRegisterContainer from 'containers/LoginRegisterContainer.jsx';
+import LoginRegistrationContainer from 'containers/LoginRegistrationContainer.jsx';
 import UserExpensesContainer from 'containers/UserExpensesContainer.jsx';
 
 hashHistory.listen(location => {
@@ -22,7 +22,7 @@ render(
   <Provider store={store}>
     <Router history={hashHistory}>
       <Route path="/" component={UserExpensesContainer} />
-      <Route path="/login" component={LoginRegisterContainer} />
+      <Route path="/login" component={LoginRegistrationContainer} />
     </Router>
   </Provider>,
   document.getElementById('js-app')
