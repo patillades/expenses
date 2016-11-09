@@ -5,14 +5,11 @@ import {
   REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,
   REGISTRATION_REQUEST_SUCC,
-  CLOSE_MODAL,
-  LOG_IN,
-  LOG_OUT
+  CLOSE_MODAL
 } from 'constants/actionTypes';
 import { MODAL_REGISTRATION_SUCC } from 'constants/messages';
 
 const initialState = {
-  id: null,
   token: null,
   register: {
     name: '',
@@ -53,7 +50,6 @@ function authenticated(state = initialState, action) {
     case REGISTRATION_REQUEST_SUCC:
       return merge({}, state, {
         isFetching: false,
-        id: action.id,
         token: action.token,
         modal: { isOpen: true, msg: MODAL_REGISTRATION_SUCC },
       });
@@ -62,15 +58,6 @@ function authenticated(state = initialState, action) {
       return merge({}, state, {
         modal: { isOpen: false, msg: null },
       });
-
-    case LOG_OUT:
-      return initialState;
-
-    case LOG_IN:
-      return {
-        id: action.id,
-        token: action.token,
-      };
 
     default:
       return state;

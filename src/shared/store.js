@@ -3,44 +3,37 @@ import thunk from 'redux-thunk';
 
 import authenticated, { initialState as initialAuthenticatedState } from 'reducers/authenticated';
 
-// get stored id and token and use it as preloaded state for the store
-const authState = {
-  id: localStorage.getItem('id'),
-  token: localStorage.getItem('token'),
-};
+// get stored token and use it as preloaded state for the store
+let storedToken = localStorage.getItem('token');
 
 const store = createStore(
   combineReducers({
     authenticated,
   }),
-  { authenticated: Object.assign({}, initialAuthenticatedState, authState) },
+  { authenticated: Object.assign({}, initialAuthenticatedState, { token: storedToken }) },
   applyMiddleware(thunk)
 );
 
 /**
  * Persist auth state to localStorage if it has changed
  *
- * @param {string} key
- * @param {string} newVal
+ * @param {object} authState
  * @returns {boolean}
  */
-function updateAuthStateIfNeeded(key, newVal) {
-  if (authState[key] === newVal) {
+function shouldUpdateStoredToken(authState) {
+  const { token } = authState;
+
+  if (storedToken === token) {
     return false;
   }
 
-  authState[key] = newVal;
+  storedToken = token;
 
-  localStorage.setItem(key, newVal);
+  localStorage.setItem('token', token);
 
   return true;
 }
 
-store.subscribe(() => {
-  const { id, token } = store.getState().authenticated;
-  const authData = { id, token };
-
-  Object.keys(authData).forEach(key => updateAuthStateIfNeeded(key, authData[key]));
-});
+store.subscribe(() => shouldUpdateStoredToken(store.getState().authenticated));
 
 export default store;

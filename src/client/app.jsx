@@ -10,10 +10,10 @@ import LoginRegisterContainer from 'containers/LoginRegisterContainer.jsx';
 import UserExpensesContainer from 'containers/UserExpensesContainer.jsx';
 
 hashHistory.listen(location => {
-  const { id, token } = store.getState().authenticated;
+  const { token } = store.getState().authenticated;
 
   // send users to login page if they are not authenticated
-  if (location.pathname === '/' && (!id || !token)) {
+  if (location.pathname !== '/login' && !token) {
     hashHistory.push('/login');
   }
 });
