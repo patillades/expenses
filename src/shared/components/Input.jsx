@@ -5,6 +5,7 @@ const propTypes = {
   label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
+  isRequired: PropTypes.bool.isRequired,
   changeHandler: PropTypes.func.isRequired,
 };
 
@@ -18,6 +19,7 @@ function Input(props) {
         className="form-control"
         id={props.id}
         placeholder={props.placeholder}
+        required={props.isRequired}
         onChange={props.changeHandler}
       />
     </div>
