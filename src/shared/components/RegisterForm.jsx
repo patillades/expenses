@@ -18,6 +18,7 @@ function RegisterForm(props) {
               placeholder="Name"
               isRequired
               changeHandler={props.inputChangeHandler}
+              value={props.name}
             />
 
             <Input
@@ -27,6 +28,7 @@ function RegisterForm(props) {
               placeholder="Email"
               isRequired
               changeHandler={props.inputChangeHandler}
+              value={props.mail}
             />
 
             <Input
@@ -36,6 +38,7 @@ function RegisterForm(props) {
               placeholder="Password"
               isRequired
               changeHandler={props.inputChangeHandler}
+              value={props.password}
             />
 
             <Button

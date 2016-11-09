@@ -18,6 +18,7 @@ function LoginForm(props) {
               placeholder="Email"
               isRequired
               changeHandler={props.inputChangeHandler}
+              value={props.mail}
             />
 
             <Input
@@ -27,6 +28,7 @@ function LoginForm(props) {
               placeholder="Password"
               isRequired
               changeHandler={props.inputChangeHandler}
+              value={props.password}
             />
 
             <Button

@@ -58,8 +58,16 @@ function authenticated(state = initialState, action) {
       });
 
     case REGISTRATION_REQUEST_SUCC:
+      return merge({}, state, {
+        registration: initialState.registration,
+        isFetching: false,
+        token: action.token,
+        modal: { isOpen: true, msg: action.msg },
+      });
+
     case LOGIN_REQUEST_SUCC:
       return merge({}, state, {
+        login: initialState.login,
         isFetching: false,
         token: action.token,
         modal: { isOpen: true, msg: action.msg },
