@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Header from 'components/Header.jsx';
-import RegisterForm from 'components/RegisterForm.jsx';
-import LoginForm from 'components/LoginForm.jsx';
-import Modal from 'components/Modal.jsx';
+import Header from './Header.jsx';
+import RegisterForm from './RegisterForm.jsx';
+import LoginForm from './LoginForm.jsx';
+import Modal from './Modal.jsx';
 
 function LoginRegister(props) {
   return (
