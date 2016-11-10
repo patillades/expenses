@@ -1,4 +1,10 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import moment from 'moment';
+
+const propTypes = {
+  expenseIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  expensesById: PropTypes.objectOf(PropTypes.object).isRequired,
+};
 
 function ExpensesTable(props) {
   return (
@@ -13,12 +19,29 @@ function ExpensesTable(props) {
       </thead>
 
       <tbody>
-        {/*<tr>*/}
-          {/*<td></td>*/}
-        {/*</tr>*/}
+        {props.expenseIds.map(id => (
+          <tr key={id}>
+            <td>{formatDate(props.expensesById[id].date)}</td>
+            <td>{props.expensesById[id].description}</td>
+            <td>{props.expensesById[id].amount}</td>
+            <td>{props.expensesById[id].comment}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
 }
+
+/**
+ * Format the expense's date
+ *
+ * @param {MomentDate} date
+ * @return {string}
+ */
+function formatDate(date) {
+  return moment(date).format('M/D/YYYY HH:mm');
+}
+
+ExpensesTable.propTypes = propTypes;
 
 export default ExpensesTable;

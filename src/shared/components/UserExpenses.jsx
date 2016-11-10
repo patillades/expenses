@@ -28,7 +28,10 @@ class UserExpenses extends React.Component {
           submitHandler={this.props.createExpenseSubmitHandler}
         />
 
-        <ExpensesTable />
+        <ExpensesTable
+          expenseIds={this.props.expenses.expenseIds}
+          expensesById={this.props.expenses.expensesById}
+        />
 
         <Modal
           {...this.props.expenses.modal}

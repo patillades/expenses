@@ -65,7 +65,7 @@ function expenses(state = initialState, action) {
       });
 
     case CREATE_EXPENSE_REQUEST_SUCC:
-      return merge({}, {
+      return merge({}, state, {
         create: initialState.create,
         isFetching: false,
         modal: { isOpen: true, msg: action.msg },
