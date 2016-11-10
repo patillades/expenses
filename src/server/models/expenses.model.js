@@ -7,7 +7,7 @@ const Expense = require('models/expense.schema');
  * description: string,
  * amount: number,
  * comment: string|undefined}} params
- * @param {string} userId
+ * @param {ObjectId} userId
  * @returns {Promise.<Expense, string>}
  */
 function create(params, userId) {
@@ -43,14 +43,25 @@ function create(params, userId) {
 /**
  * Read a user's expenses
  *
- * @param {string} userId
+ * @param {ObjectId} userId
  * @returns {Promise.<Expense[], Error>}
  */
 function read(userId) {
   return Expense
     .find({ userId })
-    .select('-__v -userId')
     .sort('-date');
 }
 
-module.exports = { create, read };
+/**
+ * Remove a given expense if it belongs to the given user
+ *
+ * @param {ObjectId} _id - The id of the Expense to be removed
+ * @param {ObjectId} userId
+ * @return {Promise.<Expense, Error>}
+ */
+function remove(_id, userId) {
+  return Expense
+    .findOneAndRemove({ _id, userId });
+}
+
+module.exports = { create, read, remove };

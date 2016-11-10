@@ -6,7 +6,7 @@ describe('Expense controller', function () {
   let testUser;
   let id;
   let token;
-  let userExpenseCount = 0;
+  const expenseIds = [];
 
   before(done => {
     testUser = testUtils.getTestUser();
@@ -102,11 +102,13 @@ describe('Expense controller', function () {
         date: Date.now(),
       }, (status, body) => {
         expect(status).toBe(201);
-        expect(body).toIncludeKey('id');
         expect(body).toExcludeKey('comment');
+        expect(body).toIncludeKey('id');
         expect(body).toExcludeKey('userId');
+        expect(body).toExcludeKey('_id');
+        expect(body).toExcludeKey('__v');
 
-        userExpenseCount++;
+        expenseIds.push(body.id);
 
         done();
       }, { Authorization: `Bearer ${token}` });
@@ -122,7 +124,7 @@ describe('Expense controller', function () {
         expect(status).toBe(201);
         expect(body).toIncludeKey('comment');
 
-        userExpenseCount++;
+        expenseIds.push(body.id);
 
         done();
       }, { Authorization: `Bearer ${token}` });
@@ -134,7 +136,50 @@ describe('Expense controller', function () {
       testUtils.request('GET', `/api/users/${id}/expenses`, {}, (status, body) => {
         expect(status).toBe(200);
         expect(body).toBeAn('array');
-        expect(body.length).toBe(userExpenseCount);
+        expect(body.length).toBe(expenseIds.length);
+
+        expect(body[0]).toIncludeKey('id');
+        expect(body[0]).toExcludeKey('userId');
+        expect(body[0]).toExcludeKey('_id');
+        expect(body[0]).toExcludeKey('__v');
+
+        expect(expenseIds).toInclude(body[0].id);
+        expect(expenseIds).toInclude(body[1].id);
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+  });
+
+  describe('delete', function () {
+    it('should return 200 if expense found', done => {
+      const uri = `/api/users/${id}/expenses/${expenseIds[0]}`;
+
+      testUtils.request('DELETE', uri, {}, (status, body) => {
+        expect(status).toBe(200);
+        expect(body).toBeAn('object');
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
+    it('should return 404 if expense not found', done => {
+      const uri = `/api/users/${id}/expenses/${expenseIds[0]}`;
+
+      testUtils.request('DELETE', uri, {}, (status, body) => {
+        expect(status).toBe(404);
+        expect(body.msg).toInclude('not found');
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
+    it('should return 404 if wrong expense id', done => {
+      const uri = `/api/users/${id}/expenses/notanid`;
+
+      testUtils.request('DELETE', uri, {}, (status, body) => {
+        expect(status).toBe(404);
+        expect(body.msg).toInclude('not found');
 
         done();
       }, { Authorization: `Bearer ${token}` });

@@ -46,5 +46,6 @@ apiRoutes.post('/users/login', userController.login);
 
 apiRoutes.post('/users/:userId/expenses', authorize, expenseController.create);
 apiRoutes.get('/users/:userId/expenses', authorize, expenseController.read);
+apiRoutes.delete('/users/:userId/expenses/:expenseId', authorize, expenseController.remove);
 
 app.listen(3000, () => console.log('listening on port 3000'));

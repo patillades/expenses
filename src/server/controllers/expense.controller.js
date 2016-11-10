@@ -1,4 +1,4 @@
-const expensesModel = require('models/expenses.model.js');
+const expensesModel = require('models/expenses.model');
 
 const respObj = require('utils/respObj');
 
@@ -25,4 +25,30 @@ function read(req, res) {
   );
 }
 
-module.exports = { create, read };
+function remove(req, res) {
+  const { expenseId, userId } = req.params;
+
+  expensesModel.remove(expenseId, userId).then(
+    result => {
+      if (!result) {
+        return res.status(404).json({ msg: 'expense not found' });
+      }
+
+      return res.status(200).json({});
+    },
+
+    err => {
+      // the expenseId had a wrong format
+      if (err.name === 'CastError') {
+        return res.status(404).json({ msg: 'expense not found' });
+      }
+
+      // @todo log
+      const resp = respObj.getInternalErrResp();
+
+      return res.status(resp.status).json({ msg: resp.msg });
+    }
+  );
+}
+
+module.exports = { create, read, remove };
