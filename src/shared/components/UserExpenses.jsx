@@ -31,6 +31,8 @@ class UserExpenses extends React.Component {
         <ExpensesTable
           expenseIds={this.props.expenses.expenseIds}
           expensesById={this.props.expenses.expensesById}
+          isDisabled={this.props.expenses.isFetching}
+          deleteHandler={this.props.deleteExpenseHandler}
         />
 
         <Modal

@@ -20,6 +20,11 @@ const GET_EXPENSES = 'get_expenses';
 const GET_EXPENSES_REQUEST_ERR = 'get expenses request error';
 const GET_EXPENSES_REQUEST_SUCC = 'get expenses request success';
 
+const DELETE_EXPENSE = 'delete_expense';
+const DELETE_EXPENSE_REQUEST = 'delete expense request';
+const DELETE_EXPENSE_REQUEST_ERR = 'delete expense request error';
+const DELETE_EXPENSE_REQUEST_SUCC = 'delete expense request success';
+
 export {
   INPUT_CHANGE,
   REGISTRATION,
@@ -39,5 +44,9 @@ export {
   CREATE_EXPENSE_REQUEST_SUCC,
   GET_EXPENSES,
   GET_EXPENSES_REQUEST_ERR,
-  GET_EXPENSES_REQUEST_SUCC
+  GET_EXPENSES_REQUEST_SUCC,
+  DELETE_EXPENSE,
+  DELETE_EXPENSE_REQUEST,
+  DELETE_EXPENSE_REQUEST_ERR,
+  DELETE_EXPENSE_REQUEST_SUCC
 };

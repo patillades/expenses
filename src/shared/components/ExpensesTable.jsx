@@ -4,8 +4,10 @@ import moment from 'moment';
 import { InlineButton } from './Button.jsx';
 
 const propTypes = {
+  isDisabled: PropTypes.bool.isRequired,
   expenseIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   expensesById: PropTypes.objectOf(PropTypes.object).isRequired,
+  deleteHandler: PropTypes.func.isRequired,
 };
 
 function ExpensesTable(props) {
@@ -30,9 +32,12 @@ function ExpensesTable(props) {
             <td>{props.expensesById[id].comment}</td>
             <td>
               <InlineButton
-                icon="remove-circle"
-                isLoading={false}
-                clickHandler={function () {}}
+                className="btn-danger btn-xs"
+                icon="remove"
+                loaderSize={6}
+                isLoading={props.isDisabled}
+                clickHandler={props.deleteHandler}
+                dataset={{ expense_id: id }}
               />
             </td>
           </tr>

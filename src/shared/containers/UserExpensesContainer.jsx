@@ -13,7 +13,9 @@ import {
   CREATE_EXPENSE_DATE_CHANGE,
   CREATE_EXPENSE_TIME_CHANGE,
   CREATE_EXPENSE_REQUEST,
-  GET_EXPENSES
+  GET_EXPENSES,
+  DELETE_EXPENSE,
+  DELETE_EXPENSE_REQUEST
 } from 'constants/actionTypes';
 
 function mapStateToProps(state) {
@@ -45,6 +47,14 @@ function mapDispatchToProps(dispatch) {
     modalBtnHandler: () => dispatch(modalBtnClick()),
 
     loadUserExpenses: () => dispatch(sendRequest(GET_EXPENSES)),
+
+    deleteExpenseHandler: e => {
+      dispatch(initRequest(
+        DELETE_EXPENSE_REQUEST,
+        { expenseId: e.target.dataset.expense_id }
+      ));
+      dispatch(sendRequest(DELETE_EXPENSE));
+    },
   };
 }
 
