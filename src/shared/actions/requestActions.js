@@ -194,11 +194,17 @@ function requestSucceeded(type, resp) {
   switch (type) {
     case REGISTRATION:
     case LOGIN:
-    case CREATE_EXPENSE:
       return {
         type: successType,
         msg: actionTypeConstants.requestSucc.msg[type],
         token: resp.token,
+      };
+
+    case CREATE_EXPENSE:
+      return {
+        type: successType,
+        msg: actionTypeConstants.requestSucc.msg[type],
+        expense: resp,
       };
 
     case GET_EXPENSES:
