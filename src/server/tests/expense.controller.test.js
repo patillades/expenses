@@ -104,6 +104,7 @@ describe('Expense controller', function () {
         expect(status).toBe(201);
         expect(body).toIncludeKey('id');
         expect(body).toExcludeKey('comment');
+        expect(body).toExcludeKey('userId');
 
         userExpenseCount++;
 
