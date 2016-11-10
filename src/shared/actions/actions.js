@@ -30,10 +30,11 @@ function inputChange(id, value) {
  * A request of the given type has been sent to the API
  *
  * @param {string} type
+ * @param {object} [data={}] - Optional payload that can be added when initiating the request
  * @returns {{type: string}}
  */
-function initRequest(type) {
-  return { type };
+function initRequest(type, data = {}) {
+  return { type, data };
 }
 
 /**

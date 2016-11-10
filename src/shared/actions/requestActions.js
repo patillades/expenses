@@ -15,12 +15,17 @@ import {
   CREATE_EXPENSE_REQUEST_SUCC,
   GET_EXPENSES,
   GET_EXPENSES_REQUEST_ERR,
-  GET_EXPENSES_REQUEST_SUCC
+  GET_EXPENSES_REQUEST_SUCC,
+  DELETE_EXPENSE,
+  DELETE_EXPENSE_REQUEST,
+  DELETE_EXPENSE_REQUEST_ERR,
+  DELETE_EXPENSE_REQUEST_SUCC
 } from 'constants/actionTypes';
 import {
   MODAL_REGISTRATION_SUCC,
   MODAL_LOGIN_SUCC,
-  MODAL_CREATE_EXPENSE_SUCC
+  MODAL_CREATE_EXPENSE_SUCC,
+  MODAL_DELETE_EXPENSE_SUCC
 } from 'constants/messages';
 
 const actionTypeConstants = {
@@ -30,11 +35,14 @@ const actionTypeConstants = {
       [LOGIN]: LOGIN_REQUEST_SUCC,
       [CREATE_EXPENSE]: CREATE_EXPENSE_REQUEST_SUCC,
       [GET_EXPENSES]: GET_EXPENSES_REQUEST_SUCC,
+      [DELETE_EXPENSE]: DELETE_EXPENSE_REQUEST_SUCC,
     },
     msg: {
       [REGISTRATION]: MODAL_REGISTRATION_SUCC,
       [LOGIN]: MODAL_LOGIN_SUCC,
       [CREATE_EXPENSE]: MODAL_CREATE_EXPENSE_SUCC,
+      [GET_EXPENSES]: '',
+      [DELETE_EXPENSE]: MODAL_DELETE_EXPENSE_SUCC,
     },
   },
   requestErrType: {
@@ -42,6 +50,7 @@ const actionTypeConstants = {
     [LOGIN]: LOGIN_REQUEST_ERR,
     [CREATE_EXPENSE]: CREATE_EXPENSE_REQUEST_ERR,
     [GET_EXPENSES]: GET_EXPENSES_REQUEST_ERR,
+    [DELETE_EXPENSE]: GET_EXPENSES_REQUEST_ERR,
   },
 };
 
@@ -50,7 +59,7 @@ const successStatus = /^2\d{2}$/;
 /**
  * Types of actions that can initialize an API call
  *
- * @typedef {(REGISTRATION|LOGIN|CREATE_EXPENSE|GET_EXPENSES)} ActionType
+ * @typedef {(REGISTRATION|LOGIN|CREATE_EXPENSE|GET_EXPENSES|DELETE_EXPENSE)} ActionType
  */
 
 /**
@@ -87,7 +96,7 @@ function sendRequest(type) {
  */
 function fetchRequest(type, state) {
   const { token } = state.authenticated;
-  const { uri, method } = getActionTypeRequestData(type, token);
+  const { uri, method } = getActionTypeRequestData(type, token, state);
 
   const options = {
     method,
@@ -110,9 +119,10 @@ function fetchRequest(type, state) {
  *
  * @param {ActionType} type
  * @param {?string} token
+ * @param {object} state - The state of redux's store
  * @returns {string}
  */
-function getActionTypeRequestData(type, token) {
+function getActionTypeRequestData(type, token, state) {
   switch (type) {
     case REGISTRATION:
       return {
@@ -136,6 +146,12 @@ function getActionTypeRequestData(type, token) {
       return {
         method: 'GET',
         uri: `/api/users/${getUserIdFromToken(token)}/expenses`,
+      };
+
+    case DELETE_EXPENSE:
+      return {
+        method: 'DELETE',
+        uri: `/api/users/${getUserIdFromToken(token)}/expenses/${state.expenses.expenseIdToDelete}`,
       };
   }
 }
@@ -185,25 +201,26 @@ function getBodyObj(type, state) {
  * The registration or login request ended successfully
  *
  * @param {ActionType} type
- * @param {object} token
+ * @param {object} resp
  * @returns {{type: string, msg:string, token: string}}
  */
 function requestSucceeded(type, resp) {
   const successType = actionTypeConstants.requestSucc.type[type];
+  const msg = actionTypeConstants.requestSucc.msg[type];
 
   switch (type) {
     case REGISTRATION:
     case LOGIN:
       return {
         type: successType,
-        msg: actionTypeConstants.requestSucc.msg[type],
+        msg,
         token: resp.token,
       };
 
     case CREATE_EXPENSE:
       return {
         type: successType,
-        msg: actionTypeConstants.requestSucc.msg[type],
+        msg,
         expense: resp,
       };
 
@@ -211,6 +228,12 @@ function requestSucceeded(type, resp) {
       return {
         type: successType,
         expenses: resp,
+      };
+
+    case DELETE_EXPENSE:
+      return {
+        type: successType,
+        msg,
       };
   }
 }

@@ -11,7 +11,10 @@ import {
   CREATE_EXPENSE_REQUEST_SUCC,
   GET_EXPENSES_REQUEST_ERR,
   GET_EXPENSES_REQUEST_SUCC,
-  CLOSE_MODAL
+  CLOSE_MODAL,
+  DELETE_EXPENSE_REQUEST,
+  DELETE_EXPENSE_REQUEST_ERR,
+  DELETE_EXPENSE_REQUEST_SUCC
 } from 'constants/actionTypes';
 
 /**
@@ -49,6 +52,7 @@ import {
  * @property {ModalState} modal
  * @property {ObjectId} expenseIds
  * @property {ExpensesById} expensesById
+ * @property {?ObjectId} expenseIdToDelete
  */
 
 /**
@@ -69,6 +73,7 @@ const initialState = {
   },
   expenseIds: [],
   expensesById: {},
+  expenseIdToDelete: null,
 };
 
 function expenses(state = initialState, action) {
@@ -98,11 +103,24 @@ function expenses(state = initialState, action) {
         isFetching: true,
       });
 
+    case DELETE_EXPENSE_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+        expenseIdToDelete: action.data.expenseId,
+      });
+
     case CREATE_EXPENSE_REQUEST_ERR:
     case GET_EXPENSES_REQUEST_ERR:
       return merge({}, state, {
         isFetching: false,
         modal: { isOpen: true, msg: action.msg },
+      });
+
+    case DELETE_EXPENSE_REQUEST_ERR:
+      return merge({}, state, {
+        isFetching: false,
+        modal: { isOpen: true, msg: action.msg },
+        expenseIdToDelete: null,
       });
 
     case CREATE_EXPENSE_REQUEST_SUCC:
@@ -137,12 +155,33 @@ function expenses(state = initialState, action) {
         return merge({}, state, { expenseIds, expensesById });
       }
 
+    case DELETE_EXPENSE_REQUEST_SUCC:
+      {
+        const index = state.expenseIds.indexOf(state.expenseIdToDelete);
+
+        const expenseIds = state.expenseIds.slice(0, index)
+          .concat(state.expenseIds.slice(index + 1));
+
+        const expensesById = Object.assign({}, state.expensesById);
+
+        delete expensesById[state.expenseIdToDelete];
+
+        return Object.assign({}, state, {
+          isFetching: false,
+          modal: { isOpen: true, msg: action.msg },
+          expenseIds,
+          expensesById,
+          expenseIdToDelete: null,
+        });
+      }
+
     default:
       return state;
   }
 }
 
 /**
+ * Add an expense to the expenseIds array and the expensesById object
  *
  * @param {Expense} obj
  * @param {ObjectId[]} expenseIds
