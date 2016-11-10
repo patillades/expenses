@@ -15,18 +15,45 @@ import {
 } from 'constants/actionTypes';
 
 /**
- * @typedef {object} Expense
- * @param {string} id
- * @param {Date} date
- * @param {string} description
- * @param {number} amount
- * @param {string|undefined} comment
+ * @typedef {object} CreateExpenseState
+ * @property {MomentDate} date
+ * @property {MomentDate} time
+ * @property {string} description
+ * @property {number} amount
+ * @property {string} comment
  */
 
 /**
- * @typedef {object.<string, Expense>} ExpensesById
+ * @typedef {object} ModalState
+ * @property {boolean} isOpen
+ * @property {?string} msg
  */
 
+/**
+ * @typedef {object} Expense
+ * @property {ObjectId} id
+ * @property {Date|MomentDate|string} date
+ * @property {string} description
+ * @property {number} amount
+ * @property {string|undefined} comment
+ */
+
+/**
+ * @typedef {object.<ObjectId, Expense>} ExpensesById
+ */
+
+/**
+ * @typedef {object} ExpensesState
+ * @property {CreateExpenseState} create
+ * @property {boolean} isFetching
+ * @property {ModalState} modal
+ * @property {ObjectId} expenseIds
+ * @property {ExpensesById} expensesById
+ */
+
+/**
+ * @type {ExpensesState}
+ */
 const initialState = {
   create: {
     date: moment(),
@@ -118,7 +145,7 @@ function expenses(state = initialState, action) {
 /**
  *
  * @param {Expense} obj
- * @param {string[]} expenseIds
+ * @param {ObjectId[]} expenseIds
  * @param {ExpensesById} expensesById
  */
 function addExpense(obj, expenseIds, expensesById) {
@@ -131,4 +158,5 @@ function addExpense(obj, expenseIds, expensesById) {
   expensesById[id] = expense;
 }
 
+export { initialState };
 export default expenses;

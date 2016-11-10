@@ -12,6 +12,18 @@ module.exports = function (grunt) {
           transform: ['babelify'],
         },
       },
+      test: {
+        files: {
+          'src/shared/tests/dest/expenses.reducer.test.browserify.js':
+            'src/shared/tests/src/expenses.reducer.test.js',
+        },
+        options: {
+          browserifyOptions: {
+            paths: ['src/shared'],
+          },
+          transform: ['babelify'],
+        },
+      },
     },
     uglify: {
       default: {

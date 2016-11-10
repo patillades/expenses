@@ -7,7 +7,8 @@
     "start": "node src/server/server.js",
     "stop": "pkill --signal SIGINT expenses",
     "start_test_env": "NODE_ENV=test npm start",
-    "test": "mocha src/server/tests"
+    "test": "mocha src/server/tests",
+    "test_reducers": "grunt browserify:test && mocha src/shared/tests/dest"
   },
   "author": "gorkamunya@hotmail.com",
   "license": "ISC",
@@ -37,6 +38,7 @@
   "devDependencies": {
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
+    "babel-register": "^6.18.0",
     "babelify": "^7.3.0",
     "browserify": "^13.1.1",
     "expect": "^1.20.2",
