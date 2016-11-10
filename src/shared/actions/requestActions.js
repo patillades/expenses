@@ -200,41 +200,31 @@ function getBodyObj(type, state) {
 /**
  * The registration or login request ended successfully
  *
- * @param {ActionType} type
- * @param {object} resp
- * @returns {{type: string, msg:string, token: string}}
+ * @param {ActionType} actionType
+ * @param {object|array} resp
+ * @returns {{type: string,
+ * msg:string|undefined,
+ * token: string|undefined,
+ * expense: Expense|undefined,
+ * expenses: Expense[]|undefined}}
  */
-function requestSucceeded(type, resp) {
-  const successType = actionTypeConstants.requestSucc.type[type];
-  const msg = actionTypeConstants.requestSucc.msg[type];
+function requestSucceeded(actionType, resp) {
+  const type = actionTypeConstants.requestSucc.type[actionType];
+  const msg = actionTypeConstants.requestSucc.msg[actionType];
 
-  switch (type) {
+  switch (actionType) {
     case REGISTRATION:
     case LOGIN:
-      return {
-        type: successType,
-        msg,
-        token: resp.token,
-      };
+      return { type, msg, token: resp.token };
 
     case CREATE_EXPENSE:
-      return {
-        type: successType,
-        msg,
-        expense: resp,
-      };
+      return { type, msg, expense: resp };
 
     case GET_EXPENSES:
-      return {
-        type: successType,
-        expenses: resp,
-      };
+      return { type, expenses: resp };
 
     case DELETE_EXPENSE:
-      return {
-        type: successType,
-        msg,
-      };
+      return { type, msg };
   }
 }
 
