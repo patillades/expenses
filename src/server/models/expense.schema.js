@@ -30,6 +30,7 @@ const expenseSchema = new mongoose.Schema({
     transform: (doc, ret) => {
       ret.id = doc._id;
 
+      delete ret.userId;
       delete ret._id;
       delete ret.__v;
 
