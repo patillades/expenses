@@ -2,28 +2,41 @@ import React from 'react';
 
 import Header from './Header.jsx';
 import NewExpense from './NewExpense.jsx';
+import ExpensesTable from './ExpensesTable.jsx';
 import Modal from './Modal.jsx';
 
-function UserExpenses(props) {
-  return (
-    <div>
-      <Header />
+class UserExpenses extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-      <NewExpense
-        {...props.expenses.create}
-        isDisabled={props.expenses.isFetching}
-        dateChangeHandler={props.dateChangeHandler}
-        timeChangeHandler={props.timeChangeHandler}
-        inputChangeHandler={props.inputChangeHandler}
-        submitHandler={props.createExpenseSubmitHandler}
-      />
+  componentWillMount() {
+    this.props.loadUserExpenses();
+  }
 
-      <Modal
-        {...props.expenses.modal}
-        clickHandler={props.modalBtnHandler}
-      />
-    </div>
-  );
+  render() {
+    return (
+      <div>
+        <Header />
+
+        <NewExpense
+          {...this.props.expenses.create}
+          isDisabled={this.props.expenses.isFetching}
+          dateChangeHandler={this.props.dateChangeHandler}
+          timeChangeHandler={this.props.timeChangeHandler}
+          inputChangeHandler={this.props.inputChangeHandler}
+          submitHandler={this.props.createExpenseSubmitHandler}
+        />
+
+        <ExpensesTable />
+
+        <Modal
+          {...this.props.expenses.modal}
+          clickHandler={this.props.modalBtnHandler}
+        />
+      </div>
+    );
+  }
 }
 
 export default UserExpenses;

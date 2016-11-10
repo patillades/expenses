@@ -8,6 +8,8 @@ import {
   CREATE_EXPENSE_REQUEST,
   CREATE_EXPENSE_REQUEST_ERR,
   CREATE_EXPENSE_REQUEST_SUCC,
+  GET_EXPENSES_REQUEST_ERR,
+  GET_EXPENSES_REQUEST_SUCC,
   CLOSE_MODAL
 } from 'constants/actionTypes';
 
@@ -24,6 +26,8 @@ const initialState = {
     isOpen: false,
     msg: null,
   },
+  expenseIds: [],
+  expensesById: {},
 };
 
 function expenses(state = initialState, action) {
@@ -54,6 +58,7 @@ function expenses(state = initialState, action) {
       });
 
     case CREATE_EXPENSE_REQUEST_ERR:
+    case GET_EXPENSES_REQUEST_ERR:
       return merge({}, state, {
         isFetching: false,
         modal: { isOpen: true, msg: action.msg },
@@ -65,6 +70,23 @@ function expenses(state = initialState, action) {
         isFetching: false,
         modal: { isOpen: true, msg: action.msg },
       });
+
+    case GET_EXPENSES_REQUEST_SUCC:
+      const expenseIds = [];
+      const expensesById = {};
+
+      action.expenses.forEach(el => {
+        const expense = Object.assign({}, el);
+        const { id } = expense;
+
+        delete expense.id;
+
+        expenseIds.push(id);
+        expensesById[id] = expense;
+      });
+
+      // @todo see what happens with the merge when the array is not empty
+      return merge({}, state, { expenseIds, expensesById });
 
     default:
       return state;

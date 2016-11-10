@@ -12,7 +12,8 @@ import {
   CREATE_EXPENSE,
   CREATE_EXPENSE_DATE_CHANGE,
   CREATE_EXPENSE_TIME_CHANGE,
-  CREATE_EXPENSE_REQUEST
+  CREATE_EXPENSE_REQUEST,
+  GET_EXPENSES
 } from 'constants/actionTypes';
 
 function mapStateToProps(state) {
@@ -42,6 +43,8 @@ function mapDispatchToProps(dispatch) {
     },
 
     modalBtnHandler: () => dispatch(modalBtnClick()),
+
+    loadUserExpenses: () => dispatch(sendRequest(GET_EXPENSES)),
   };
 }
 

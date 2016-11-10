@@ -16,6 +16,10 @@ const CREATE_EXPENSE_REQUEST = 'create expense request';
 const CREATE_EXPENSE_REQUEST_ERR = 'create expense request error';
 const CREATE_EXPENSE_REQUEST_SUCC = 'create expense request success';
 
+const GET_EXPENSES = 'get_expenses';
+const GET_EXPENSES_REQUEST_ERR = 'get expenses request error';
+const GET_EXPENSES_REQUEST_SUCC = 'get expenses request success';
+
 export {
   INPUT_CHANGE,
   REGISTRATION,
@@ -32,5 +36,8 @@ export {
   CREATE_EXPENSE_TIME_CHANGE,
   CREATE_EXPENSE_REQUEST,
   CREATE_EXPENSE_REQUEST_ERR,
-  CREATE_EXPENSE_REQUEST_SUCC
+  CREATE_EXPENSE_REQUEST_SUCC,
+  GET_EXPENSES,
+  GET_EXPENSES_REQUEST_ERR,
+  GET_EXPENSES_REQUEST_SUCC
 };
