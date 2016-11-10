@@ -8,21 +8,44 @@ const propTypes = {
   isLoading: PropTypes.bool.isRequired,
   clickHandler: PropTypes.func.isRequired,
   isInline: PropTypes.bool,
+  className: PropTypes.string, // used to replace the "btn-primary" class
+  loaderSize: PropTypes.number,
+  dataset: PropTypes.object
 };
 
 function Button(props) {
-  const btnClass = classnames('btn', 'btn-primary', { 'center-block': !props.isInline });
+  const btnClass = classnames(
+    'btn',
+    {
+      'btn-primary': !props.className,
+      [props.className]: props.className,
+      'center-block': !props.isInline,
+    },
+  );
+
   const txtClass = classnames({
     hidden: props.isLoading,
     glyphicon: props.icon,
     [`glyphicon-${props.icon}`]: props.icon,
   });
+
   const loaderClass = classnames({ hidden: !props.isLoading });
+
+  // create an object with the optional data key-value pairs to spread as attributes of the button
+  const dataset = props.dataset
+    ? Object.keys(props.dataset).reduce((data, key) => {
+      data[`data-${key}`] = props.dataset[key];
+
+      return data;
+    }, {})
+    : {};
 
   return (
     <button
       className={btnClass}
       onClick={props.clickHandler}
+      disabled={props.isLoading}
+      {...dataset}
     >
       <span className={txtClass}>
         {props.txt}
@@ -31,7 +54,7 @@ function Button(props) {
       <Loader
         className={loaderClass}
         color="#fff"
-        size="14px"
+        size={`${props.loaderSize ? props.loaderSize : 14}px`}
         margin="4px"
       />
     </button>
