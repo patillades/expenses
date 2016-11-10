@@ -3,7 +3,8 @@ import Loader from 'halogen/PulseLoader';
 import classnames from 'classnames';
 
 const propTypes = {
-  txt: PropTypes.string.isRequired,
+  txt: PropTypes.string,
+  icon: PropTypes.string,
   isLoading: PropTypes.bool.isRequired,
   clickHandler: PropTypes.func.isRequired,
   isInline: PropTypes.bool,
@@ -11,7 +12,11 @@ const propTypes = {
 
 function Button(props) {
   const btnClass = classnames('btn', 'btn-primary', { 'center-block': !props.isInline });
-  const txtClass = classnames({ hidden: props.isLoading });
+  const txtClass = classnames({
+    hidden: props.isLoading,
+    glyphicon: props.icon,
+    [`glyphicon-${props.icon}`]: props.icon,
+  });
   const loaderClass = classnames({ hidden: !props.isLoading });
 
   return (
