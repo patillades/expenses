@@ -16,49 +16,62 @@ const propTypes = {
 
 function ExpenseInputs(props) {
   return (
-    <div>
-      <DatePicker
-        selected={props.date}
-        onChange={props.dateChangeHandler}
-      />
+    <tr>
+      <td>
+        <DatePicker
+          selected={props.date}
+          onChange={props.dateChangeHandler}
+          className="form-control"
+        />
+      </td>
 
-      <TimePicker
-        placeholder="Time"
-        showSecond={false}
-        value={props.time}
-        onChange={props.timeChangeHandler}
-      />
+      <td>
+        <TimePicker
+          placeholder="Time"
+          showSecond={false}
+          value={props.time}
+          onChange={props.timeChangeHandler}
+        />
+      </td>
 
-      <InlineInput
-        type="text"
-        id="description"
-        placeholder="description"
-        label="Description"
-        isRequired
-        changeHandler={props.inputChangeHandler}
-        value={props.description}
-      />
+      <td>
+        <InlineInput
+          type="text"
+          id="description"
+          placeholder="description"
+          label="Description"
+          isRequired
+          changeHandler={props.inputChangeHandler}
+          value={props.description}
+        />
+      </td>
 
-      <InlineInput
-        type="number"
-        id="amount"
-        placeholder="amount"
-        label="amount"
-        isRequired
-        changeHandler={props.inputChangeHandler}
-        value={props.amount}
-      />
+      <td>
+        <InlineInput
+          type="number"
+          id="amount"
+          placeholder="amount"
+          label="amount"
+          isRequired
+          changeHandler={props.inputChangeHandler}
+          value={props.amount}
+        />
+      </td>
 
-      <InlineInput
-        type="text"
-        id="comment"
-        placeholder="comment"
-        label="comment"
-        isRequired={false}
-        changeHandler={props.inputChangeHandler}
-        value={props.comment}
-      />
-    </div>
+      <td>
+        <InlineInput
+          type="text"
+          id="comment"
+          placeholder="comment"
+          label="comment"
+          isRequired={false}
+          changeHandler={props.inputChangeHandler}
+          value={props.comment}
+        />
+      </td>
+
+      {props.children}
+    </tr>
   );
 }
 

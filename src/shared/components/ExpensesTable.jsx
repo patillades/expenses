@@ -14,7 +14,7 @@ const propTypes = {
 
 function ExpensesTable(props) {
   return (
-    <table className="table table-responsive">
+    <table className="table">
       <thead>
         <tr>
           <th>Date</th>
