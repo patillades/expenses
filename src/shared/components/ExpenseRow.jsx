@@ -6,6 +6,7 @@ import ExpenseInputs from './ExpenseInputs.jsx';
 
 const propTypes = {
   id: PropTypes.string.isRequired,
+  editObj: PropTypes.object.isRequired,
   expense: PropTypes.shape({
     date: PropTypes.object,
     amount: PropTypes.number,
@@ -23,9 +24,7 @@ function ExpenseRow(props) {
   if (props.isOnEdition) {
     return (
       <ExpenseInputs
-        description={props.expense.description}
-        amount={props.expense.amount}
-        comment={props.expense.comment}
+        {...props.editObj}
       />
     );
   }
@@ -65,6 +64,8 @@ function ExpenseRow(props) {
     </tr>
   );
 }
+
+ExpenseRow.propTypes = propTypes;
 
 /**
  * Format the expense's date

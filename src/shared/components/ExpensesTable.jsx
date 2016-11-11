@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import ExpenseRow from './ExpenseRow.jsx';
 
 const propTypes = {
+  editObj: PropTypes.object.isRequired,
   triggerId: PropTypes.string,
   expenseIdOnEdition: PropTypes.string,
   isDisabled: PropTypes.bool.isRequired,
@@ -30,6 +31,7 @@ function ExpensesTable(props) {
         {props.expenseIds.map(id => <ExpenseRow
           key={id}
           id={id}
+          editObj={props.editObj}
           expense={props.expensesById[id]}
           triggerId={props.triggerId}
           isDisabled={props.isDisabled}

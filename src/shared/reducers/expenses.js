@@ -49,6 +49,7 @@ import {
 /**
  * @typedef {object} ExpensesState
  * @property {CreateExpenseState} create
+ * @property {CreateExpenseState} edit
  * @property {boolean} isFetching
  * @property {?string} triggerId - Id of the element that triggered the API request
  * @property {ModalState} modal
@@ -63,6 +64,13 @@ import {
  */
 const initialState = {
   create: {
+    date: moment(),
+    time: moment().hours(0).minutes(0),
+    description: '',
+    amount: '',
+    comment: '',
+  },
+  edit: {
     date: moment(),
     time: moment().hours(0).minutes(0),
     description: '',
@@ -104,14 +112,20 @@ function expenses(state = initialState, action) {
       });
 
     case EDIT_EXPENSE:
+      const expense = state.expensesById[action.expenseId];
+      const date = moment(expense.date);
+      const time = moment(expense.date);
+      const { description, amount, comment } = expense;
+
       return merge({}, state, {
         expenseIdOnEdition: action.expenseId,
+        edit: { date, time, description, amount, comment },
       });
 
     case CREATE_EXPENSE_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
-        triggerId: action.data.triggerId
+        triggerId: action.data.triggerId,
       });
 
     case DELETE_EXPENSE_REQUEST:

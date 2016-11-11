@@ -30,6 +30,7 @@ class UserExpenses extends React.Component {
         />
 
         <ExpensesTable
+          editObj={this.props.expenses.edit}
           expenseIds={this.props.expenses.expenseIds}
           expensesById={this.props.expenses.expensesById}
           triggerId={this.props.expenses.triggerId}
