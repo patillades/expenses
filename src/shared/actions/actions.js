@@ -64,14 +64,15 @@ function closeModal() {
  */
 
 /**
- * The date selected on the date or time pickers used to create expenses has been changed
+ * The date selected on the date or time pickers used to create/edit expenses has been changed
  *
  * @param {string} type
+ * @param {('create'|'edit')} form - The form where the change happened
  * @param {MomentDate} date
  * @returns {{type: string, date: MomentDate}}
  */
-function createExpenseDatetimeChange(type, date) {
-  return { type, date };
+function createExpenseDatetimeChange(type, form, date) {
+  return { type, form, date };
 }
 
 /**

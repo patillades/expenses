@@ -9,7 +9,10 @@ const propTypes = {
   date: PropTypes.object.isRequired,
   time: PropTypes.object.isRequired,
   description: PropTypes.string.isRequired,
-  amount: PropTypes.string,
+  amount: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
   inputChangeHandler: PropTypes.func.isRequired,
   dateChangeHandler: PropTypes.func.isRequired,
   timeChangeHandler: PropTypes.func.isRequired,

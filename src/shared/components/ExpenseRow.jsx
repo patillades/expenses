@@ -8,7 +8,7 @@ const propTypes = {
   id: PropTypes.string.isRequired,
   editObj: PropTypes.object.isRequired,
   expense: PropTypes.shape({
-    date: PropTypes.object,
+    date: PropTypes.string,
     amount: PropTypes.number,
     description: PropTypes.string,
     comment: PropTypes.string,
@@ -18,6 +18,8 @@ const propTypes = {
   isOnEdition: PropTypes.bool.isRequired,
   deleteHandler: PropTypes.func.isRequired,
   editHandler: PropTypes.func.isRequired,
+  dateChangeHandler: PropTypes.func.isRequired,
+  timeChangeHandler: PropTypes.func.isRequired,
   inputChangeHandler: PropTypes.func.isRequired,
 };
 
@@ -27,6 +29,8 @@ function ExpenseRow(props) {
       <ExpenseInputs
         formPrefix="edit"
         {...props.editObj}
+        dateChangeHandler={props.dateChangeHandler}
+        timeChangeHandler={props.timeChangeHandler}
         inputChangeHandler={props.inputChangeHandler}
       />
     );

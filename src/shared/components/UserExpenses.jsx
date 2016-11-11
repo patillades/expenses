@@ -23,8 +23,8 @@ class UserExpenses extends React.Component {
           {...this.props.expenses.create}
           triggerId={this.props.expenses.triggerId}
           isDisabled={this.props.expenses.isFetching}
-          dateChangeHandler={this.props.dateChangeHandler}
-          timeChangeHandler={this.props.timeChangeHandler}
+          dateChangeHandler={this.props.dateChangeHandler.bind(null, 'create')}
+          timeChangeHandler={this.props.timeChangeHandler.bind(null, 'create')}
           inputChangeHandler={this.props.inputChangeHandler}
           submitHandler={this.props.createExpenseSubmitHandler}
         />
@@ -38,6 +38,8 @@ class UserExpenses extends React.Component {
           isDisabled={this.props.expenses.isFetching}
           deleteHandler={this.props.deleteExpenseHandler}
           editHandler={this.props.editExpenseHandler}
+          dateChangeHandler={this.props.dateChangeHandler.bind(null, 'edit')}
+          timeChangeHandler={this.props.timeChangeHandler.bind(null, 'edit')}
           inputChangeHandler={this.props.inputChangeHandler}
         />
 

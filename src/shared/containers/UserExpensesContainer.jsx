@@ -10,8 +10,8 @@ import {
   editExpense
 } from 'actions/actions';
 import {
-  CREATE_EXPENSE_DATE_CHANGE,
-  CREATE_EXPENSE_TIME_CHANGE,
+  EXPENSE_DATE_CHANGE,
+  EXPENSE_TIME_CHANGE,
   CREATE_EXPENSE_REQUEST,
   GET_EXPENSES_REQUEST,
   DELETE_EXPENSE_REQUEST
@@ -23,13 +23,15 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    dateChangeHandler: date => dispatch(createExpenseDatetimeChange(
-      CREATE_EXPENSE_DATE_CHANGE,
+    dateChangeHandler: (form, date) => dispatch(createExpenseDatetimeChange(
+      EXPENSE_DATE_CHANGE,
+      form,
       date
     )),
 
-    timeChangeHandler: date => dispatch(createExpenseDatetimeChange(
-      CREATE_EXPENSE_TIME_CHANGE,
+    timeChangeHandler: (form, date) => dispatch(createExpenseDatetimeChange(
+      EXPENSE_TIME_CHANGE,
+      form,
       date
     )),
 

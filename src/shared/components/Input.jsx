@@ -8,7 +8,10 @@ const propTypes = {
   placeholder: PropTypes.string.isRequired,
   isRequired: PropTypes.bool.isRequired,
   changeHandler: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]).isRequired,
 };
 
 function Input(props) {

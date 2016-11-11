@@ -8,8 +8,8 @@ import {
   initRequest
 } from 'actions/actions';
 import {
-  CREATE_EXPENSE_DATE_CHANGE,
-  CREATE_EXPENSE_TIME_CHANGE,
+  EXPENSE_DATE_CHANGE,
+  EXPENSE_TIME_CHANGE,
   CREATE_EXPENSE_REQUEST
 } from 'constants/actionTypes';
 
@@ -31,7 +31,7 @@ describe('Expenses reducer', function () {
 
     let newState = expenses(
       initialState,
-      createExpenseDatetimeChange(CREATE_EXPENSE_DATE_CHANGE, date)
+      createExpenseDatetimeChange(EXPENSE_DATE_CHANGE, date)
     );
 
     expect(newState.create.date.format('M/D/YYYY')).toBe(date.format('M/D/YYYY'));
@@ -40,7 +40,7 @@ describe('Expenses reducer', function () {
 
     newState = expenses(
       initialState,
-      createExpenseDatetimeChange(CREATE_EXPENSE_TIME_CHANGE, time)
+      createExpenseDatetimeChange(EXPENSE_TIME_CHANGE, time)
     );
 
     expect(newState.create.time.format('HH:mm')).toBe(time.format('HH:mm'));

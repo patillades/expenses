@@ -3,8 +3,8 @@ import merge from 'lodash/merge';
 import sortBy from 'lodash/sortBy';
 
 import {
-  CREATE_EXPENSE_DATE_CHANGE,
-  CREATE_EXPENSE_TIME_CHANGE,
+  EXPENSE_DATE_CHANGE,
+  EXPENSE_TIME_CHANGE,
   INPUT_CHANGE,
   CREATE_EXPENSE_REQUEST,
   CREATE_EXPENSE_REQUEST_ERR,
@@ -96,14 +96,14 @@ function expenses(state = initialState, action) {
         modal: { isOpen: false, msg: null },
       });
 
-    case CREATE_EXPENSE_DATE_CHANGE:
+    case EXPENSE_DATE_CHANGE:
       return merge({}, state, {
-        create: { date: action.date },
+        [action.form]: { date: action.date },
       });
 
-    case CREATE_EXPENSE_TIME_CHANGE:
+    case EXPENSE_TIME_CHANGE:
       return merge({}, state, {
-        create: { time: action.date },
+        [action.form]: { time: action.date },
       });
 
     // the id field on the create/edit forms has the format "formName_fieldName"

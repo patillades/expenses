@@ -3,8 +3,8 @@ const ERROR = '_error';
 const SUCCESS = '_success';
 
 const INPUT_CHANGE = 'input_change';
-const CREATE_EXPENSE_DATE_CHANGE = 'date_change';
-const CREATE_EXPENSE_TIME_CHANGE = 'time_change';
+const EXPENSE_DATE_CHANGE = 'date_change';
+const EXPENSE_TIME_CHANGE = 'time_change';
 const CLOSE_MODAL = 'close_modal';
 
 const REGISTRATION_REQUEST = 'registration' + REQUEST;
@@ -33,8 +33,8 @@ export {
   ERROR,
   SUCCESS,
   INPUT_CHANGE,
-  CREATE_EXPENSE_DATE_CHANGE,
-  CREATE_EXPENSE_TIME_CHANGE,
+  EXPENSE_DATE_CHANGE,
+  EXPENSE_TIME_CHANGE,
   CLOSE_MODAL,
   REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,
