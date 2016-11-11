@@ -1,90 +1,69 @@
 import jwtDecode from 'jwt-decode';
 
 import objToQueryString from 'utils/objToQueryString';
+import { MODAL_MESSAGES } from 'constants/messages';
 import {
-  REGISTRATION,
+  ERROR,
+  SUCCESS,
   REGISTRATION_REQUEST,
-  REGISTRATION_REQUEST_ERR,
-  REGISTRATION_REQUEST_SUCC,
-  LOGIN,
   LOGIN_REQUEST,
-  LOGIN_REQUEST_ERR,
-  LOGIN_REQUEST_SUCC,
-  CREATE_EXPENSE,
-  CREATE_EXPENSE_REQUEST_ERR,
-  CREATE_EXPENSE_REQUEST_SUCC,
-  GET_EXPENSES,
-  GET_EXPENSES_REQUEST_ERR,
-  GET_EXPENSES_REQUEST_SUCC,
-  DELETE_EXPENSE,
-  DELETE_EXPENSE_REQUEST,
-  DELETE_EXPENSE_REQUEST_ERR,
-  DELETE_EXPENSE_REQUEST_SUCC
+  CREATE_EXPENSE_REQUEST,
+  GET_EXPENSES_REQUEST,
+  DELETE_EXPENSE_REQUEST
 } from 'constants/actionTypes';
-import {
-  MODAL_REGISTRATION_SUCC,
-  MODAL_LOGIN_SUCC,
-  MODAL_CREATE_EXPENSE_SUCC,
-  MODAL_DELETE_EXPENSE_SUCC
-} from 'constants/messages';
 
-const actionTypeConstants = {
-  requestSucc: {
-    type: {
-      [REGISTRATION]: REGISTRATION_REQUEST_SUCC,
-      [LOGIN]: LOGIN_REQUEST_SUCC,
-      [CREATE_EXPENSE]: CREATE_EXPENSE_REQUEST_SUCC,
-      [GET_EXPENSES]: GET_EXPENSES_REQUEST_SUCC,
-      [DELETE_EXPENSE]: DELETE_EXPENSE_REQUEST_SUCC,
-    },
-    msg: {
-      [REGISTRATION]: MODAL_REGISTRATION_SUCC,
-      [LOGIN]: MODAL_LOGIN_SUCC,
-      [CREATE_EXPENSE]: MODAL_CREATE_EXPENSE_SUCC,
-      [GET_EXPENSES]: '',
-      [DELETE_EXPENSE]: MODAL_DELETE_EXPENSE_SUCC,
-    },
-  },
-  requestErrType: {
-    [REGISTRATION]: REGISTRATION_REQUEST_ERR,
-    [LOGIN]: LOGIN_REQUEST_ERR,
-    [CREATE_EXPENSE]: CREATE_EXPENSE_REQUEST_ERR,
-    [GET_EXPENSES]: GET_EXPENSES_REQUEST_ERR,
-    [DELETE_EXPENSE]: GET_EXPENSES_REQUEST_ERR,
-  },
-};
-
+// regexp for HTTP success' status
 const successStatus = /^2\d{2}$/;
 
 /**
  * Types of actions that can initialize an API call
  *
- * @typedef {(REGISTRATION|LOGIN|CREATE_EXPENSE|GET_EXPENSES|DELETE_EXPENSE)} ActionType
+ * @typedef {(REGISTRATION_REQUEST
+ * |LOGIN_REQUEST
+ * |CREATE_EXPENSE_REQUEST
+ * |GET_EXPENSES_REQUEST
+ * |DELETE_EXPENSE_REQUEST)} ActionType
  */
 
 /**
  * Send a request to the API
  *
  * @param {ActionType} type
+ * @param {object} [data={}] - Optional payload that can be added when initiating the request
  * @returns {function: (Promise)} If it worked, dispatch the token found on the response object,
  * or the error message. If it was rejected, dispatch an error message.
  */
-function sendRequest(type) {
-  return (dispatch, getState) => fetchRequest(type, getState()).then(
-    response => response.json().then(
-      resp => {
-        if (successStatus.test(response.status)) {
-          return dispatch(requestSucceeded(type, resp));
-        }
+function sendRequest(type, data = {}) {
+  return (dispatch, getState) => {
+    dispatch(initRequest(type, data));
 
-        return dispatch(requestFailed(type, resp.msg));
-      },
+    fetchRequest(type, getState()).then(
+      response => response.json().then(
+        resp => {
+          if (successStatus.test(response.status)) {
+            return dispatch(requestSucceeded(type, resp));
+          }
+
+          return dispatch(requestFailed(type, resp.msg));
+        },
+
+        rejected => dispatch(internalError(type))
+      ),
 
       rejected => dispatch(internalError(type))
-    ),
+    );
+  }
+}
 
-    rejected => dispatch(internalError(type))
-  );
+/**
+ * A request of the given type has been sent to the API
+ *
+ * @param {ActionType} type
+ * @param {object} [data={}] - Optional payload that can be added when initiating the request
+ * @returns {{type: string}}
+ */
+function initRequest(type, data = {}) {
+  return { type, data };
 }
 
 /**
@@ -125,31 +104,31 @@ function getActionTypeRequestData(type, state) {
   const userId = getUserIdFromToken(state.authenticated.token);
 
   switch (type) {
-    case REGISTRATION:
+    case REGISTRATION_REQUEST:
       return {
         method: 'POST',
         uri: '/api/users',
       };
 
-    case LOGIN:
+    case LOGIN_REQUEST:
       return {
         method: 'POST',
         uri: '/api/users/login',
       };
 
-    case CREATE_EXPENSE:
+    case CREATE_EXPENSE_REQUEST:
       return {
         method: 'POST',
         uri: `/api/users/${userId}/expenses`,
       };
 
-    case GET_EXPENSES:
+    case GET_EXPENSES_REQUEST:
       return {
         method: 'GET',
         uri: `/api/users/${userId}/expenses`,
       };
 
-    case DELETE_EXPENSE:
+    case DELETE_EXPENSE_REQUEST:
       return {
         method: 'DELETE',
         uri: `/api/users/${userId}/expenses/${state.expenses.expenseIdToDelete}`,
@@ -168,19 +147,23 @@ function getUserIdFromToken(token) {
 }
 
 /**
- * Get the state object to be used as the body of an API request
+ * Get the state object to be used as the body of a API POST request
  *
  * @param {ActionType} type
  * @param {object} state
  * @returns {object}
  */
 function getBodyObj(type, state) {
-  switch (type) {
-    case REGISTRATION:
-    case LOGIN:
-      return state.authenticated[type];
+  const { registration, login } = state.authenticated;
 
-    case CREATE_EXPENSE:
+  switch (type) {
+    case REGISTRATION_REQUEST:
+      return registration;
+
+    case LOGIN_REQUEST:
+      return login;
+
+    case CREATE_EXPENSE_REQUEST:
       const body = Object.assign({}, state.expenses.create);
       const { time } = body;
 
@@ -199,7 +182,7 @@ function getBodyObj(type, state) {
 }
 
 /**
- * The registration or login request ended successfully
+ * The API request ended successfully
  *
  * @param {ActionType} actionType
  * @param {object|array} resp
@@ -210,35 +193,38 @@ function getBodyObj(type, state) {
  * expenses: Expense[]|undefined}}
  */
 function requestSucceeded(actionType, resp) {
-  const type = actionTypeConstants.requestSucc.type[actionType];
-  const msg = actionTypeConstants.requestSucc.msg[actionType];
+  const msg = MODAL_MESSAGES[actionType];
+
+  // the action to be dispatched is the SUCCESS version of the current request
+  const type = actionType + SUCCESS;
 
   switch (actionType) {
-    case REGISTRATION:
-    case LOGIN:
+    case REGISTRATION_REQUEST:
+    case LOGIN_REQUEST:
       return { type, msg, token: resp.token };
 
-    case CREATE_EXPENSE:
+    case CREATE_EXPENSE_REQUEST:
       return { type, msg, expense: resp };
 
-    case GET_EXPENSES:
+    case GET_EXPENSES_REQUEST:
       return { type, expenses: resp };
 
-    case DELETE_EXPENSE:
+    case DELETE_EXPENSE_REQUEST:
       return { type, msg };
   }
 }
 
 /**
- * The registration or login request ended in an error
+ * The API request ended in an error
  *
  * @param {ActionType} type
  * @param {string} msg
  * @returns {{type: string, msg: string}}
  */
 function requestFailed(type, msg) {
+  // the action to be dispatched is the ERROR version of the current request
   return {
-    type: actionTypeConstants.requestErrType[type],
+    type: type + ERROR,
     msg,
   };
 }

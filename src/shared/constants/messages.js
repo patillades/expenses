@@ -1,11 +1,15 @@
-const MODAL_REGISTRATION_SUCC = 'registration successful';
-const MODAL_LOGIN_SUCC = 'login successful';
-const MODAL_CREATE_EXPENSE_SUCC = 'expense created successfully';
-const MODAL_DELETE_EXPENSE_SUCC = 'expense deleted successfully';
+import {
+  REGISTRATION_REQUEST,
+  LOGIN_REQUEST,
+  CREATE_EXPENSE_REQUEST,
+  DELETE_EXPENSE_REQUEST
+} from './actionTypes';
 
-export {
-  MODAL_REGISTRATION_SUCC,
-  MODAL_LOGIN_SUCC,
-  MODAL_CREATE_EXPENSE_SUCC,
-  MODAL_DELETE_EXPENSE_SUCC
+const MODAL_MESSAGES = {
+  [REGISTRATION_REQUEST]: 'registration successful',
+  [LOGIN_REQUEST]: 'login successful',
+  [CREATE_EXPENSE_REQUEST]: 'expense created successfully',
+  [DELETE_EXPENSE_REQUEST]: 'expense deleted successfully',
 };
+
+export { MODAL_MESSAGES };

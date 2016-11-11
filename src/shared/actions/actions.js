@@ -1,15 +1,14 @@
 import 'whatwg-fetch';
 import hashHistory from 'react-router/lib/hashHistory';
 
+import sendRequest from './requestActions';
+import { MODAL_MESSAGES } from 'constants/messages';
 import {
   INPUT_CHANGE,
-  CLOSE_MODAL
+  CLOSE_MODAL,
+  REGISTRATION_REQUEST,
+  LOGIN_REQUEST
 } from 'constants/actionTypes';
-import {
-  MODAL_REGISTRATION_SUCC,
-  MODAL_LOGIN_SUCC
-} from 'constants/messages';
-import sendRequest from './requestActions';
 
 /**
  * Change event on a form input
@@ -27,17 +26,6 @@ function inputChange(id, value) {
 }
 
 /**
- * A request of the given type has been sent to the API
- *
- * @param {string} type
- * @param {object} [data={}] - Optional payload that can be added when initiating the request
- * @returns {{type: string}}
- */
-function initRequest(type, data = {}) {
-  return { type, data };
-}
-
-/**
  * Handle the click of the button on the modal dialog, checking if the state requires a navigation
  * to another page before closing the dialog
  *
@@ -47,7 +35,11 @@ function modalBtnClick() {
   return (dispatch, getState) => {
     const modalMsg = getState().authenticated.modal.msg;
 
-    if ([MODAL_REGISTRATION_SUCC, MODAL_LOGIN_SUCC].includes(modalMsg)) {
+    if ([
+        MODAL_MESSAGES[REGISTRATION_REQUEST],
+        MODAL_MESSAGES[LOGIN_REQUEST],
+      ].includes(modalMsg)
+    ) {
       hashHistory.push('/');
     }
 
@@ -83,7 +75,6 @@ function createExpenseDatetimeChange(type, date) {
 
 export {
   inputChange,
-  initRequest,
   sendRequest,
   modalBtnClick,
   closeModal,

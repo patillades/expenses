@@ -9,12 +9,10 @@ import {
   modalBtnClick
 } from 'actions/actions';
 import {
-  CREATE_EXPENSE,
   CREATE_EXPENSE_DATE_CHANGE,
   CREATE_EXPENSE_TIME_CHANGE,
   CREATE_EXPENSE_REQUEST,
-  GET_EXPENSES,
-  DELETE_EXPENSE,
+  GET_EXPENSES_REQUEST,
   DELETE_EXPENSE_REQUEST
 } from 'constants/actionTypes';
 
@@ -39,22 +37,16 @@ function mapDispatchToProps(dispatch) {
       e.target.value
     )),
 
-    createExpenseSubmitHandler: () => {
-      dispatch(initRequest(CREATE_EXPENSE_REQUEST));
-      dispatch(sendRequest(CREATE_EXPENSE));
-    },
+    createExpenseSubmitHandler: () => dispatch(sendRequest(CREATE_EXPENSE_REQUEST)),
 
     modalBtnHandler: () => dispatch(modalBtnClick()),
 
-    loadUserExpenses: () => dispatch(sendRequest(GET_EXPENSES)),
+    loadUserExpenses: () => dispatch(sendRequest(GET_EXPENSES_REQUEST)),
 
-    deleteExpenseHandler: e => {
-      dispatch(initRequest(
-        DELETE_EXPENSE_REQUEST,
-        { expenseId: e.target.dataset.expense_id }
-      ));
-      dispatch(sendRequest(DELETE_EXPENSE));
-    },
+    deleteExpenseHandler: e => dispatch(sendRequest(
+      DELETE_EXPENSE_REQUEST,
+      { expenseId: e.target.dataset.expense_id }
+    )),
   };
 }
 

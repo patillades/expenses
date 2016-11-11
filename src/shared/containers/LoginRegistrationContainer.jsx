@@ -7,9 +7,7 @@ import {
   modalBtnClick
 } from 'actions/actions';
 import {
-  REGISTRATION,
   REGISTRATION_REQUEST,
-  LOGIN,
   LOGIN_REQUEST
 } from 'constants/actionTypes';
 
@@ -26,15 +24,9 @@ function mapDispatchToProps(dispatch) {
       e.target.value
     )),
 
-    registrationSubmitHandler: () => {
-      dispatch(initRequest(REGISTRATION_REQUEST));
-      dispatch(sendRequest(REGISTRATION));
-    },
+    registrationSubmitHandler: () => dispatch(sendRequest(REGISTRATION_REQUEST)),
 
-    loginSubmitHandler: () => {
-      dispatch(initRequest(LOGIN_REQUEST));
-      dispatch(sendRequest(LOGIN));
-    },
+    loginSubmitHandler: () => dispatch(sendRequest(LOGIN_REQUEST)),
 
     modalBtnHandler: () => dispatch(modalBtnClick()),
   };
