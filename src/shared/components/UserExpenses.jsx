@@ -41,6 +41,7 @@ class UserExpenses extends React.Component {
           dateChangeHandler={this.props.dateChangeHandler.bind(null, 'edit')}
           timeChangeHandler={this.props.timeChangeHandler.bind(null, 'edit')}
           inputChangeHandler={this.props.inputChangeHandler}
+          editSubmitHandler={this.props.editExpenseSubmitHandler}
         />
 
         <Modal

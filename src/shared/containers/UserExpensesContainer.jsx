@@ -14,7 +14,8 @@ import {
   EXPENSE_TIME_CHANGE,
   CREATE_EXPENSE_REQUEST,
   GET_EXPENSES_REQUEST,
-  DELETE_EXPENSE_REQUEST
+  DELETE_EXPENSE_REQUEST,
+  EDIT_EXPENSE_REQUEST
 } from 'constants/actionTypes';
 
 function mapStateToProps(state) {
@@ -42,6 +43,11 @@ function mapDispatchToProps(dispatch) {
 
     createExpenseSubmitHandler: e => dispatch(sendRequest(
       CREATE_EXPENSE_REQUEST,
+      { triggerId: e.target.id }
+    )),
+
+    editExpenseSubmitHandler: e => dispatch(sendRequest(
+      EDIT_EXPENSE_REQUEST,
       { triggerId: e.target.id }
     )),
 

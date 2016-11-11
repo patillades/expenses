@@ -15,7 +15,8 @@ import {
   DELETE_EXPENSE_REQUEST,
   DELETE_EXPENSE_REQUEST_ERR,
   DELETE_EXPENSE_REQUEST_SUCC,
-  EDIT_EXPENSE
+  EDIT_EXPENSE,
+  EDIT_EXPENSE_REQUEST
 } from 'constants/actionTypes';
 
 /**
@@ -126,6 +127,7 @@ function expenses(state = initialState, action) {
       });
 
     case CREATE_EXPENSE_REQUEST:
+    case EDIT_EXPENSE_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
         triggerId: action.data.triggerId,

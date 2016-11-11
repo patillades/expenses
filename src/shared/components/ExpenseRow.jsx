@@ -21,6 +21,7 @@ const propTypes = {
   dateChangeHandler: PropTypes.func.isRequired,
   timeChangeHandler: PropTypes.func.isRequired,
   inputChangeHandler: PropTypes.func.isRequired,
+  editSubmitHandler: PropTypes.func.isRequired,
 };
 
 function ExpenseRow(props) {
@@ -32,7 +33,18 @@ function ExpenseRow(props) {
         dateChangeHandler={props.dateChangeHandler}
         timeChangeHandler={props.timeChangeHandler}
         inputChangeHandler={props.inputChangeHandler}
-      />
+      >
+        <td>
+          <InlineButton
+            id="editExpenseBtn"
+            triggerId={props.triggerId}
+            className="btn-success btn-xs"
+            icon="save"
+            isLoading={props.isDisabled}
+            clickHandler={props.editSubmitHandler}
+          />
+        </td>
+      </ExpenseInputs>
     );
   }
 

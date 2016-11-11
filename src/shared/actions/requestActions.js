@@ -9,7 +9,8 @@ import {
   LOGIN_REQUEST,
   CREATE_EXPENSE_REQUEST,
   GET_EXPENSES_REQUEST,
-  DELETE_EXPENSE_REQUEST
+  DELETE_EXPENSE_REQUEST,
+  EDIT_EXPENSE_REQUEST
 } from 'constants/actionTypes';
 
 // regexp for HTTP success' status
@@ -84,7 +85,7 @@ function fetchRequest(type, state) {
     },
   };
 
-  if (method === 'POST') {
+  if (['POST', 'PUT'].includes(method)) {
     options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
     options.body = objToQueryString(getBodyObj(type, state));
@@ -133,6 +134,12 @@ function getActionTypeRequestData(type, state) {
         method: 'DELETE',
         uri: `/api/users/${userId}/expenses/${state.expenses.expenseIdToDelete}`,
       };
+
+    case EDIT_EXPENSE_REQUEST:
+      return {
+        method: 'PUT',
+        uri: `/api/users/${userId}/expenses/${state.expenses.expenseIdOnEdition}`,
+      };
   }
 }
 
@@ -147,7 +154,7 @@ function getUserIdFromToken(token) {
 }
 
 /**
- * Get the state object to be used as the body of a API POST request
+ * Get the object to be used as the body of a API POST request
  *
  * @param {ActionType} type
  * @param {object} state
@@ -164,21 +171,34 @@ function getBodyObj(type, state) {
       return login;
 
     case CREATE_EXPENSE_REQUEST:
-      const body = Object.assign({}, state.expenses.create);
-      const { time } = body;
+      return getCreateOrEditExpenseBody(state.expenses.create);
 
-      body.date
-        .hours(time.hours())
-        .minutes(time.minutes())
-        .seconds(0);
-
-      delete body.time;
-
-      return body;
+    case EDIT_EXPENSE_REQUEST:
+      return getCreateOrEditExpenseBody(state.expenses.edit);
 
     default:
       return {};
   }
+}
+
+/**
+ * Get the request body for create/edit requests
+ *
+ * @param {CreateExpenseState} expenseData
+ * @return {{date: MomentDate, description: string, amount: number, comment: string }}
+ */
+function getCreateOrEditExpenseBody(expenseData) {
+  const body = Object.assign({}, expenseData);
+  const { time } = body;
+
+  body.date
+    .hours(time.hours())
+    .minutes(time.minutes())
+    .seconds(0);
+
+  delete body.time;
+
+  return body;
 }
 
 /**
