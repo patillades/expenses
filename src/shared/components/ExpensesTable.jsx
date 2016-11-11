@@ -4,6 +4,7 @@ import moment from 'moment';
 import { InlineButton } from './Button.jsx';
 
 const propTypes = {
+  triggerId: PropTypes.string,
   isDisabled: PropTypes.bool.isRequired,
   expenseIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   expensesById: PropTypes.objectOf(PropTypes.object).isRequired,
@@ -32,6 +33,8 @@ function ExpensesTable(props) {
             <td>{props.expensesById[id].comment}</td>
             <td>
               <InlineButton
+                id={`delExpenseBtn_${id}`}
+                triggerId={props.triggerId}
                 className="btn-danger btn-xs"
                 icon="remove"
                 loaderSize={6}

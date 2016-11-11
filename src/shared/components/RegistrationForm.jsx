@@ -42,6 +42,8 @@ function RegistrationForm(props) {
             />
 
             <Button
+              id="registrationBtn"
+              triggerId={props.triggerId}
               txt="Sign up"
               isLoading={props.isDisabled}
               clickHandler={props.submitHandler}

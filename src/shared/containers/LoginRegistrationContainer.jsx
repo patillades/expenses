@@ -24,9 +24,15 @@ function mapDispatchToProps(dispatch) {
       e.target.value
     )),
 
-    registrationSubmitHandler: () => dispatch(sendRequest(REGISTRATION_REQUEST)),
+    registrationSubmitHandler: e => dispatch(sendRequest(
+      REGISTRATION_REQUEST,
+      { triggerId: e.target.id }
+    )),
 
-    loginSubmitHandler: () => dispatch(sendRequest(LOGIN_REQUEST)),
+    loginSubmitHandler: e => dispatch(sendRequest(
+      LOGIN_REQUEST,
+      { triggerId: e.target.id }
+    )),
 
     modalBtnHandler: () => dispatch(modalBtnClick()),
   };

@@ -49,6 +49,7 @@ import {
  * @typedef {object} ExpensesState
  * @property {CreateExpenseState} create
  * @property {boolean} isFetching
+ * @property {?string} triggerId - Id of the element that triggered the API request
  * @property {ModalState} modal
  * @property {ObjectId} expenseIds
  * @property {ExpensesById} expensesById
@@ -67,6 +68,7 @@ const initialState = {
     comment: '',
   },
   isFetching: false,
+  triggerId: null,
   modal: {
     isOpen: false,
     msg: null,
@@ -101,11 +103,13 @@ function expenses(state = initialState, action) {
     case CREATE_EXPENSE_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
+        triggerId: action.data.triggerId
       });
 
     case DELETE_EXPENSE_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
+        triggerId: action.data.triggerId,
         expenseIdToDelete: action.data.expenseId,
       });
 
@@ -113,12 +117,14 @@ function expenses(state = initialState, action) {
     case GET_EXPENSES_REQUEST_ERR:
       return merge({}, state, {
         isFetching: false,
+        triggerId: null,
         modal: { isOpen: true, msg: action.msg },
       });
 
     case DELETE_EXPENSE_REQUEST_ERR:
       return merge({}, state, {
         isFetching: false,
+        triggerId: null,
         modal: { isOpen: true, msg: action.msg },
         expenseIdToDelete: null,
       });
@@ -137,6 +143,7 @@ function expenses(state = initialState, action) {
         return merge({}, state, {
           create: initialState.create,
           isFetching: false,
+          triggerId: null,
           modal: { isOpen: true, msg: action.msg },
           expenseIds,
           expensesById,
@@ -168,6 +175,7 @@ function expenses(state = initialState, action) {
 
         return Object.assign({}, state, {
           isFetching: false,
+          triggerId: null,
           modal: { isOpen: true, msg: action.msg },
           expenseIds,
           expensesById,

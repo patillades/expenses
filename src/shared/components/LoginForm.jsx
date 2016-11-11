@@ -32,6 +32,8 @@ function LoginForm(props) {
             />
 
             <Button
+              id="loginBtn"
+              triggerId={props.triggerId}
               txt="Sign in"
               isLoading={props.isDisabled}
               clickHandler={props.submitHandler}

@@ -52,6 +52,8 @@ function NewExpense(props) {
         />
 
         <InlineButton
+          id="addExpenseBtn"
+          triggerId={props.triggerId}
           txt="Add expense"
           isLoading={props.isDisabled}
           clickHandler={props.submitHandler}

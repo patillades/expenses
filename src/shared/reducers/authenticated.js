@@ -23,6 +23,7 @@ const initialState = {
     password: '',
   },
   isFetching: false,
+  triggerId: null,
   modal: {
     isOpen: false,
     msg: null,
@@ -48,27 +49,24 @@ function authenticated(state = initialState, action) {
     case LOGIN_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
+        triggerId: action.data.triggerId,
       });
 
     case REGISTRATION_REQUEST_ERR:
     case LOGIN_REQUEST_ERR:
       return merge({}, state, {
         isFetching: false,
+        triggerId: null,
         modal: { isOpen: true, msg: action.msg },
       });
 
     case REGISTRATION_REQUEST_SUCC:
-      return merge({}, state, {
-        registration: initialState.registration,
-        isFetching: false,
-        token: action.token,
-        modal: { isOpen: true, msg: action.msg },
-      });
-
     case LOGIN_REQUEST_SUCC:
-      return merge({}, state, {
+      return merge({}, {
+        registration: initialState.registration,
         login: initialState.login,
         isFetching: false,
+        triggerId: null,
         token: action.token,
         modal: { isOpen: true, msg: action.msg },
       });

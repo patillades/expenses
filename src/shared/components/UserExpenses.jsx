@@ -21,6 +21,7 @@ class UserExpenses extends React.Component {
 
         <NewExpense
           {...this.props.expenses.create}
+          triggerId={this.props.expenses.triggerId}
           isDisabled={this.props.expenses.isFetching}
           dateChangeHandler={this.props.dateChangeHandler}
           timeChangeHandler={this.props.timeChangeHandler}
@@ -31,6 +32,7 @@ class UserExpenses extends React.Component {
         <ExpensesTable
           expenseIds={this.props.expenses.expenseIds}
           expensesById={this.props.expenses.expensesById}
+          triggerId={this.props.expenses.triggerId}
           isDisabled={this.props.expenses.isFetching}
           deleteHandler={this.props.deleteExpenseHandler}
         />

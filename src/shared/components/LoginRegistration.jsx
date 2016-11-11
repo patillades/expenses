@@ -12,6 +12,7 @@ function LoginRegistration(props) {
 
       <RegistrationForm
         {...props.authenticated.registration}
+        triggerId={props.authenticated.triggerId}
         isDisabled={props.authenticated.isFetching}
         inputChangeHandler={props.inputChangeHandler}
         submitHandler={props.registrationSubmitHandler}
@@ -19,6 +20,7 @@ function LoginRegistration(props) {
 
       <LoginForm
         {...props.authenticated.login}
+        triggerId={props.authenticated.triggerId}
         isDisabled={props.authenticated.isFetching}
         inputChangeHandler={props.inputChangeHandler}
         submitHandler={props.loginSubmitHandler}

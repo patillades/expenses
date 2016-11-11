@@ -37,7 +37,10 @@ function mapDispatchToProps(dispatch) {
       e.target.value
     )),
 
-    createExpenseSubmitHandler: () => dispatch(sendRequest(CREATE_EXPENSE_REQUEST)),
+    createExpenseSubmitHandler: e => dispatch(sendRequest(
+      CREATE_EXPENSE_REQUEST,
+      { triggerId: e.target.id }
+    )),
 
     modalBtnHandler: () => dispatch(modalBtnClick()),
 
@@ -45,7 +48,10 @@ function mapDispatchToProps(dispatch) {
 
     deleteExpenseHandler: e => dispatch(sendRequest(
       DELETE_EXPENSE_REQUEST,
-      { expenseId: e.target.dataset.expense_id }
+      {
+        triggerId: e.target.id,
+        expenseId: e.target.dataset.expense_id,
+      }
     )),
   };
 }

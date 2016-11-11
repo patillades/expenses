@@ -3,6 +3,8 @@ import Loader from 'halogen/PulseLoader';
 import classnames from 'classnames';
 
 const propTypes = {
+  id: PropTypes.string.isRequired,
+  triggerId: PropTypes.string,
   txt: PropTypes.string,
   icon: PropTypes.string,
   isLoading: PropTypes.bool.isRequired,
@@ -24,12 +26,12 @@ function Button(props) {
   );
 
   const txtClass = classnames({
-    hidden: props.isLoading,
+    hidden: props.id === props.triggerId,
     glyphicon: props.icon,
     [`glyphicon-${props.icon}`]: props.icon,
   });
 
-  const loaderClass = classnames({ hidden: !props.isLoading });
+  const loaderClass = classnames({ hidden: props.id !== props.triggerId });
 
   // create an object with the optional data key-value pairs to spread as attributes of the button
   const dataset = props.dataset
@@ -42,6 +44,7 @@ function Button(props) {
 
   return (
     <button
+      id={props.id}
       className={btnClass}
       onClick={props.clickHandler}
       disabled={props.isLoading}
