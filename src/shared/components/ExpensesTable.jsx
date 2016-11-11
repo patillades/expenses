@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
-import moment from 'moment';
 
-import { InlineButton } from './Button.jsx';
+import ExpenseRow from './ExpenseRow.jsx';
 
 const propTypes = {
   triggerId: PropTypes.string,
@@ -25,39 +24,17 @@ function ExpensesTable(props) {
       </thead>
 
       <tbody>
-        {props.expenseIds.map(id => (
-          <tr key={id}>
-            <td>{formatDate(props.expensesById[id].date)}</td>
-            <td>{props.expensesById[id].description}</td>
-            <td>{props.expensesById[id].amount}</td>
-            <td>{props.expensesById[id].comment}</td>
-            <td>
-              <InlineButton
-                id={`delExpenseBtn_${id}`}
-                triggerId={props.triggerId}
-                className="btn-danger btn-xs"
-                icon="remove"
-                loaderSize={6}
-                isLoading={props.isDisabled}
-                clickHandler={props.deleteHandler}
-                dataset={{ expense_id: id }}
-              />
-            </td>
-          </tr>
-        ))}
+        {props.expenseIds.map(id => <ExpenseRow
+          key={id}
+          id={id}
+          expense={props.expensesById[id]}
+          triggerId={props.triggerId}
+          isDisabled={props.isDisabled}
+          deleteHandler={props.deleteHandler}
+        />)}
       </tbody>
     </table>
   );
-}
-
-/**
- * Format the expense's date
- *
- * @param {MomentDate} date
- * @return {string}
- */
-function formatDate(date) {
-  return moment(date).format('M/D/YYYY HH:mm');
 }
 
 ExpensesTable.propTypes = propTypes;
