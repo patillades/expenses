@@ -63,7 +63,7 @@ const successStatus = /^2\d{2}$/;
  */
 
 /**
- * Send a user registration or login request to the API
+ * Send a request to the API
  *
  * @param {ActionType} type
  * @returns {function: (Promise)} If it worked, dispatch the token found on the response object,
@@ -96,7 +96,7 @@ function sendRequest(type) {
  */
 function fetchRequest(type, state) {
   const { token } = state.authenticated;
-  const { uri, method } = getActionTypeRequestData(type, token, state);
+  const { uri, method } = getActionTypeRequestData(type, state);
 
   const options = {
     method,
@@ -118,11 +118,12 @@ function fetchRequest(type, state) {
  * Get the API endpoint URI related to the given action type
  *
  * @param {ActionType} type
- * @param {?string} token
  * @param {object} state - The state of redux's store
  * @returns {string}
  */
-function getActionTypeRequestData(type, token, state) {
+function getActionTypeRequestData(type, state) {
+  const userId = getUserIdFromToken(state.authenticated.token);
+
   switch (type) {
     case REGISTRATION:
       return {
@@ -139,19 +140,19 @@ function getActionTypeRequestData(type, token, state) {
     case CREATE_EXPENSE:
       return {
         method: 'POST',
-        uri: `/api/users/${getUserIdFromToken(token)}/expenses`,
+        uri: `/api/users/${userId}/expenses`,
       };
 
     case GET_EXPENSES:
       return {
         method: 'GET',
-        uri: `/api/users/${getUserIdFromToken(token)}/expenses`,
+        uri: `/api/users/${userId}/expenses`,
       };
 
     case DELETE_EXPENSE:
       return {
         method: 'DELETE',
-        uri: `/api/users/${getUserIdFromToken(token)}/expenses/${state.expenses.expenseIdToDelete}`,
+        uri: `/api/users/${userId}/expenses/${state.expenses.expenseIdToDelete}`,
       };
   }
 }
