@@ -55,7 +55,7 @@ function mapDispatchToProps(dispatch) {
       }
     )),
 
-    editExpenseHandler: e => dispatch(editExpense(e.target.id)),
+    editExpenseHandler: e => dispatch(editExpense(e.target.dataset.expense_id)),
   };
 }
 

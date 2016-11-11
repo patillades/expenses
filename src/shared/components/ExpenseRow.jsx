@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import moment from 'moment';
 
 import { InlineButton } from './Button.jsx';
+import ExpenseInputs from './ExpenseInputs.jsx';
 
 const propTypes = {
   id: PropTypes.string.isRequired,
@@ -13,10 +14,20 @@ const propTypes = {
   }).isRequired,
   triggerId: PropTypes.string,
   isDisabled: PropTypes.bool.isRequired,
+  isOnEdition: PropTypes.bool.isRequired,
   deleteHandler: PropTypes.func.isRequired,
+  editHandler: PropTypes.func.isRequired,
 };
 
 function ExpenseRow(props) {
+  if (props.isOnEdition) {
+    return (
+      <tr>
+        <ExpenseInputs />
+      </tr>
+    );
+  }
+
   return (
     <tr>
       <td>{formatDate(props.expense.date)}</td>
@@ -25,8 +36,19 @@ function ExpenseRow(props) {
       <td>{props.expense.comment}</td>
       <td>
         <InlineButton
+          id={`editExpenseBtn_${props.id}`}
+          triggerId={`edit_${props.triggerId}`}
+          className="btn-info btn-xs"
+          icon="edit"
+          loaderSize={6}
+          isLoading={props.isDisabled}
+          clickHandler={props.editHandler}
+          dataset={{ expense_id: props.id }}
+        />
+
+        <InlineButton
           id={`delExpenseBtn_${props.id}`}
-          triggerId={props.triggerId}
+          triggerId={`del_${props.triggerId}`}
           className="btn-danger btn-xs"
           icon="remove"
           loaderSize={6}
