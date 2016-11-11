@@ -106,9 +106,12 @@ function expenses(state = initialState, action) {
         create: { time: action.date },
       });
 
+    // the id field on the create/edit forms has the format "formName_fieldName"
     case INPUT_CHANGE:
+      const [form, field] = action.id.split('_');
+
       return merge({}, state, {
-        create: { [action.id]: action.value },
+        [form]: { [field]: action.value },
       });
 
     case EDIT_EXPENSE:

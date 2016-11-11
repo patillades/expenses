@@ -10,6 +10,7 @@ function NewExpense(props) {
         <table className="table">
           <tbody>
             <ExpenseInputs
+              formPrefix="create"
               date={props.date}
               time={props.time}
               description={props.description}

@@ -38,6 +38,7 @@ class UserExpenses extends React.Component {
           isDisabled={this.props.expenses.isFetching}
           deleteHandler={this.props.deleteExpenseHandler}
           editHandler={this.props.editExpenseHandler}
+          inputChangeHandler={this.props.inputChangeHandler}
         />
 
         <Modal

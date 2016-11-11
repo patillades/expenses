@@ -11,6 +11,7 @@ const propTypes = {
   expensesById: PropTypes.objectOf(PropTypes.object).isRequired,
   deleteHandler: PropTypes.func.isRequired,
   editHandler: PropTypes.func.isRequired,
+  inputChangeHandler: PropTypes.func.isRequired,
 };
 
 function ExpensesTable(props) {
@@ -38,6 +39,7 @@ function ExpensesTable(props) {
           isOnEdition={props.expenseIdOnEdition === id}
           deleteHandler={props.deleteHandler}
           editHandler={props.editHandler}
+          inputChangeHandler={props.inputChangeHandler}
         />)}
       </tbody>
     </table>

@@ -18,13 +18,16 @@ const propTypes = {
   isOnEdition: PropTypes.bool.isRequired,
   deleteHandler: PropTypes.func.isRequired,
   editHandler: PropTypes.func.isRequired,
+  inputChangeHandler: PropTypes.func.isRequired,
 };
 
 function ExpenseRow(props) {
   if (props.isOnEdition) {
     return (
       <ExpenseInputs
+        formPrefix="edit"
         {...props.editObj}
+        inputChangeHandler={props.inputChangeHandler}
       />
     );
   }
