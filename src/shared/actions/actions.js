@@ -7,7 +7,8 @@ import {
   INPUT_CHANGE,
   CLOSE_MODAL,
   REGISTRATION_REQUEST,
-  LOGIN_REQUEST
+  LOGIN_REQUEST,
+  EDIT_EXPENSE
 } from 'constants/actionTypes';
 
 /**
@@ -73,10 +74,21 @@ function createExpenseDatetimeChange(type, date) {
   return { type, date };
 }
 
+/**
+ * Turn the given expense row editable
+ *
+ * @param {ObjectId} expenseId
+ * @return {{type: string, expenseId: ObjectId}}
+ */
+function editExpense(expenseId) {
+  return { type: EDIT_EXPENSE, expenseId };
+}
+
 export {
   inputChange,
   sendRequest,
   modalBtnClick,
   closeModal,
-  createExpenseDatetimeChange
+  createExpenseDatetimeChange,
+  editExpense
 };

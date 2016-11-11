@@ -6,7 +6,8 @@ import {
   inputChange,
   initRequest,
   sendRequest,
-  modalBtnClick
+  modalBtnClick,
+  editExpense
 } from 'actions/actions';
 import {
   CREATE_EXPENSE_DATE_CHANGE,
@@ -53,6 +54,8 @@ function mapDispatchToProps(dispatch) {
         expenseId: e.target.dataset.expense_id,
       }
     )),
+
+    editExpenseHandler: e => dispatch(editExpense(e.target.id)),
   };
 }
 

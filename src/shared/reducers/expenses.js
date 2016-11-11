@@ -14,7 +14,8 @@ import {
   CLOSE_MODAL,
   DELETE_EXPENSE_REQUEST,
   DELETE_EXPENSE_REQUEST_ERR,
-  DELETE_EXPENSE_REQUEST_SUCC
+  DELETE_EXPENSE_REQUEST_SUCC,
+  EDIT_EXPENSE
 } from 'constants/actionTypes';
 
 /**
@@ -54,6 +55,7 @@ import {
  * @property {ObjectId} expenseIds
  * @property {ExpensesById} expensesById
  * @property {?ObjectId} expenseIdToDelete
+ * @property {?ObjectId} expenseIdOnEdition
  */
 
 /**
@@ -76,6 +78,7 @@ const initialState = {
   expenseIds: [],
   expensesById: {},
   expenseIdToDelete: null,
+  expenseIdOnEdition: null,
 };
 
 function expenses(state = initialState, action) {
@@ -98,6 +101,11 @@ function expenses(state = initialState, action) {
     case INPUT_CHANGE:
       return merge({}, state, {
         create: { [action.id]: action.value },
+      });
+
+    case EDIT_EXPENSE:
+      return merge({}, state, {
+        expenseIdOnEdition: action.expenseId,
       });
 
     case CREATE_EXPENSE_REQUEST:

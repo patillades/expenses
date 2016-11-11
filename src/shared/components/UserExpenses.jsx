@@ -33,8 +33,10 @@ class UserExpenses extends React.Component {
           expenseIds={this.props.expenses.expenseIds}
           expensesById={this.props.expenses.expensesById}
           triggerId={this.props.expenses.triggerId}
+          expenseIdOnEdition={this.props.expenses.expenseIdOnEdition}
           isDisabled={this.props.expenses.isFetching}
           deleteHandler={this.props.deleteExpenseHandler}
+          editHandler={this.props.editExpenseHandler}
         />
 
         <Modal
