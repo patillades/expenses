@@ -185,4 +185,61 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${token}` });
     });
   });
+
+  describe('update', function () {
+    it('should return 404 if expense not found', done => {
+      const uri = `/api/users/${id}/expenses/${expenseIds[0]}`;
+
+      testUtils.request('PUT', uri, {}, (status, body) => {
+        expect(status).toBe(404);
+        expect(body.msg).toInclude('not found');
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
+    it('should return 404 if wrong expense id', done => {
+      const uri = `/api/users/${id}/expenses/notanid`;
+
+      testUtils.request('PUT', uri, {}, (status, body) => {
+        expect(status).toBe(404);
+        expect(body.msg).toInclude('not found');
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
+    it('should return 400 if amount is not a number', done => {
+      const uri = `/api/users/${id}/expenses/${expenseIds[1]}`;
+
+      testUtils.request('PUT', uri, { amount: 'not an amount' }, (status, body) => {
+        expect(status).toBe(400);
+        expect(body.msg).toInclude('number');
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
+    it('should return 400 if date is not a date', done => {
+      const uri = `/api/users/${id}/expenses/${expenseIds[1]}`;
+
+      testUtils.request('PUT', uri, { date: 'not a date' }, (status, body) => {
+        expect(status).toBe(400);
+        expect(body.msg).toInclude('date');
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
+    it('should return 204 if it worked', done => {
+      const uri = `/api/users/${id}/expenses/${expenseIds[1]}`;
+
+      testUtils.request('PUT', uri, { description: 'new description' }, (status, body) => {
+        expect(status).toBe(204);
+        expect(body).toNotExist();
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+  });
 });

@@ -19,7 +19,7 @@ const querystring = require('querystring');
  * @param {object.<string, string>} additionalHeaders
  */
 function request(method, path, params, cb, additionalHeaders = {}) {
-  const content = method === 'POST'
+  const content = ['POST', 'PUT'].includes(method)
     ? { 'Content-Type': 'application/x-www-form-urlencoded' }
     : {};
 

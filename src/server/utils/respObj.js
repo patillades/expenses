@@ -37,13 +37,15 @@ function getUnauthorizedResp(msg = 'Format is Authorization: Bearer [token]') {
   return getRespObj(401, msg);
 }
 
+const INTERNAL_ERR = 'Internal Server Error';
+
 /**
  * Get an internal server error response with the given message
  *
  * @param {string} msg
  * @returns {RespObj}
  */
-function getInternalErrResp(msg = 'Internal Server Error') {
+function getInternalErrResp(msg = INTERNAL_ERR) {
   return getRespObj(500, msg);
 }
 
