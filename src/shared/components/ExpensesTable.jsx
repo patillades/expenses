@@ -18,6 +18,7 @@ function ExpensesTable(props) {
       <thead>
         <tr>
           <th>Date</th>
+          <th>Time</th>
           <th>Description</th>
           <th>Amount</th>
           <th>Comment</th>

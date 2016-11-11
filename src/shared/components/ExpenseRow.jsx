@@ -22,15 +22,20 @@ const propTypes = {
 function ExpenseRow(props) {
   if (props.isOnEdition) {
     return (
-      <tr>
-        <ExpenseInputs />
-      </tr>
+      <ExpenseInputs
+        description={props.expense.description}
+        amount={props.expense.amount}
+        comment={props.expense.comment}
+      />
     );
   }
 
+  const { date, time } = formatDate(props.expense.date);
+
   return (
     <tr>
-      <td>{formatDate(props.expense.date)}</td>
+      <td>{date}</td>
+      <td>{time}</td>
       <td>{props.expense.description}</td>
       <td>{props.expense.amount}</td>
       <td>{props.expense.comment}</td>
@@ -65,10 +70,15 @@ function ExpenseRow(props) {
  * Format the expense's date
  *
  * @param {MomentDate} date
- * @return {string}
+ * @return {{date: string, time: string}}
  */
 function formatDate(date) {
-  return moment(date).format('M/D/YYYY HH:mm');
+  const dateObj = moment(date);
+
+  return {
+    date: dateObj.format('M/D/YYYY'),
+    time: dateObj.format('HH:mm'),
+  };
 }
 
 export default ExpenseRow;
