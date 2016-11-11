@@ -1,54 +1,21 @@
 import React from 'react';
-import DatePicker from 'react-datepicker';
-import TimePicker from 'rc-time-picker';
 
-import { InlineInput } from './Input.jsx';
+import ExpenseInputs from './ExpenseInputs.jsx';
 import { InlineButton } from './Button.jsx';
 
 function NewExpense(props) {
   return (
     <form className="form-inline">
       <fieldset disabled={props.isDisabled}>
-        <DatePicker
-          selected={props.date}
-          onChange={props.dateChangeHandler}
-        />
-
-        <TimePicker
-          placeholder="Time"
-          showSecond={false}
-          value={props.time}
-          onChange={props.timeChangeHandler}
-        />
-
-        <InlineInput
-          type="text"
-          id="description"
-          placeholder="description"
-          label="Description"
-          isRequired
-          changeHandler={props.inputChangeHandler}
-          value={props.description}
-        />
-
-        <InlineInput
-          type="number"
-          id="amount"
-          placeholder="amount"
-          label="amount"
-          isRequired
-          changeHandler={props.inputChangeHandler}
-          value={props.amount}
-        />
-
-        <InlineInput
-          type="text"
-          id="comment"
-          placeholder="comment"
-          label="comment"
-          isRequired={false}
-          changeHandler={props.inputChangeHandler}
-          value={props.comment}
+        <ExpenseInputs
+          date={props.date}
+          time={props.time}
+          description={props.description}
+          amount={props.amount}
+          comment={props.comment}
+          inputChangeHandler={props.inputChangeHandler}
+          dateChangeHandler={props.dateChangeHandler}
+          timeChangeHandler={props.timeChangeHandler}
         />
 
         <InlineButton
