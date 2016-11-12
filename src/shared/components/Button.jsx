@@ -6,6 +6,7 @@ const propTypes = {
   id: PropTypes.string.isRequired,
   triggerId: PropTypes.string,
   txt: PropTypes.string,
+  title: PropTypes.string,
   icon: PropTypes.string,
   isLoading: PropTypes.bool.isRequired,
   clickHandler: PropTypes.func.isRequired,
@@ -45,6 +46,7 @@ function Button(props) {
   return (
     <button
       id={props.id}
+      title={props.title}
       className={btnClass}
       onClick={props.clickHandler}
       disabled={props.isLoading}

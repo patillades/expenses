@@ -15,6 +15,7 @@ const propTypes = {
   timeChangeHandler: PropTypes.func.isRequired,
   inputChangeHandler: PropTypes.func.isRequired,
   editSubmitHandler: PropTypes.func.isRequired,
+  cancelEditHandler: PropTypes.func.isRequired,
 };
 
 function ExpensesTable(props) {
@@ -46,6 +47,7 @@ function ExpensesTable(props) {
           timeChangeHandler={props.timeChangeHandler}
           inputChangeHandler={props.inputChangeHandler}
           editSubmitHandler={props.editSubmitHandler}
+          cancelEditHandler={props.cancelEditHandler}
         />)}
       </tbody>
     </table>

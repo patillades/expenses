@@ -8,7 +8,8 @@ import {
   CLOSE_MODAL,
   REGISTRATION_REQUEST,
   LOGIN_REQUEST,
-  EDIT_EXPENSE
+  EDIT_EXPENSE,
+  CANCEL_EDIT_EXPENSE
 } from 'constants/actionTypes';
 
 /**
@@ -85,11 +86,16 @@ function editExpense(expenseId) {
   return { type: EDIT_EXPENSE, expenseId };
 }
 
+function cancelEditExpense() {
+  return { type: CANCEL_EDIT_EXPENSE };
+}
+
 export {
   inputChange,
   sendRequest,
   modalBtnClick,
   closeModal,
   createExpenseDatetimeChange,
-  editExpense
+  editExpense,
+  cancelEditExpense
 };

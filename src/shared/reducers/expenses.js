@@ -16,6 +16,7 @@ import {
   DELETE_EXPENSE_REQUEST_ERR,
   DELETE_EXPENSE_REQUEST_SUCC,
   EDIT_EXPENSE,
+  CANCEL_EDIT_EXPENSE,
   EDIT_EXPENSE_REQUEST
 } from 'constants/actionTypes';
 
@@ -124,6 +125,12 @@ function expenses(state = initialState, action) {
       return merge({}, state, {
         expenseIdOnEdition: action.expenseId,
         edit: { date, time, description, amount, comment },
+      });
+
+    case CANCEL_EDIT_EXPENSE:
+      return merge({}, state, {
+        expenseIdOnEdition: null,
+        edit: initialState.edit,
       });
 
     case CREATE_EXPENSE_REQUEST:

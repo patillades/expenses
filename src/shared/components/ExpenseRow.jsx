@@ -22,6 +22,7 @@ const propTypes = {
   timeChangeHandler: PropTypes.func.isRequired,
   inputChangeHandler: PropTypes.func.isRequired,
   editSubmitHandler: PropTypes.func.isRequired,
+  cancelEditHandler: PropTypes.func.isRequired,
 };
 
 function ExpenseRow(props) {
@@ -39,9 +40,20 @@ function ExpenseRow(props) {
             id="editExpenseBtn"
             triggerId={props.triggerId}
             className="btn-success btn-xs"
+            title="save changes"
             icon="save"
             isLoading={props.isDisabled}
             clickHandler={props.editSubmitHandler}
+          />
+
+          <InlineButton
+            id="cancelEditExpenseBtn"
+            triggerId={props.triggerId}
+            className="btn-default btn-xs"
+            title="cancel changes"
+            icon="remove"
+            isLoading={props.isDisabled}
+            clickHandler={props.cancelEditHandler}
           />
         </td>
       </ExpenseInputs>
@@ -62,6 +74,7 @@ function ExpenseRow(props) {
           id={`editExpenseBtn_${props.id}`}
           triggerId={`edit_${props.triggerId}`}
           className="btn-info btn-xs"
+          title="edit expense"
           icon="edit"
           loaderSize={6}
           isLoading={props.isDisabled}
@@ -73,6 +86,7 @@ function ExpenseRow(props) {
           id={`delExpenseBtn_${props.id}`}
           triggerId={`del_${props.triggerId}`}
           className="btn-danger btn-xs"
+          title="delete expense"
           icon="remove"
           loaderSize={6}
           isLoading={props.isDisabled}

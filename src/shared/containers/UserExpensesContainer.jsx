@@ -7,7 +7,8 @@ import {
   initRequest,
   sendRequest,
   modalBtnClick,
-  editExpense
+  editExpense,
+  cancelEditExpense
 } from 'actions/actions';
 import {
   EXPENSE_DATE_CHANGE,
@@ -64,6 +65,8 @@ function mapDispatchToProps(dispatch) {
     )),
 
     editExpenseHandler: e => dispatch(editExpense(e.target.dataset.expense_id)),
+
+    cancelEditExpenseHandler: () => dispatch(cancelEditExpense()),
   };
 }
 
