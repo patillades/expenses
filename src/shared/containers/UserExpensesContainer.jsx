@@ -13,6 +13,7 @@ import {
 import {
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
+  FILTER_DATE_CHANGE,
   CREATE_EXPENSE_REQUEST,
   GET_EXPENSES_REQUEST,
   DELETE_EXPENSE_REQUEST,
@@ -34,6 +35,12 @@ function mapDispatchToProps(dispatch) {
     timeChangeHandler: (form, date) => dispatch(expenseDatetimeChange(
       EXPENSE_TIME_CHANGE,
       form,
+      date
+    )),
+
+    filterDateChangeHandler: (field, date) => dispatch(expenseDatetimeChange(
+      FILTER_DATE_CHANGE,
+      field,
       date
     )),
 

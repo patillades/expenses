@@ -2,6 +2,7 @@ import React from 'react';
 
 import Header from './Header.jsx';
 import NewExpense from './NewExpense.jsx';
+import Filters from './Filters.jsx';
 import ExpensesTable from './ExpensesTable.jsx';
 import Modal from './Modal.jsx';
 
@@ -28,6 +29,18 @@ class UserExpenses extends React.Component {
           inputChangeHandler={this.props.inputChangeHandler}
           submitHandler={this.props.createExpenseSubmitHandler}
         />
+
+        <div className="panel panel-info">
+          <div className="panel-heading">Filter the expenses</div>
+
+          <Filters
+            {...this.props.expenses.filters}
+            triggerId={this.props.expenses.triggerId}
+            isDisabled={this.props.expenses.isFetching}
+            dateChangeHandler={this.props.filterDateChangeHandler}
+            submitHandler={this.props.loadUserExpenses}
+          />
+        </div>
 
         <ExpensesTable
           editObj={this.props.expenses.edit}

@@ -59,7 +59,7 @@ function sendRequest(type, data = {}) {
 
       rejected => dispatch(internalError(type))
     );
-  }
+  };
 }
 
 /**
@@ -82,7 +82,7 @@ function initRequest(type, data = {}) {
  */
 function fetchRequest(type, state) {
   const { token } = state.authenticated;
-  const { uri, method } = getActionTypeRequestData(type, state);
+  const { uri, method } = getRequestData(type, state);
 
   const options = {
     method,
@@ -107,7 +107,7 @@ function fetchRequest(type, state) {
  * @param {object} state - The state of redux's store
  * @returns {string}
  */
-function getActionTypeRequestData(type, state) {
+function getRequestData(type, state) {
   const userId = getUserIdFromToken(state.authenticated.token);
 
   switch (type) {
@@ -130,9 +130,11 @@ function getActionTypeRequestData(type, state) {
       };
 
     case GET_EXPENSES_REQUEST:
+      const query = objToQueryString(state.expenses.filters, true);
+
       return {
         method: 'GET',
-        uri: `/api/users/${userId}/expenses`,
+        uri: `/api/users/${userId}/expenses?${query}`,
       };
 
     case DELETE_EXPENSE_REQUEST:

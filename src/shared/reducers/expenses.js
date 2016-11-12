@@ -5,6 +5,7 @@ import sortBy from 'lodash/sortBy';
 import {
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
+  FILTER_DATE_CHANGE,
   INPUT_CHANGE,
   CREATE_EXPENSE_REQUEST,
   CREATE_EXPENSE_REQUEST_ERR,
@@ -91,6 +92,10 @@ const initialState = {
   expensesById: {},
   expenseIdToDelete: null,
   expenseIdOnEdition: null,
+  filters: {
+    $gte_date: null,
+    $lte_date: null,
+  },
 };
 
 function expenses(state = initialState, action) {
@@ -108,6 +113,11 @@ function expenses(state = initialState, action) {
     case EXPENSE_TIME_CHANGE:
       return merge({}, state, {
         [action.form]: { time: action.date },
+      });
+
+    case FILTER_DATE_CHANGE:
+      return merge({}, state, {
+        filters: { [action.form]: action.date },
       });
 
     // the id field on the create/edit forms has the format "formName_fieldName"
@@ -196,9 +206,7 @@ function expenses(state = initialState, action) {
 
         action.expenses.forEach(el => addExpense(el, expenseIds, expensesById));
 
-        // @todo see what happens with the merge when the array is not empty
-        // expensesById merges right, but the expenseIds replaces the values on the given positions
-        return merge({}, state, { expenseIds, expensesById });
+        return Object.assign({}, state, { expenseIds, expensesById });
       }
 
     case DELETE_EXPENSE_REQUEST_SUCC:

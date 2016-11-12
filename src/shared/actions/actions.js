@@ -68,9 +68,10 @@ function closeModal() {
  * The date selected on the date or time pickers used to create/edit expenses has been changed
  *
  * @param {string} type
- * @param {('create'|'edit')} form - The form where the change happened
+ * @param {('create'|'edit'|'$gte_date'|'$lte_date')} form - The form or filter input where the
+ * change happened
  * @param {MomentDate} date
- * @returns {{type: string, date: MomentDate}}
+ * @returns {{type: string, form: ('create'|'edit'|'$gte_date'|'$lte_date'), date: MomentDate}}
  */
 function expenseDatetimeChange(type, form, date) {
   return { type, form, date };

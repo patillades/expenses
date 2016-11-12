@@ -5,6 +5,7 @@ const SUCCESS = '_success';
 const INPUT_CHANGE = 'input_change';
 const EXPENSE_DATE_CHANGE = 'date_change';
 const EXPENSE_TIME_CHANGE = 'time_change';
+const FILTER_DATE_CHANGE = 'filter_date_change';
 const CLOSE_MODAL = 'close_modal';
 
 const REGISTRATION_REQUEST = 'registration' + REQUEST;
@@ -39,6 +40,7 @@ export {
   INPUT_CHANGE,
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
+  FILTER_DATE_CHANGE,
   CLOSE_MODAL,
   REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,
