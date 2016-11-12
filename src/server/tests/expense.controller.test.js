@@ -1,4 +1,5 @@
 const expect = require('expect');
+const moment = require('moment');
 
 const testUtils = require('./testUtils');
 
@@ -14,7 +15,7 @@ describe('Expense controller', function () {
     testUtils.request('POST', '/api/users', testUser, (status, body) => {
       expect(status).toBe(201);
 
-      ({ id, token } = body );
+      ({ id, token } = body);
 
       done();
     });
@@ -97,9 +98,9 @@ describe('Expense controller', function () {
   describe('create', function () {
     it('should return 201 if everything ok', done => {
       testUtils.request('POST', `/api/users/${id}/expenses`, {
-        amount: 20,
-        description: 'some stuff',
-        date: Date.now(),
+        amount: 10,
+        description: 'I bought some great stuff on the city center',
+        date: moment().add(1, 'd').format(),
       }, (status, body) => {
         expect(status).toBe(201);
         expect(body).toExcludeKey('comment');
@@ -117,8 +118,8 @@ describe('Expense controller', function () {
     it('should return 201 and comment if everything ok', done => {
       testUtils.request('POST', `/api/users/${id}/expenses`, {
         amount: 20,
-        description: 'some stuff',
-        date: Date.now(),
+        description: 'Went to the supermarket and picked a lot of tasty stuff',
+        date: moment().subtract(1, 'd').format(),
         comment: 'cool!',
       }, (status, body) => {
         expect(status).toBe(201);
@@ -148,6 +149,148 @@ describe('Expense controller', function () {
 
         done();
       }, { Authorization: `Bearer ${token}` });
+    });
+
+    describe('filters', function () {
+      it('should return one expense with an amount >= 15', done => {
+        testUtils.request(
+          'GET', `/api/users/${id}/expenses`,
+          { $gte_amount: 15 },
+          (status, body) => {
+            expect(status).toBe(200);
+            expect(body).toBeAn('array');
+            expect(body.length).toBe(1);
+
+            done();
+          }, { Authorization: `Bearer ${token}` }
+        );
+      });
+
+      it('should return one expense with an amount <= 18', done => {
+        testUtils.request(
+          'GET', `/api/users/${id}/expenses`,
+          { $lte_amount: 18 },
+          (status, body) => {
+            expect(status).toBe(200);
+            expect(body).toBeAn('array');
+            expect(body.length).toBe(1);
+
+            done();
+          }, { Authorization: `Bearer ${token}` }
+        );
+      });
+
+      it('should return two expenses with amount >=10 <= 20', done => {
+        testUtils.request(
+          'GET', `/api/users/${id}/expenses`,
+          { $gte_amount: 10, $lte_amount: 20 },
+          (status, body) => {
+            expect(status).toBe(200);
+            expect(body).toBeAn('array');
+            expect(body.length).toBe(2);
+
+            done();
+          }, { Authorization: `Bearer ${token}` }
+        );
+      });
+
+      it('should return no expenses with date >= +2days', done => {
+        testUtils.request(
+          'GET', `/api/users/${id}/expenses`,
+          { $gte_date: moment().add(2, 'd').format() },
+          (status, body) => {
+            expect(status).toBe(200);
+            expect(body).toBeAn('array');
+            expect(body.length).toBe(0);
+
+            done();
+          }, { Authorization: `Bearer ${token}` }
+        );
+      });
+
+      it('should return one expense with date <= -1days', done => {
+        testUtils.request(
+          'GET', `/api/users/${id}/expenses`,
+          { $lte_date: moment().subtract(1, 'd').format() },
+          (status, body) => {
+            expect(status).toBe(200);
+            expect(body).toBeAn('array');
+            expect(body.length).toBe(1);
+
+            done();
+          }, { Authorization: `Bearer ${token}` }
+        );
+      });
+
+      it('should return two expenses with the word "stuff"', done => {
+        testUtils.request(
+          'GET', `/api/users/${id}/expenses`,
+          { $text_description: 'stuff' },
+          (status, body) => {
+            expect(status).toBe(200);
+            expect(body).toBeAn('array');
+            expect(body.length).toBe(2);
+
+            done();
+          }, { Authorization: `Bearer ${token}` }
+        );
+      });
+
+      it('should return one expenses with the word "stuff" and amount >= 15', done => {
+        testUtils.request(
+          'GET', `/api/users/${id}/expenses`,
+          { $text_description: 'stuff', $gte_amount: 15 },
+          (status, body) => {
+            expect(status).toBe(200);
+            expect(body).toBeAn('array');
+            expect(body.length).toBe(1);
+
+            done();
+          }, { Authorization: `Bearer ${token}` }
+        );
+      });
+
+      it('should return one expenses with the word "supermarket"', done => {
+        testUtils.request(
+          'GET', `/api/users/${id}/expenses`,
+          { $text_description: 'supermarket' },
+          (status, body) => {
+            expect(status).toBe(200);
+            expect(body).toBeAn('array');
+            expect(body.length).toBe(1);
+
+            done();
+          }, { Authorization: `Bearer ${token}` }
+        );
+      });
+
+      it('should return no expenses with the word "table"', done => {
+        testUtils.request(
+          'GET', `/api/users/${id}/expenses`,
+          { $text_description: 'table' },
+          (status, body) => {
+            expect(status).toBe(200);
+            expect(body).toBeAn('array');
+            expect(body.length).toBe(0);
+
+            done();
+          }, { Authorization: `Bearer ${token}` }
+        );
+      });
+
+      it('should return one expenses with the phrase "a lot of tasty stuff"', done => {
+        testUtils.request(
+          'GET', `/api/users/${id}/expenses`,
+          { $text_description: '"a lot of tasty stuff"' },
+          (status, body) => {
+            expect(status).toBe(200);
+            expect(body).toBeAn('array');
+            expect(body.length).toBe(1);
+
+            done();
+          }, { Authorization: `Bearer ${token}` }
+        );
+      });
     });
   });
 

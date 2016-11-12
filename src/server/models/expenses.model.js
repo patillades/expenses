@@ -38,17 +38,20 @@ function read(userId, filters) {
   const conditions = { userId };
 
   Object.keys(filters).forEach(key => {
-    const value = filters[key];
+    let value = filters[key];
 
     if (typeof value === 'undefined') {
       return;
     }
 
     if (key.includes('_')) {
-      const [limit, field] = key.split('_');
-      const operator = limit === 'from' ? '$gte' : '$lte';
+      const [operator, field] = key.split('_');
 
-      conditions[field] = Object.assign({ [operator]: value }, conditions[field]);
+      if (operator === '$text') {
+        conditions[operator] = { $search: value };
+      } else {
+        conditions[field] = Object.assign({ [operator]: value }, conditions[field]);
+      }
     }
   });
 

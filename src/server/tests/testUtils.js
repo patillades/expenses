@@ -25,6 +25,12 @@ function request(method, path, params, cb, additionalHeaders = {}) {
 
   const headers = Object.assign({}, content, additionalHeaders);
 
+  const paramString = querystring.stringify(params);
+
+  if (method === 'GET') {
+    path += '?' + paramString;
+  }
+
   const req = http.request({
     port: 3000,
     method,
@@ -39,7 +45,10 @@ function request(method, path, params, cb, additionalHeaders = {}) {
     res.on('end', () => cb(res.statusCode, body));
   });
 
-  req.write(querystring.stringify(params));
+  if (['POST', 'PUT'].includes(method)) {
+    req.write(paramString);
+  }
+
   req.end();
 }
 

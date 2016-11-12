@@ -13,6 +13,7 @@ const expenseSchema = new mongoose.Schema({
   description: {
     type: String,
     required: [true, '{PATH} is required!'],
+    text: true,
   },
   amount: {
     type: Number,
