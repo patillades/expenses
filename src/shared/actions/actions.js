@@ -72,7 +72,7 @@ function closeModal() {
  * @param {MomentDate} date
  * @returns {{type: string, date: MomentDate}}
  */
-function createExpenseDatetimeChange(type, form, date) {
+function expenseDatetimeChange(type, form, date) {
   return { type, form, date };
 }
 
@@ -95,7 +95,7 @@ export {
   sendRequest,
   modalBtnClick,
   closeModal,
-  createExpenseDatetimeChange,
+  expenseDatetimeChange,
   editExpense,
   cancelEditExpense
 };

@@ -4,7 +4,7 @@ import moment from 'moment';
 import expenses, { initialState } from 'reducers/expenses';
 import {
   inputChange,
-  createExpenseDatetimeChange,
+  expenseDatetimeChange,
   initRequest
 } from 'actions/actions';
 import {
@@ -31,7 +31,7 @@ describe('Expenses reducer', function () {
 
     let newState = expenses(
       initialState,
-      createExpenseDatetimeChange(EXPENSE_DATE_CHANGE, date)
+      expenseDatetimeChange(EXPENSE_DATE_CHANGE, date)
     );
 
     expect(newState.create.date.format('M/D/YYYY')).toBe(date.format('M/D/YYYY'));
@@ -40,7 +40,7 @@ describe('Expenses reducer', function () {
 
     newState = expenses(
       initialState,
-      createExpenseDatetimeChange(EXPENSE_TIME_CHANGE, time)
+      expenseDatetimeChange(EXPENSE_TIME_CHANGE, time)
     );
 
     expect(newState.create.time.format('HH:mm')).toBe(time.format('HH:mm'));
