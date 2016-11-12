@@ -251,7 +251,7 @@ describe('Expense controller', function () {
       it('should return two expenses with the word "stuff"', done => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
-          { $text_description: 'stuff' },
+          { $text: 'stuff' },
           (status, body) => {
             expect(status).toBe(200);
             expect(body).toBeAn('array');
@@ -265,7 +265,7 @@ describe('Expense controller', function () {
       it('should return one expenses with the word "stuff" and amount >= 15', done => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
-          { $text_description: 'stuff', $gte_amount: 15 },
+          { $text: 'stuff', $gte_amount: 15 },
           (status, body) => {
             expect(status).toBe(200);
             expect(body).toBeAn('array');
@@ -279,7 +279,7 @@ describe('Expense controller', function () {
       it('should return one expenses with the word "supermarket"', done => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
-          { $text_description: 'supermarket' },
+          { $text: 'supermarket' },
           (status, body) => {
             expect(status).toBe(200);
             expect(body).toBeAn('array');
@@ -293,7 +293,7 @@ describe('Expense controller', function () {
       it('should return no expenses with the word "table"', done => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
-          { $text_description: 'table' },
+          { $text: 'table' },
           (status, body) => {
             expect(status).toBe(200);
             expect(body).toBeAn('array');
@@ -307,7 +307,7 @@ describe('Expense controller', function () {
       it('should return one expenses with the phrase "a lot of tasty stuff"', done => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
-          { $text_description: '"a lot of tasty stuff"' },
+          { $text: '"a lot of tasty stuff"' },
           (status, body) => {
             expect(status).toBe(200);
             expect(body).toBeAn('array');

@@ -1,4 +1,5 @@
 const moment = require('moment');
+const _ = require('lodash');
 
 const Expense = require('models/expense.schema');
 const respObj = require('utils/respObj');
@@ -31,29 +32,11 @@ function create(params, userId) {
  * Read a user's expenses
  *
  * @param {ObjectId} userId
- * @param {object} filters
+ * @param {object} queryParams
  * @returns {Promise.<Expense[], RespObj>}
  */
-function read(userId, filters) {
-  const conditions = { userId };
-
-  Object.keys(filters).forEach(key => {
-    let value = filters[key];
-
-    if (typeof value === 'undefined') {
-      return;
-    }
-
-    if (key.includes('_')) {
-      const [operator, field] = key.split('_');
-
-      if (operator === '$text') {
-        conditions[operator] = { $search: value };
-      } else {
-        conditions[field] = Object.assign({ [operator]: value }, conditions[field]);
-      }
-    }
-  });
+function read(userId, queryParams) {
+  const conditions = _.reduce(queryParams, queryParamsToConditions, { userId });
 
   return Expense
     .find(conditions)
@@ -74,6 +57,40 @@ function read(userId, filters) {
         );
       }
     );
+}
+
+/**
+ * Convert the submitted query params to mongoose query conditions
+ *
+ * @param {object} conditions
+ * @param {string} value
+ * @param {string} key
+ * @return {object}
+ */
+function queryParamsToConditions(conditions, value, key) {
+  if (!value) {
+    return conditions;
+  }
+
+  if (key === '$text') {
+    return Object.assign({ [key]: { $search: value } }, conditions);
+  }
+
+  const [operator, field] = key.split('_');
+
+  if (field === 'date') {
+    const date = moment(value);
+
+    if (operator === '$gte') {
+      date.hours(0).minutes(0).seconds(0);
+    } else {
+      date.hours(23).minutes(59).seconds(59);
+    }
+
+    value = date.format();
+  }
+
+  return _.merge({ [field]: { [operator]: value } }, conditions);
 }
 
 /**

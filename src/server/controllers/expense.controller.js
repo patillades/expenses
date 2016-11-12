@@ -12,11 +12,11 @@ function create(req, res) {
 }
 
 function read(req, res) {
-  const { $gte_date, $lte_date, $gte_amount, $lte_amount, $text_description } = req.query;
+  const { $gte_date, $lte_date, $gte_amount, $lte_amount, $text } = req.query;
 
   expensesModel.read(
     req.params.userId,
-    { $gte_date, $lte_date, $gte_amount, $lte_amount, $text_description }
+    { $gte_date, $lte_date, $gte_amount, $lte_amount, $text }
   ).then(
     expenses => res.status(200).json(expenses),
 
