@@ -4,11 +4,15 @@ import moment from 'moment';
 import { InlineButton } from './Button.jsx';
 import ExpenseInputs from './ExpenseInputs.jsx';
 
+// expense.date comes as a string from the GET API, but becomes a MomentDate when edited
 const propTypes = {
   id: PropTypes.string.isRequired,
   editObj: PropTypes.object.isRequired,
   expense: PropTypes.shape({
-    date: PropTypes.string,
+    date: PropTypes.oneOf([
+      PropTypes.string,
+      PropTypes.object,
+    ]),
     amount: PropTypes.number,
     description: PropTypes.string,
     comment: PropTypes.string,

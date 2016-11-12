@@ -20,37 +20,41 @@ const propTypes = {
 
 function ExpensesTable(props) {
   return (
-    <table className="table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Time</th>
-          <th>Description</th>
-          <th>Amount</th>
-          <th>Comment</th>
-          <th></th>
-        </tr>
-      </thead>
+    <form>
+      <fieldset disabled={props.isDisabled}>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Comment</th>
+              <th></th>
+            </tr>
+          </thead>
 
-      <tbody>
-        {props.expenseIds.map(id => <ExpenseRow
-          key={id}
-          id={id}
-          editObj={props.editObj}
-          expense={props.expensesById[id]}
-          triggerId={props.triggerId}
-          isDisabled={props.isDisabled}
-          isOnEdition={props.expenseIdOnEdition === id}
-          deleteHandler={props.deleteHandler}
-          editHandler={props.editHandler}
-          dateChangeHandler={props.dateChangeHandler}
-          timeChangeHandler={props.timeChangeHandler}
-          inputChangeHandler={props.inputChangeHandler}
-          editSubmitHandler={props.editSubmitHandler}
-          cancelEditHandler={props.cancelEditHandler}
-        />)}
-      </tbody>
-    </table>
+          <tbody>
+            {props.expenseIds.map(id => <ExpenseRow
+              key={id}
+              id={id}
+              editObj={props.editObj}
+              expense={props.expensesById[id]}
+              triggerId={props.triggerId}
+              isDisabled={props.isDisabled}
+              isOnEdition={props.expenseIdOnEdition === id}
+              deleteHandler={props.deleteHandler}
+              editHandler={props.editHandler}
+              dateChangeHandler={props.dateChangeHandler}
+              timeChangeHandler={props.timeChangeHandler}
+              inputChangeHandler={props.inputChangeHandler}
+              editSubmitHandler={props.editSubmitHandler}
+              cancelEditHandler={props.cancelEditHandler}
+            />)}
+          </tbody>
+        </table>
+      </fieldset>
+    </form>
   );
 }
 
