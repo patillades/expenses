@@ -152,6 +152,32 @@ describe('Expense controller', function () {
     });
 
     describe('filters', function () {
+      it('should return 400 if amount not a number', done => {
+        testUtils.request(
+          'GET', `/api/users/${id}/expenses`,
+          { $gte_amount: 'notanumber' },
+          (status, body) => {
+            expect(status).toBe(400);
+            expect(body.msg).toInclude('number');
+
+            done();
+          }, { Authorization: `Bearer ${token}` }
+        );
+      });
+
+      it('should return 400 if date not a date', done => {
+        testUtils.request(
+          'GET', `/api/users/${id}/expenses`,
+          { $gte_date: 'notadate' },
+          (status, body) => {
+            expect(status).toBe(400);
+            expect(body.msg).toInclude('date');
+
+            done();
+          }, { Authorization: `Bearer ${token}` }
+        );
+      });
+
       it('should return one expense with an amount >= 15', done => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,

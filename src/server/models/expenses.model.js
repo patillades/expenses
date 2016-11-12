@@ -32,7 +32,7 @@ function create(params, userId) {
  *
  * @param {ObjectId} userId
  * @param {object} filters
- * @returns {Promise.<Expense[], Error>}
+ * @returns {Promise.<Expense[], RespObj>}
  */
 function read(userId, filters) {
   const conditions = { userId };
@@ -57,7 +57,23 @@ function read(userId, filters) {
 
   return Expense
     .find(conditions)
-    .sort('-date');
+    .sort('-date')
+    .then(
+      result => result,
+
+      err => {
+        if (err.name === 'CastError') {
+          return Promise.reject(
+            getCastErrorMsg(err.path)
+          );
+        }
+
+        // @todo log error
+        return Promise.reject(
+          respObj.getInternalErrResp()
+        );
+      }
+    );
 }
 
 /**
@@ -66,7 +82,7 @@ function read(userId, filters) {
  * @param {ObjectId} _id
  * @param {ObjectId} userId
  * @param {object} params - fields to be updated
- * @return {Promise.<Expense, string>}
+ * @return {Promise.<Expense, RespObj>}
  */
 function update(_id, userId, params) {
   return Expense
@@ -75,8 +91,6 @@ function update(_id, userId, params) {
       result => result,
 
       err => {
-        console.log('update',err);
-
         if (err.name === 'ValidationError') {
           return Promise.reject(
             respObj.getBadReqResp(getValidationErrorMsg(err))
@@ -134,7 +148,7 @@ const DATE_SHOULD_BE_DATE = 'date has to be in the "Y-m-d (H:i)" format';
  * Get the msg related to a CastError depending on the field where it happened
  *
  * @param {string} field
- * @return {{status: number, msg: string}}
+ * @return {RespObj}
  */
 function getCastErrorMsg(field) {
   switch (field) {

@@ -20,12 +20,7 @@ function read(req, res) {
   ).then(
     expenses => res.status(200).json(expenses),
 
-    // @todo log
-    err => {
-      const resp = respObj.getInternalErrResp();
-
-      return res.status(resp.status).json({ msg: resp.msg });
-    }
+    resp => res.status(resp.status).json({ msg: resp.msg })
   );
 }
 
