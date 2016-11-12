@@ -39,17 +39,22 @@ function sendRequest(type, data = {}) {
     dispatch(initRequest(type, data));
 
     fetchRequest(type, getState()).then(
-      response => response.json().then(
-        resp => {
-          if (successStatus.test(response.status)) {
-            return dispatch(requestSucceeded(type, resp));
-          }
+      response => {
+        // 204 (no content) comes without a body
+        const bodyData = response.status === 204 ? 'text' : 'json';
 
-          return dispatch(requestFailed(type, resp.msg));
-        },
+        response[bodyData]().then(
+          resp => {
+            if (successStatus.test(response.status)) {
+              return dispatch(requestSucceeded(type, resp));
+            }
 
-        rejected => dispatch(internalError(type))
-      ),
+            return dispatch(requestFailed(type, resp.msg));
+          },
+
+          rejected => dispatch(internalError(type))
+        );
+      },
 
       rejected => dispatch(internalError(type))
     );

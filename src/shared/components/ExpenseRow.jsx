@@ -42,6 +42,7 @@ function ExpenseRow(props) {
             className="btn-success btn-xs"
             title="save changes"
             icon="save"
+            loaderSize={6}
             isLoading={props.isDisabled}
             clickHandler={props.editSubmitHandler}
           />

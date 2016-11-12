@@ -17,7 +17,9 @@ import {
   DELETE_EXPENSE_REQUEST_SUCC,
   EDIT_EXPENSE,
   CANCEL_EDIT_EXPENSE,
-  EDIT_EXPENSE_REQUEST
+  EDIT_EXPENSE_REQUEST,
+  EDIT_EXPENSE_REQUEST_ERR,
+  EDIT_EXPENSE_REQUEST_SUCC
 } from 'constants/actionTypes';
 
 /**
@@ -149,6 +151,7 @@ function expenses(state = initialState, action) {
 
     case CREATE_EXPENSE_REQUEST_ERR:
     case GET_EXPENSES_REQUEST_ERR:
+    case EDIT_EXPENSE_REQUEST_ERR:
       return merge({}, state, {
         isFetching: false,
         triggerId: null,
