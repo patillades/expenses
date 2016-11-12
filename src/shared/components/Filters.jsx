@@ -55,6 +55,7 @@ function Filters(props) {
             id="filterExpensesBtn"
             triggerId={props.triggerId}
             txt="Apply"
+            loaderSize={8}
             isLoading={props.isDisabled}
             clickHandler={props.submitHandler}
           />

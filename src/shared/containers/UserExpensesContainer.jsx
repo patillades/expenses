@@ -61,7 +61,11 @@ function mapDispatchToProps(dispatch) {
 
     modalBtnHandler: () => dispatch(modalBtnClick()),
 
-    loadUserExpenses: () => dispatch(sendRequest(GET_EXPENSES_REQUEST)),
+    // on app start, it's called on componentWillMount@UserExpenses, so there's no e argument
+    loadUserExpenses: e => dispatch(sendRequest(
+      GET_EXPENSES_REQUEST,
+      { triggerId: e ? e.target.id : null }
+    )),
 
     deleteExpenseHandler: e => dispatch(sendRequest(
       DELETE_EXPENSE_REQUEST,

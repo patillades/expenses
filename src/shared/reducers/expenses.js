@@ -10,6 +10,7 @@ import {
   CREATE_EXPENSE_REQUEST,
   CREATE_EXPENSE_REQUEST_ERR,
   CREATE_EXPENSE_REQUEST_SUCC,
+  GET_EXPENSES_REQUEST,
   GET_EXPENSES_REQUEST_ERR,
   GET_EXPENSES_REQUEST_SUCC,
   CLOSE_MODAL,
@@ -149,6 +150,7 @@ function expenses(state = initialState, action) {
 
     case CREATE_EXPENSE_REQUEST:
     case EDIT_EXPENSE_REQUEST:
+    case GET_EXPENSES_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
         triggerId: action.data.triggerId,
@@ -206,7 +208,12 @@ function expenses(state = initialState, action) {
 
         action.expenses.forEach(el => addExpense(el, expenseIds, expensesById));
 
-        return Object.assign({}, state, { expenseIds, expensesById });
+        return Object.assign({}, state, {
+          isFetching: false,
+          triggerId: null,
+          expenseIds,
+          expensesById,
+        });
       }
 
     case DELETE_EXPENSE_REQUEST_SUCC:
