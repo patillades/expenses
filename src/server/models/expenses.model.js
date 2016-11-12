@@ -1,4 +1,5 @@
 const Expense = require('models/expense.schema');
+const respObj = require('utils/respObj');
 
 /**
  * Create an expense with the given params and user
@@ -20,19 +21,7 @@ function create(params, userId) {
   return expense.save().then(
     result => result,
 
-    err => {
-      let msg;
-      const errField = Object.keys(err.errors)[0];
-
-      if (err.errors[errField].name === 'CastError') {
-        msg = getCastErrorMsg(errField);
-      } else {
-        // return the message belonging to the first error key
-        msg = err.errors[errField].message;
-      }
-
-      return Promise.reject(msg);
-    }
+    err => Promise.reject(getValidationErrorMsg(err))
   );
 }
 
@@ -58,20 +47,29 @@ function read(userId) {
  */
 function update(_id, userId, params) {
   return Expense
-    .findOneAndUpdate({ _id, userId }, params)
+    .findOneAndUpdate({ _id, userId }, params, { runValidators: true })
     .then(
       result => result,
 
       err => {
-        let msg;
+        console.log('update',err);
 
-        if (err.name === 'CastError') {
-          msg = getCastErrorMsg(err.path);
-        } else {
-          msg = err.message;
+        if (err.name === 'ValidationError') {
+          return Promise.reject(
+            respObj.getBadReqResp(getValidationErrorMsg(err))
+          );
         }
 
-        return Promise.reject(msg);
+        if (err.name === 'CastError') {
+          return Promise.reject(
+            getCastErrorMsg(err.path)
+          );
+        }
+
+        // @todo log error
+        return Promise.reject(
+          respObj.getInternalErrResp()
+        );
       }
     );
 }
@@ -88,6 +86,22 @@ function remove(_id, userId) {
     .findOneAndRemove({ _id, userId });
 }
 
+/**
+ * Get the message belonging to the first key when a mongoose validation error happens
+ *
+ * @param {ValidationError} err
+ * @return {string}
+ */
+function getValidationErrorMsg(err) {
+  const errField = Object.keys(err.errors)[0];
+
+  if (err.errors[errField].name === 'CastError') {
+    return getCastErrorMsg(errField).msg;
+  }
+
+  return err.errors[errField].message;
+}
+
 const EXPENSE_NOT_FOUND = 'expense not found';
 const USER_NOT_FOUND = 'user not found';
 const AMOUNT_SHOULD_BE_NUM = 'amount has to be a number';
@@ -97,21 +111,21 @@ const DATE_SHOULD_BE_DATE = 'date has to be in the "Y-m-d (H:i)" format';
  * Get the msg related to a CastError depending on the field where it happened
  *
  * @param {string} field
- * @return {string}
+ * @return {{status: number, msg: string}}
  */
 function getCastErrorMsg(field) {
   switch (field) {
     case '_id':
-      return EXPENSE_NOT_FOUND;
+      return respObj.getNotFoundResp(EXPENSE_NOT_FOUND);
 
     case 'userId':
-      return USER_NOT_FOUND;
+      return respObj.getNotFoundResp(USER_NOT_FOUND);
 
     case 'amount':
-      return AMOUNT_SHOULD_BE_NUM;
+      return respObj.getBadReqResp(AMOUNT_SHOULD_BE_NUM);
 
     case 'date':
-      return DATE_SHOULD_BE_DATE;
+      return respObj.getBadReqResp(DATE_SHOULD_BE_DATE);
   }
 }
 

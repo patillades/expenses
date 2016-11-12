@@ -38,7 +38,7 @@ function create(params, role) {
       }
 
       return reject(msg);
-    })
+    });
   });
 }
 
@@ -67,7 +67,7 @@ function authenticate(mail, password) {
           }
 
           return resolve(same ? result.id : false);
-        })
+        });
       },
 
       err => reject(err)

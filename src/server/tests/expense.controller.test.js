@@ -209,6 +209,17 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${token}` });
     });
 
+    it('should return 400 if amount is empty', done => {
+      const uri = `/api/users/${id}/expenses/${expenseIds[1]}`;
+
+      testUtils.request('PUT', uri, { amount: '' }, (status, body) => {
+        expect(status).toBe(400);
+        expect(body.msg).toInclude('required');
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
     it('should return 400 if amount is not a number', done => {
       const uri = `/api/users/${id}/expenses/${expenseIds[1]}`;
 

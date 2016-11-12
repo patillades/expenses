@@ -36,28 +36,7 @@ function update(req, res) {
       return res.status(204).json({});
     },
 
-    msg => {
-      if ([
-          expensesModel.EXPENSE_NOT_FOUND,
-          expensesModel.USER_NOT_FOUND,
-        ].includes(msg)
-      ) {
-        return res.status(404).json({ msg });
-      }
-
-      if ([
-          expensesModel.AMOUNT_SHOULD_BE_NUM,
-          expensesModel.DATE_SHOULD_BE_DATE,
-        ].includes(msg)
-      ) {
-        return res.status(400).json({ msg });
-      }
-
-      // @todo log
-      const resp = respObj.getInternalErrResp();
-
-      return res.status(resp.status).json({ msg: resp.msg });
-    }
+    resp => res.status(resp.status).json({ msg: resp.msg })
   );
 }
 
