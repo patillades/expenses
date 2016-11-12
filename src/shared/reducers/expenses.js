@@ -119,15 +119,17 @@ function expenses(state = initialState, action) {
       });
 
     case EDIT_EXPENSE:
-      const expense = state.expensesById[action.expenseId];
-      const date = moment(expense.date);
-      const time = moment(expense.date);
-      const { description, amount, comment } = expense;
+      {
+        const expense = state.expensesById[action.expenseId];
+        const date = moment(expense.date);
+        const time = moment(expense.date);
+        const { description, amount, comment } = expense;
 
-      return merge({}, state, {
-        expenseIdOnEdition: action.expenseId,
-        edit: { date, time, description, amount, comment },
-      });
+        return merge({}, state, {
+          expenseIdOnEdition: action.expenseId,
+          edit: { date, time, description, amount, comment },
+        });
+      }
 
     case CANCEL_EDIT_EXPENSE:
       return merge({}, state, {
@@ -217,6 +219,29 @@ function expenses(state = initialState, action) {
           expenseIds,
           expensesById,
           expenseIdToDelete: null,
+        });
+      }
+
+    case EDIT_EXPENSE_REQUEST_SUCC:
+      {
+        const expense = Object.assign({}, state.edit);
+
+        const { time } = expense;
+
+        expense.date
+          .hours(time.hours())
+          .minutes(time.minutes())
+          .seconds(0);
+
+        delete expense.time;
+
+        return merge({}, state, {
+          isFetching: false,
+          triggerId: null,
+          modal: { isOpen: true, msg: action.msg },
+          expenseIdOnEdition: null,
+          edit: initialState.edit,
+          expensesById: { [state.expenseIdOnEdition]: expense },
         });
       }
 

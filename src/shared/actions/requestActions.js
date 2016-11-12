@@ -23,7 +23,8 @@ const successStatus = /^2\d{2}$/;
  * |LOGIN_REQUEST
  * |CREATE_EXPENSE_REQUEST
  * |GET_EXPENSES_REQUEST
- * |DELETE_EXPENSE_REQUEST)} ActionType
+ * |DELETE_EXPENSE_REQUEST
+ * |EDIT_EXPENSE_REQUEST)} ActionType
  */
 
 /**
@@ -234,7 +235,7 @@ function requestSucceeded(actionType, resp) {
     case GET_EXPENSES_REQUEST:
       return { type, expenses: resp };
 
-    case DELETE_EXPENSE_REQUEST:
+    default:
       return { type, msg };
   }
 }
