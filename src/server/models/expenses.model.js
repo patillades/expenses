@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const Expense = require('models/expense.schema');
 const respObj = require('utils/respObj');
 
@@ -29,11 +31,29 @@ function create(params, userId) {
  * Read a user's expenses
  *
  * @param {ObjectId} userId
+ * @param {object} filters
  * @returns {Promise.<Expense[], Error>}
  */
-function read(userId) {
+function read(userId, filters) {
+  const conditions = { userId };
+
+  Object.keys(filters).forEach(key => {
+    const value = filters[key];
+
+    if (typeof value === 'undefined') {
+      return;
+    }
+
+    if (key.includes('_')) {
+      const [limit, field] = key.split('_');
+      const operator = limit === 'from' ? '$gte' : '$lte';
+
+      conditions[field] = Object.assign({ [operator]: value }, conditions[field]);
+    }
+  });
+
   return Expense
-    .find({ userId })
+    .find(conditions)
     .sort('-date');
 }
 

@@ -12,7 +12,12 @@ function create(req, res) {
 }
 
 function read(req, res) {
-  expensesModel.read(req.params.userId).then(
+  const { from_date, to_date } = req.query;
+
+  expensesModel.read(
+    req.params.userId,
+    { from_date, to_date }
+  ).then(
     expenses => res.status(200).json(expenses),
 
     // @todo log
