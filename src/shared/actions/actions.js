@@ -48,17 +48,8 @@ function modalBtnClick() {
       hashHistory.push('/');
     }
 
-    return dispatch(closeModal());
+    return dispatch(action(CLOSE_MODAL));
   };
-}
-
-/**
- * Close modal dialog
- *
- * @returns {{type: string}}
- */
-function closeModal() {
-  return { type: CLOSE_MODAL };
 }
 
 /**
@@ -90,21 +81,20 @@ function editExpense(expenseId) {
   return { type: EDIT_EXPENSE, expenseId };
 }
 
-function cancelEditExpense() {
-  return { type: CANCEL_EDIT_EXPENSE };
-}
-
-function clearExpensesFilter() {
-  return { type: CLEAR_EXPENSES_FILTER };
+/**
+ * Create an action with no payload
+ *
+ * @returns {{type: string}}
+ */
+function action(type) {
+  return { type };
 }
 
 export {
   inputChange,
   sendRequest,
   modalBtnClick,
-  closeModal,
+  action,
   expenseDatetimeChange,
   editExpense,
-  cancelEditExpense,
-  clearExpensesFilter
 };
