@@ -2,11 +2,14 @@ import React, { PropTypes } from 'react';
 import DatePicker from 'react-datepicker';
 
 import Button from './Button.jsx';
+import Input from './Input.jsx';
 
 const propTypes = {
   $gte_date: PropTypes.object,
   $lte_date: PropTypes.object,
+  $text: PropTypes.string,
   dateChangeHandler: PropTypes.func.isRequired,
+  inputChangeHandler: PropTypes.func.isRequired,
 };
 
 function Filters(props) {
@@ -46,7 +49,20 @@ function Filters(props) {
           />
         </div>
 
-        <div className="col-xs-2"></div>
+        <div className="col-xs-2">
+          <p className="invisible">Description</p>
+
+          <Input
+            type="text"
+            placeholder=""
+            isRequired={false}
+            changeHandler={props.inputChangeHandler}
+            value={props.$text}
+            form={props.form}
+            field="$text"
+          />
+        </div>
+
         <div className="col-xs-2"></div>
         <div className="col-xs-2"></div>
 

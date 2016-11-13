@@ -34,10 +34,12 @@ class UserExpenses extends React.Component {
           <div className="panel-heading">Filter the expenses</div>
 
           <Filters
+            form="filters"
             {...this.props.expenses.filters}
             triggerId={this.props.expenses.triggerId}
             isDisabled={this.props.expenses.isFetching}
             dateChangeHandler={this.props.filterDateChangeHandler}
+            inputChangeHandler={this.props.inputChangeHandler}
             submitHandler={this.props.loadUserExpenses}
           />
         </div>
