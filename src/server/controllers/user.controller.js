@@ -9,17 +9,13 @@ function create(req, res) {
     result => {
       user = result;
 
-      return usersModel.signToken(user.id);
+      return usersModel.signToken({ id: user.id, role: user.role });
     },
 
     msg => Promise.reject(respObj.getBadReqResp(msg))
   ).then(
     token => {
-      const result = Object.assign(
-        {},
-        user.toObject(),
-        { token }
-      );
+      const result = Object.assign({}, user.toObject(), { token });
 
       return res.status(201).json(result);
     },

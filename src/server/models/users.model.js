@@ -53,8 +53,8 @@ function create(params, role = ROLES.USER) {
  *
  * @param {string} mail
  * @param {string} password - unencrypted user's password
- * @returns {Promise.<string|boolean, Error>} Resolve to the user's id if the authentication worked,
- * false otherwise; reject with an Error if there's any
+ * @returns {Promise.<{id: ObjectId, role: number}|boolean, Error>} Resolve to the user's id and
+ * role if the authentication worked, false otherwise; reject with an Error if there's any
  */
 function authenticate(mail, password) {
   const user = User.findOne({ mail });
@@ -72,7 +72,11 @@ function authenticate(mail, password) {
             return reject(err);
           }
 
-          return resolve(same ? result.id : false);
+          return resolve(
+            same
+              ? { id: result.id, role: result.role }
+              : false
+          );
         });
       },
 
@@ -84,12 +88,14 @@ function authenticate(mail, password) {
 /**
  * Sign a JSON Web Token for the given user
  *
- * @param {string} sub - The user's id, used as the "subject" of the token
+ * @param {{id: ObjectId, role: number}} user - The user's id and role, used as token payload
  * @returns {Promise.<string, RespObj>}
  */
-function signToken(sub) {
+function signToken(user) {
   return new Promise((resolve, reject) => {
-    jwt.sign({ sub }, config.get('secret'), { expiresIn: '1d' }, (err, token) => {
+    const payload = { sub: user.id, role: user.role };
+
+    jwt.sign(payload, config.get('secret'), { expiresIn: '1d' }, (err, token) => {
       // @todo add log
       if (err) {
         return reject(respObj.getInternalErrResp());
