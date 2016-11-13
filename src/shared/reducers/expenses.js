@@ -43,7 +43,7 @@ import {
 /**
  * @typedef {object} Expense
  * @property {ObjectId} id
- * @property {Date|MomentDate|string} date
+ * @property {string} date
  * @property {string} description
  * @property {number} amount
  * @property {string|undefined} comment
@@ -139,7 +139,9 @@ function expenses(state = initialState, action) {
 
     case EDIT_EXPENSE:
       {
-        const expense = state.expensesById[action.expenseId];
+        // merge the expense to edit to prevent mutations
+        const expense = merge({}, state.expensesById[action.expenseId]);
+
         const date = moment(expense.date);
         const time = moment(expense.date);
         const { description, amount, comment } = expense;
@@ -190,17 +192,22 @@ function expenses(state = initialState, action) {
 
     case CREATE_EXPENSE_REQUEST_SUCC:
       {
+        // clone the state objects to prevent mutations
         const unsortedIds = state.expenseIds.slice();
-        const expensesById = Object.assign({}, state.expensesById);
+        const expensesById = merge({}, state.expensesById);
 
+        // add the created expense
         addExpense(action.expense, unsortedIds, expensesById);
 
         // sort by descending date
         const expenseIds = sortBy(unsortedIds, id => expensesById[id].date)
           .reverse();
 
-        return merge({}, state, {
-          create: initialState.create,
+        // merge initial state to prevent mutations
+        const create = initialState.create;
+
+        return Object.assign({}, state, {
+          create,
           isFetching: false,
           triggerId: null,
           modal: { isOpen: true, msg: action.msg },
@@ -226,12 +233,13 @@ function expenses(state = initialState, action) {
 
     case DELETE_EXPENSE_REQUEST_SUCC:
       {
+        // remove the deleted expense from cloned state objects
         const index = state.expenseIds.indexOf(state.expenseIdToDelete);
 
         const expenseIds = state.expenseIds.slice(0, index)
           .concat(state.expenseIds.slice(index + 1));
 
-        const expensesById = Object.assign({}, state.expensesById);
+        const expensesById = merge({}, state.expensesById);
 
         delete expensesById[state.expenseIdToDelete];
 
@@ -247,8 +255,11 @@ function expenses(state = initialState, action) {
 
     case EDIT_EXPENSE_REQUEST_SUCC:
       {
-        const expense = Object.assign({}, state.edit);
+        // merge the edit object to store it on expensesById
+        const expense = merge({}, state.edit);
 
+        // set the time on the MomentDate date property, and format to string like the expenses sent
+        // by API
         const { time } = expense;
 
         expense.date
@@ -256,15 +267,32 @@ function expenses(state = initialState, action) {
           .minutes(time.minutes())
           .seconds(0);
 
+        expense.date = expense.date.format();
+
         delete expense.time;
 
-        return merge({}, state, {
+        // clone the state objects
+        const unsortedIds = state.expenseIds.slice();
+        const expensesById = merge({}, state.expensesById);
+
+        // add the new expense
+        expensesById[state.expenseIdOnEdition] = expense;
+
+        // sort by descending date
+        const expenseIds = sortBy(unsortedIds, id => expensesById[id].date)
+          .reverse();
+
+        // merge initial state to prevent mutations
+        const edit = initialState.edit;
+
+        return Object.assign({}, state, {
           isFetching: false,
           triggerId: null,
           modal: { isOpen: true, msg: action.msg },
           expenseIdOnEdition: null,
-          edit: initialState.edit,
-          expensesById: { [state.expenseIdOnEdition]: expense },
+          edit,
+          expenseIds,
+          expensesById,
         });
       }
 
@@ -281,7 +309,7 @@ function expenses(state = initialState, action) {
  * @param {ExpensesById} expensesById
  */
 function addExpense(obj, expenseIds, expensesById) {
-  const expense = Object.assign({}, obj);
+  const expense = merge({}, obj);
   const { id } = expense;
 
   delete expense.id;
