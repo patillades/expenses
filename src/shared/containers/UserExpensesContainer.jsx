@@ -8,17 +8,19 @@ import {
   sendRequest,
   modalBtnClick,
   editExpense,
-  cancelEditExpense,
-  clearExpensesFilter
+  action
 } from 'actions/actions';
 import {
   EXPENSES_INPUT_CHANGE,
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
   FILTER_DATE_CHANGE,
+  CLEAR_EXPENSES_FILTER,
+  TOGGLE_DAY_WEEK_EXPENSES,
   CREATE_EXPENSE_REQUEST,
   GET_EXPENSES_REQUEST,
   DELETE_EXPENSE_REQUEST,
+  CANCEL_EDIT_EXPENSE,
   EDIT_EXPENSE_REQUEST
 } from 'constants/actionTypes';
 
@@ -85,13 +87,15 @@ function mapDispatchToProps(dispatch) {
 
     editExpenseHandler: e => dispatch(editExpense(e.target.dataset.expense_id)),
 
-    cancelEditExpenseHandler: () => dispatch(cancelEditExpense()),
+    cancelEditExpenseHandler: () => dispatch(action(CANCEL_EDIT_EXPENSE)),
 
     clearExpensesFilterHandler: e => {
-      dispatch(clearExpensesFilter());
+      dispatch(action(CLEAR_EXPENSES_FILTER));
 
       loadUserExpenses(e);
     },
+
+    toggleDayWeekExpensesHandler: e => dispatch(action(TOGGLE_DAY_WEEK_EXPENSES)),
   };
 }
 

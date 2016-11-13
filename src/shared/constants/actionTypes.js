@@ -9,6 +9,7 @@ const EXPENSE_DATE_CHANGE = 'date_change';
 const EXPENSE_TIME_CHANGE = 'time_change';
 const FILTER_DATE_CHANGE = 'filter_date_change';
 const CLEAR_EXPENSES_FILTER = 'clear_expenses__filter';
+const TOGGLE_DAY_WEEK_EXPENSES = 'toggle_day_week_expenses';
 const CLOSE_MODAL = 'close_modal';
 
 const REGISTRATION_REQUEST = 'registration' + REQUEST;
@@ -46,6 +47,7 @@ export {
   EXPENSE_TIME_CHANGE,
   FILTER_DATE_CHANGE,
   CLEAR_EXPENSES_FILTER,
+  TOGGLE_DAY_WEEK_EXPENSES,
   CLOSE_MODAL,
   REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,

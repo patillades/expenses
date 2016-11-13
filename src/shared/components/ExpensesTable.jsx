@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react';
+import classnames from 'classnames';
 
 import ExpenseRow from './ExpenseRow.jsx';
 
 const propTypes = {
+  isVisible: PropTypes.bool.isRequired,
   editObj: PropTypes.object.isRequired,
   triggerId: PropTypes.string,
   expenseIdOnEdition: PropTypes.string,
@@ -19,8 +21,10 @@ const propTypes = {
 };
 
 function ExpensesTable(props) {
+  const formClass = classnames({ hidden: !props.isVisible });
+
   return (
-    <form>
+    <form className={formClass}>
       <fieldset disabled={props.isDisabled}>
         <table className="table">
           <thead>

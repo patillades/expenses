@@ -3,6 +3,8 @@ import React from 'react';
 import Header from './Header.jsx';
 import NewExpense from './NewExpense.jsx';
 import Filters from './Filters.jsx';
+import ToggleDayWeekExpenses from './ToggleDayWeekExpenses.jsx';
+import ExpensesPerWeek from './ExpensesPerWeek.jsx';
 import ExpensesTable from './ExpensesTable.jsx';
 import Modal from './Modal.jsx';
 
@@ -30,22 +32,32 @@ class UserExpenses extends React.Component {
           submitHandler={this.props.createExpenseSubmitHandler}
         />
 
-        <div className="panel panel-info">
-          <div className="panel-heading">Filter the expenses</div>
+        <Filters
+          form="filters"
+          {...this.props.expenses.filters}
+          triggerId={this.props.expenses.triggerId}
+          isDisabled={this.props.expenses.isFetching}
+          dateChangeHandler={this.props.filterDateChangeHandler}
+          inputChangeHandler={this.props.inputChangeHandler}
+          submitHandler={this.props.loadUserExpenses}
+          clearHandler={this.props.clearExpensesFilterHandler}
+        />
 
-          <Filters
-            form="filters"
-            {...this.props.expenses.filters}
-            triggerId={this.props.expenses.triggerId}
-            isDisabled={this.props.expenses.isFetching}
-            dateChangeHandler={this.props.filterDateChangeHandler}
-            inputChangeHandler={this.props.inputChangeHandler}
-            submitHandler={this.props.loadUserExpenses}
-            clearHandler={this.props.clearExpensesFilterHandler}
-          />
-        </div>
+        <ToggleDayWeekExpenses
+          view={this.props.expensesView}
+          triggerId={this.props.expenses.triggerId}
+          isDisabled={this.props.expenses.isFetching}
+          clickHandler={this.props.toggleDayWeekExpensesHandler}
+        />
+
+        <ExpensesPerWeek
+          isVisible={this.props.expensesView.weekly}
+          triggerId={this.props.expenses.triggerId}
+          isDisabled={this.props.expenses.isFetching}
+        />
 
         <ExpensesTable
+          isVisible={this.props.expensesView.daily}
           editObj={this.props.expenses.edit}
           expenseIds={this.props.expenses.expenseIds}
           expensesById={this.props.expenses.expensesById}
