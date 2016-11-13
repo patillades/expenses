@@ -41,6 +41,7 @@ class UserExpenses extends React.Component {
             dateChangeHandler={this.props.filterDateChangeHandler}
             inputChangeHandler={this.props.inputChangeHandler}
             submitHandler={this.props.loadUserExpenses}
+            clearHandler={this.props.clearExpensesFilterHandler}
           />
         </div>
 

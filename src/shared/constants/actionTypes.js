@@ -8,6 +8,7 @@ const EXPENSES_INPUT_CHANGE = 'expenses_' + INPUT_CHANGE;
 const EXPENSE_DATE_CHANGE = 'date_change';
 const EXPENSE_TIME_CHANGE = 'time_change';
 const FILTER_DATE_CHANGE = 'filter_date_change';
+const CLEAR_EXPENSES_FILTER = 'clear_expenses__filter';
 const CLOSE_MODAL = 'close_modal';
 
 const REGISTRATION_REQUEST = 'registration' + REQUEST;
@@ -44,6 +45,7 @@ export {
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
   FILTER_DATE_CHANGE,
+  CLEAR_EXPENSES_FILTER,
   CLOSE_MODAL,
   REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,

@@ -4,11 +4,12 @@ import hashHistory from 'react-router/lib/hashHistory';
 import sendRequest from './requestActions';
 import { MODAL_MESSAGES } from 'constants/messages';
 import {
+  CLEAR_EXPENSES_FILTER,
   CLOSE_MODAL,
   REGISTRATION_REQUEST,
   LOGIN_REQUEST,
   EDIT_EXPENSE,
-  CANCEL_EDIT_EXPENSE
+  CANCEL_EDIT_EXPENSE,
 } from 'constants/actionTypes';
 
 /**
@@ -93,6 +94,10 @@ function cancelEditExpense() {
   return { type: CANCEL_EDIT_EXPENSE };
 }
 
+function clearExpensesFilter() {
+  return { type: CLEAR_EXPENSES_FILTER };
+}
+
 export {
   inputChange,
   sendRequest,
@@ -100,5 +105,6 @@ export {
   closeModal,
   expenseDatetimeChange,
   editExpense,
-  cancelEditExpense
+  cancelEditExpense,
+  clearExpensesFilter
 };

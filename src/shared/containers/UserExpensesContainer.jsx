@@ -8,7 +8,8 @@ import {
   sendRequest,
   modalBtnClick,
   editExpense,
-  cancelEditExpense
+  cancelEditExpense,
+  clearExpensesFilter
 } from 'actions/actions';
 import {
   EXPENSES_INPUT_CHANGE,
@@ -26,6 +27,14 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
+  // on app start, it's called on componentWillMount@UserExpenses, so there's no e argument
+  function loadUserExpenses(e) {
+    return dispatch(sendRequest(
+      GET_EXPENSES_REQUEST,
+      { triggerId: e ? e.target.id : null }
+    ));
+  }
+
   return {
     dateChangeHandler: (form, date) => dispatch(expenseDatetimeChange(
       EXPENSE_DATE_CHANGE,
@@ -64,11 +73,7 @@ function mapDispatchToProps(dispatch) {
 
     modalBtnHandler: () => dispatch(modalBtnClick()),
 
-    // on app start, it's called on componentWillMount@UserExpenses, so there's no e argument
-    loadUserExpenses: e => dispatch(sendRequest(
-      GET_EXPENSES_REQUEST,
-      { triggerId: e ? e.target.id : null }
-    )),
+    loadUserExpenses,
 
     deleteExpenseHandler: e => dispatch(sendRequest(
       DELETE_EXPENSE_REQUEST,
@@ -81,6 +86,12 @@ function mapDispatchToProps(dispatch) {
     editExpenseHandler: e => dispatch(editExpense(e.target.dataset.expense_id)),
 
     cancelEditExpenseHandler: () => dispatch(cancelEditExpense()),
+
+    clearExpensesFilterHandler: e => {
+      dispatch(clearExpensesFilter());
+
+      loadUserExpenses(e);
+    },
   };
 }
 

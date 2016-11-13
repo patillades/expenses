@@ -10,6 +10,8 @@ const propTypes = {
   $text: PropTypes.string,
   dateChangeHandler: PropTypes.func.isRequired,
   inputChangeHandler: PropTypes.func.isRequired,
+  submitHandler: PropTypes.func.isRequired,
+  clearHandler: PropTypes.func.isRequired,
 };
 
 function Filters(props) {
@@ -97,6 +99,16 @@ function Filters(props) {
             loaderSize={8}
             isLoading={props.isDisabled}
             clickHandler={props.submitHandler}
+          />
+
+          <Button
+            id="clearExpensesFilterBtn"
+            className="btn-warning"
+            triggerId={props.triggerId}
+            txt="Clear"
+            loaderSize={8}
+            isLoading={props.isDisabled}
+            clickHandler={props.clearHandler}
           />
         </div>
       </div>
