@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 const propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   labelClass: PropTypes.string,
   type: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
@@ -18,12 +18,16 @@ const propTypes = {
 function Input(props) {
   return (
     <div className="form-group">
-      <label
-        htmlFor={`${props.form}_${props.field}`}
-        className={props.labelClass}
-      >
-        {props.label}
-      </label>
+      {
+        props.label
+          ? <label
+            htmlFor={`${props.form}_${props.field}`}
+            className={props.labelClass}
+          >
+            {props.label}
+          </label>
+          : null
+      }
 
       <input
         type={props.type}
