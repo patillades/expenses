@@ -33,7 +33,7 @@ const initialState = {
 function authenticated(state = initialState, action) {
   switch (action.type) {
     case CLOSE_MODAL:
-      return merge({}, state, {
+      return Object.assign({}, state, {
         modal: { isOpen: false, msg: null },
       });
 
@@ -53,7 +53,7 @@ function authenticated(state = initialState, action) {
 
     case REGISTRATION_REQUEST_ERR:
     case LOGIN_REQUEST_ERR:
-      return merge({}, state, {
+      return Object.assign({}, state, {
         isFetching: false,
         triggerId: null,
         modal: { isOpen: true, msg: action.msg },
@@ -61,7 +61,7 @@ function authenticated(state = initialState, action) {
 
     case REGISTRATION_REQUEST_SUCC:
     case LOGIN_REQUEST_SUCC:
-      return merge({}, {
+      return Object.assign({}, {
         registration: initialState.registration,
         login: initialState.login,
         isFetching: false,

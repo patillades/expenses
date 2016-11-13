@@ -6,6 +6,7 @@ import {
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
   FILTER_DATE_CHANGE,
+  CLEAR_EXPENSES_FILTER,
   EXPENSES_INPUT_CHANGE,
   CREATE_EXPENSE_REQUEST,
   CREATE_EXPENSE_REQUEST_ERR,
@@ -105,7 +106,7 @@ const initialState = {
 function expenses(state = initialState, action) {
   switch (action.type) {
     case CLOSE_MODAL:
-      return merge({}, state, {
+      return Object.assign({}, state, {
         modal: { isOpen: false, msg: null },
       });
 
@@ -124,6 +125,11 @@ function expenses(state = initialState, action) {
         filters: { [action.form]: action.date },
       });
 
+    case CLEAR_EXPENSES_FILTER:
+      return merge({}, state, {
+        filters: initialState.filters,
+      });
+
     case EXPENSES_INPUT_CHANGE:
       const { form, field, value } = action;
 
@@ -138,7 +144,7 @@ function expenses(state = initialState, action) {
         const time = moment(expense.date);
         const { description, amount, comment } = expense;
 
-        return merge({}, state, {
+        return Object.assign({}, state, {
           expenseIdOnEdition: action.expenseId,
           edit: { date, time, description, amount, comment },
         });
@@ -168,14 +174,14 @@ function expenses(state = initialState, action) {
     case CREATE_EXPENSE_REQUEST_ERR:
     case GET_EXPENSES_REQUEST_ERR:
     case EDIT_EXPENSE_REQUEST_ERR:
-      return merge({}, state, {
+      return Object.assign({}, state, {
         isFetching: false,
         triggerId: null,
         modal: { isOpen: true, msg: action.msg },
       });
 
     case DELETE_EXPENSE_REQUEST_ERR:
-      return merge({}, state, {
+      return Object.assign({}, state, {
         isFetching: false,
         triggerId: null,
         modal: { isOpen: true, msg: action.msg },
