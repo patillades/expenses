@@ -9,14 +9,8 @@ const propTypes = {
   id: PropTypes.string.isRequired,
   editObj: PropTypes.object.isRequired,
   expense: PropTypes.shape({
-    date: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.object,
-    ]),
-    amount: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-    ]),
+    date: PropTypes.string,
+    amount: PropTypes.number,
     description: PropTypes.string,
     comment: PropTypes.string,
   }).isRequired,

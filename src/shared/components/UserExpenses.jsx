@@ -50,12 +50,6 @@ class UserExpenses extends React.Component {
           clickHandler={this.props.toggleDayWeekExpensesHandler}
         />
 
-        <ExpensesPerWeek
-          isVisible={this.props.expensesView.weekly}
-          triggerId={this.props.expenses.triggerId}
-          isDisabled={this.props.expenses.isFetching}
-        />
-
         <ExpensesTable
           isVisible={this.props.expensesView.daily}
           editObj={this.props.expenses.edit}
@@ -71,6 +65,12 @@ class UserExpenses extends React.Component {
           inputChangeHandler={this.props.inputChangeHandler}
           editSubmitHandler={this.props.editExpenseSubmitHandler}
           cancelEditHandler={this.props.cancelEditExpenseHandler}
+        />
+
+        <ExpensesPerWeek
+          isVisible={this.props.expensesView.weekly}
+          expenseIds={this.props.expenses.expenseIds}
+          expensesById={this.props.expenses.expensesById}
         />
 
         <Modal

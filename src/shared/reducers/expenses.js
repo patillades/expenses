@@ -60,7 +60,7 @@ import {
  * @property {boolean} isFetching
  * @property {?string} triggerId - Id of the element that triggered the API request
  * @property {ModalState} modal
- * @property {ObjectId} expenseIds
+ * @property {ObjectId[]} expenseIds
  * @property {ExpensesById} expensesById
  * @property {?ObjectId} expenseIdToDelete
  * @property {?ObjectId} expenseIdOnEdition
@@ -257,6 +257,9 @@ function expenses(state = initialState, action) {
       {
         // merge the edit object to store it on expensesById
         const expense = merge({}, state.edit);
+
+        // cast amount to number so it doesn't cause issues when calculating weekly totals
+        expense.amount = Number(expense.amount);
 
         // set the time on the MomentDate date property, and format to string like the expenses sent
         // by API
