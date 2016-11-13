@@ -139,25 +139,6 @@ describe('Expense controller', function () {
         done();
       }, { Authorization: `Bearer ${token}` });
     });
-
-    it('should return 201 if admin creates the expense on the user behalf', done => {
-      testUtils.request('POST', `/api/users/${id}/expenses`, {
-        amount: 30,
-        description: 'admin is tricky',
-        date: moment().add(1, 'd').format(),
-      }, (status, body) => {
-        expect(status).toBe(201);
-        expect(body).toExcludeKey('comment');
-        expect(body).toIncludeKey('id');
-        expect(body).toExcludeKey('userId');
-        expect(body).toExcludeKey('_id');
-        expect(body).toExcludeKey('__v');
-
-        expenseIds.push(body.id);
-
-        done();
-      }, { Authorization: `Bearer ${adminToken}` });
-    });
   });
 
   describe('read', function () {
@@ -206,14 +187,14 @@ describe('Expense controller', function () {
         );
       });
 
-      it('should return two expenses with an amount >= 15', done => {
+      it('should return one expense with an amount >= 15', done => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $gte_amount: 15 },
           (status, body) => {
             expect(status).toBe(200);
             expect(body).toBeAn('array');
-            expect(body.length).toBe(2);
+            expect(body.length).toBe(1);
 
             done();
           }, { Authorization: `Bearer ${token}` }
@@ -448,6 +429,69 @@ describe('Expense controller', function () {
 
         done();
       }, { Authorization: `Bearer ${token}` });
+    });
+  });
+
+  describe('admin access', function () {
+    it('should be able to create an expense on the user\'s behalf', done => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {
+        amount: 30,
+        description: 'The admin is shady',
+        date: moment().add(1, 'd').format(),
+      }, (status, body) => {
+        expect(status).toBe(201);
+        expect(body).toExcludeKey('comment');
+        expect(body).toIncludeKey('id');
+        expect(body).toExcludeKey('userId');
+        expect(body).toExcludeKey('_id');
+        expect(body).toExcludeKey('__v');
+
+        expenseIds.push(body.id);
+
+        done();
+      }, { Authorization: `Bearer ${adminToken}` });
+    });
+
+    it('should be able to read a user\'s expenses', done => {
+      testUtils.request('GET', `/api/users/${id}/expenses`, {}, (status, body) => {
+        expect(status).toBe(200);
+        expect(body).toBeAn('array');
+
+        // one of the expenses has been deleted
+        expect(body.length).toBe(expenseIds.length - 1);
+
+        expect(body[0]).toIncludeKey('id');
+        expect(body[0]).toExcludeKey('userId');
+        expect(body[0]).toExcludeKey('_id');
+        expect(body[0]).toExcludeKey('__v');
+
+        expect(expenseIds).toInclude(body[0].id);
+        expect(expenseIds).toInclude(body[1].id);
+
+        done();
+      }, { Authorization: `Bearer ${adminToken}` });
+    });
+
+    it('should be able to update an expense on the user\'s behalf', done => {
+      const uri = `/api/users/${id}/expenses/${expenseIds[1]}`;
+
+      testUtils.request('PUT', uri, { description: 'admin mind tricks' }, (status, body) => {
+        expect(status).toBe(204);
+        expect(body).toNotExist();
+
+        done();
+      }, { Authorization: `Bearer ${adminToken}` });
+    });
+
+    it('should be able to delete an expense on the user\'s behalf', done => {
+      const uri = `/api/users/${id}/expenses/${expenseIds[1]}`;
+
+      testUtils.request('DELETE', uri, {}, (status, body) => {
+        expect(status).toBe(200);
+        expect(body).toBeAn('object');
+
+        done();
+      }, { Authorization: `Bearer ${adminToken}` });
     });
   });
 });

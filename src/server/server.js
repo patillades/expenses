@@ -45,13 +45,11 @@ app.use('/api', apiRoutes);
 apiRoutes.post('/users', userController.create);
 apiRoutes.post('/users/login', userController.login);
 
-apiRoutes.post(
-  '/users/:userId/expenses',
-  authorize.bind(null, [ROLES.ADMIN]),
-  expenseController.create
-);
-apiRoutes.get('/users/:userId/expenses', authorize, expenseController.read);
-apiRoutes.put('/users/:userId/expenses/:expenseId', authorize, expenseController.update);
-apiRoutes.delete('/users/:userId/expenses/:expenseId', authorize, expenseController.remove);
+const authAdmin = authorize.bind(null, [ROLES.ADMIN]);
+
+apiRoutes.post('/users/:userId/expenses', authAdmin, expenseController.create);
+apiRoutes.get('/users/:userId/expenses', authAdmin, expenseController.read);
+apiRoutes.put('/users/:userId/expenses/:expenseId', authAdmin, expenseController.update);
+apiRoutes.delete('/users/:userId/expenses/:expenseId', authAdmin, expenseController.remove);
 
 app.listen(3000, () => console.log('listening on port 3000'));
