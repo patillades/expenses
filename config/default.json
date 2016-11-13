@@ -1,4 +1,14 @@
 {
   "db": "expenses",
-  "secret": "HkePmy55FX9MEg0DiZQc"
+  "secret": "HkePmy55FX9MEg0DiZQc",
+  "admin": {
+    "name": "admin",
+    "mail": "admin@toptal.com",
+    "password": "toptal_admin"
+  },
+  "user_manager": {
+    "name": "user_manager",
+    "mail": "user_manager@toptal.com",
+    "password": "toptal_user_manager"
+  }
 }
