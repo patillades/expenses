@@ -12,23 +12,25 @@ function LoginForm(props) {
         <form>
           <fieldset disabled={props.isDisabled}>
             <Input
-              id="login_mail"
               label="Email address"
               type="email"
               placeholder="Email"
               isRequired
               changeHandler={props.inputChangeHandler}
               value={props.mail}
+              form={props.form}
+              field="mail"
             />
 
             <Input
-              id="login_password"
               label="Password"
               type="password"
               placeholder="Password"
               isRequired
               changeHandler={props.inputChangeHandler}
               value={props.password}
+              form={props.form}
+              field="password"
             />
 
             <Button

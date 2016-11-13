@@ -12,33 +12,36 @@ function RegistrationForm(props) {
         <form>
           <fieldset disabled={props.isDisabled}>
             <Input
-              id="registration_name"
               label="Your name"
               type="text"
               placeholder="Name"
               isRequired
               changeHandler={props.inputChangeHandler}
               value={props.name}
+              form={props.form}
+              field="name"
             />
 
             <Input
-              id="registration_mail"
               label="Email address"
               type="email"
               placeholder="Email"
               isRequired
               changeHandler={props.inputChangeHandler}
               value={props.mail}
+              form={props.form}
+              field="mail"
             />
 
             <Input
-              id="registration_password"
               label="Password"
               type="password"
               placeholder="Password"
               isRequired
               changeHandler={props.inputChangeHandler}
               value={props.password}
+              form={props.form}
+              field="password"
             />
 
             <Button

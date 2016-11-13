@@ -11,6 +11,7 @@ import {
   cancelEditExpense
 } from 'actions/actions';
 import {
+  EXPENSES_INPUT_CHANGE,
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
   FILTER_DATE_CHANGE,
@@ -45,7 +46,9 @@ function mapDispatchToProps(dispatch) {
     )),
 
     inputChangeHandler: e => dispatch(inputChange(
-      e.target.id,
+      EXPENSES_INPUT_CHANGE,
+      e.target.dataset.form,
+      e.target.dataset.field,
       e.target.value
     )),
 

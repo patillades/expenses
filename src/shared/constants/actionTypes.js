@@ -3,6 +3,8 @@ const ERROR = '_error';
 const SUCCESS = '_success';
 
 const INPUT_CHANGE = 'input_change';
+const LOGIN_REGISTRATION_INPUT_CHANGE = 'login_registration_' + INPUT_CHANGE;
+const EXPENSES_INPUT_CHANGE = 'expenses_' + INPUT_CHANGE;
 const EXPENSE_DATE_CHANGE = 'date_change';
 const EXPENSE_TIME_CHANGE = 'time_change';
 const FILTER_DATE_CHANGE = 'filter_date_change';
@@ -37,7 +39,8 @@ const EDIT_EXPENSE_REQUEST_SUCC = EDIT_EXPENSE_REQUEST + SUCCESS;
 export {
   ERROR,
   SUCCESS,
-  INPUT_CHANGE,
+  LOGIN_REGISTRATION_INPUT_CHANGE,
+  EXPENSES_INPUT_CHANGE,
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
   FILTER_DATE_CHANGE,

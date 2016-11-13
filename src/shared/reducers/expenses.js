@@ -6,7 +6,7 @@ import {
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
   FILTER_DATE_CHANGE,
-  INPUT_CHANGE,
+  EXPENSES_INPUT_CHANGE,
   CREATE_EXPENSE_REQUEST,
   CREATE_EXPENSE_REQUEST_ERR,
   CREATE_EXPENSE_REQUEST_SUCC,
@@ -96,6 +96,7 @@ const initialState = {
   filters: {
     $gte_date: null,
     $lte_date: null,
+    $text: '',
   },
 };
 
@@ -121,12 +122,11 @@ function expenses(state = initialState, action) {
         filters: { [action.form]: action.date },
       });
 
-    // the id field on the create/edit forms has the format "formName_fieldName"
-    case INPUT_CHANGE:
-      const [form, field] = action.id.split('_');
+    case EXPENSES_INPUT_CHANGE:
+      const { form, field, value } = action;
 
       return merge({}, state, {
-        [form]: { [field]: action.value },
+        [form]: { [field]: value },
       });
 
     case EDIT_EXPENSE:

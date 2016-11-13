@@ -4,7 +4,6 @@ import hashHistory from 'react-router/lib/hashHistory';
 import sendRequest from './requestActions';
 import { MODAL_MESSAGES } from 'constants/messages';
 import {
-  INPUT_CHANGE,
   CLOSE_MODAL,
   REGISTRATION_REQUEST,
   LOGIN_REQUEST,
@@ -15,14 +14,17 @@ import {
 /**
  * Change event on a form input
  *
- * @param {string} id - ID belonging to a form input
+ * @param {string} type
+ * @param {string} form - form the input belongs to
+ * @param {string} field - field the input is related to
  * @param {string} value - value on the input
  * @returns {{type: string, id: string, value: string}}
  */
-function inputChange(id, value) {
+function inputChange(type, form, field, value) {
   return {
-    type: INPUT_CHANGE,
-    id,
+    type,
+    form,
+    field,
     value,
   };
 }

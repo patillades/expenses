@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 
 const propTypes = {
-  id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   labelClass: PropTypes.string,
   type: PropTypes.string.isRequired,
@@ -12,13 +11,15 @@ const propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]).isRequired,
+  form: PropTypes.string.isRequired,
+  field: PropTypes.string.isRequired,
 };
 
 function Input(props) {
   return (
     <div className="form-group">
       <label
-        htmlFor={props.id}
+        htmlFor={`${props.form}_${props.field}`}
         className={props.labelClass}
       >
         {props.label}
@@ -27,11 +28,13 @@ function Input(props) {
       <input
         type={props.type}
         className="form-control"
-        id={props.id}
+        id={`${props.form}_${props.field}`}
         placeholder={props.placeholder}
         required={props.isRequired}
         onChange={props.changeHandler}
         value={props.value}
+        data-form={props.form}
+        data-field={props.field}
       />
     </div>
   );

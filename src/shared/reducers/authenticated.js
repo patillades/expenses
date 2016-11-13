@@ -1,7 +1,7 @@
 import merge from 'lodash/merge';
 
 import {
-  INPUT_CHANGE,
+  LOGIN_REGISTRATION_INPUT_CHANGE,
   REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,
   REGISTRATION_REQUEST_SUCC,
@@ -37,12 +37,11 @@ function authenticated(state = initialState, action) {
         modal: { isOpen: false, msg: null },
       });
 
-    // the id field on the login/registration forms has the format "formName_fieldName"
-    case INPUT_CHANGE:
-      const [form, field] = action.id.split('_');
+    case LOGIN_REGISTRATION_INPUT_CHANGE:
+      const { form, field, value } = action;
 
       return merge({}, state, {
-        [form]: { [field]: action.value },
+        [form]: { [field]: value },
       });
 
     case REGISTRATION_REQUEST:

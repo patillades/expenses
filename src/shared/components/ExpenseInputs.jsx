@@ -5,7 +5,7 @@ import TimePicker from 'rc-time-picker';
 import { InlineInput } from './Input.jsx';
 
 const propTypes = {
-  formPrefix: PropTypes.string.isRequired,
+  form: PropTypes.string.isRequired,
   date: PropTypes.object.isRequired,
   time: PropTypes.object.isRequired,
   description: PropTypes.string.isRequired,
@@ -41,36 +41,39 @@ function ExpenseInputs(props) {
       <td>
         <InlineInput
           type="text"
-          id={`${props.formPrefix}_description`}
           placeholder="description"
           label="Description"
           isRequired
           changeHandler={props.inputChangeHandler}
           value={props.description}
+          form={props.form}
+          field="description"
         />
       </td>
 
       <td>
         <InlineInput
           type="number"
-          id={`${props.formPrefix}_amount`}
           placeholder="amount"
           label="amount"
           isRequired
           changeHandler={props.inputChangeHandler}
           value={props.amount}
+          form={props.form}
+          field="amount"
         />
       </td>
 
       <td>
         <InlineInput
           type="text"
-          id={`${props.formPrefix}_comment`}
           placeholder="comment"
           label="comment"
           isRequired={false}
           changeHandler={props.inputChangeHandler}
           value={props.comment}
+          form={props.form}
+          field="comment"
         />
       </td>
 

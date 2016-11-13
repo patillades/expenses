@@ -13,7 +13,10 @@ const propTypes = {
       PropTypes.string,
       PropTypes.object,
     ]),
-    amount: PropTypes.number,
+    amount: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+    ]),
     description: PropTypes.string,
     comment: PropTypes.string,
   }).isRequired,
@@ -33,7 +36,7 @@ function ExpenseRow(props) {
   if (props.isOnEdition) {
     return (
       <ExpenseInputs
-        formPrefix="edit"
+        form="edit"
         {...props.editObj}
         dateChangeHandler={props.dateChangeHandler}
         timeChangeHandler={props.timeChangeHandler}

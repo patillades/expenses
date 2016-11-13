@@ -7,6 +7,7 @@ import {
   modalBtnClick
 } from 'actions/actions';
 import {
+  LOGIN_REGISTRATION_INPUT_CHANGE,
   REGISTRATION_REQUEST,
   LOGIN_REQUEST
 } from 'constants/actionTypes';
@@ -20,7 +21,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     inputChangeHandler: e => dispatch(inputChange(
-      e.target.id,
+      LOGIN_REGISTRATION_INPUT_CHANGE,
+      e.target.dataset.form,
+      e.target.dataset.field,
       e.target.value
     )),
 

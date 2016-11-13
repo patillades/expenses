@@ -11,6 +11,7 @@ function LoginRegistration(props) {
       <Header />
 
       <RegistrationForm
+        form="registration"
         {...props.authenticated.registration}
         triggerId={props.authenticated.triggerId}
         isDisabled={props.authenticated.isFetching}
@@ -19,6 +20,7 @@ function LoginRegistration(props) {
       />
 
       <LoginForm
+        form="login"
         {...props.authenticated.login}
         triggerId={props.authenticated.triggerId}
         isDisabled={props.authenticated.isFetching}
