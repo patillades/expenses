@@ -130,7 +130,7 @@ function getRequestData(type, state) {
       };
 
     case GET_EXPENSES_REQUEST:
-      const query = objToQueryString(state.expenses.filters, true);
+      const query = objToQueryString(state.filters, true);
 
       return {
         method: 'GET',

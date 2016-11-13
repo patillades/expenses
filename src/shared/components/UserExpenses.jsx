@@ -34,11 +34,11 @@ class UserExpenses extends React.Component {
 
         <Filters
           form="filters"
-          {...this.props.expenses.filters}
+          {...this.props.filters}
           triggerId={this.props.expenses.triggerId}
           isDisabled={this.props.expenses.isFetching}
           dateChangeHandler={this.props.filterDateChangeHandler}
-          inputChangeHandler={this.props.inputChangeHandler}
+          inputChangeHandler={this.props.filterInputChangeHandler}
           submitHandler={this.props.loadUserExpenses}
           clearHandler={this.props.clearExpensesFilterHandler}
         />

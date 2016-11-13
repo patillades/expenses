@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 
 import authenticated, { initialState as initialAuthenticatedState } from 'reducers/authenticated';
 import expenses from 'reducers/expenses';
+import filters from 'reducers/filters';
 import expensesView from 'reducers/expensesView';
 
 // get stored token and use it as preloaded state for the store
@@ -12,6 +13,7 @@ const store = createStore(
   combineReducers({
     authenticated,
     expenses,
+    filters,
     expensesView,
   }),
   { authenticated: Object.assign({}, initialAuthenticatedState, { token: storedToken }) },

@@ -5,8 +5,6 @@ import sortBy from 'lodash/sortBy';
 import {
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
-  FILTER_DATE_CHANGE,
-  CLEAR_EXPENSES_FILTER,
   EXPENSES_INPUT_CHANGE,
   CREATE_EXPENSE_REQUEST,
   CREATE_EXPENSE_REQUEST_ERR,
@@ -94,13 +92,6 @@ const initialState = {
   expensesById: {},
   expenseIdToDelete: null,
   expenseIdOnEdition: null,
-  filters: {
-    $gte_date: null,
-    $lte_date: null,
-    $text: '',
-    $gte_amount: '',
-    $lte_amount: '',
-  },
 };
 
 function expenses(state = initialState, action) {
@@ -118,16 +109,6 @@ function expenses(state = initialState, action) {
     case EXPENSE_TIME_CHANGE:
       return merge({}, state, {
         [action.form]: { time: action.date },
-      });
-
-    case FILTER_DATE_CHANGE:
-      return merge({}, state, {
-        filters: { [action.form]: action.date },
-      });
-
-    case CLEAR_EXPENSES_FILTER:
-      return merge({}, state, {
-        filters: initialState.filters,
       });
 
     case EXPENSES_INPUT_CHANGE:

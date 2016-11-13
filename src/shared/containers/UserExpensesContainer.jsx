@@ -15,6 +15,7 @@ import {
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
   FILTER_DATE_CHANGE,
+  FILTER_INPUT_CHANGE,
   CLEAR_EXPENSES_FILTER,
   TOGGLE_DAY_WEEK_EXPENSES,
   CREATE_EXPENSE_REQUEST,
@@ -37,6 +38,15 @@ function mapDispatchToProps(dispatch) {
     ));
   }
 
+  function dispatchInputChange(e, type) {
+    return dispatch(inputChange(
+      type,
+      e.target.dataset.form,
+      e.target.dataset.field,
+      e.target.value
+    ));
+  }
+
   return {
     dateChangeHandler: (form, date) => dispatch(expenseDatetimeChange(
       EXPENSE_DATE_CHANGE,
@@ -56,12 +66,9 @@ function mapDispatchToProps(dispatch) {
       date
     )),
 
-    inputChangeHandler: e => dispatch(inputChange(
-      EXPENSES_INPUT_CHANGE,
-      e.target.dataset.form,
-      e.target.dataset.field,
-      e.target.value
-    )),
+    inputChangeHandler: e => dispatchInputChange(e, EXPENSES_INPUT_CHANGE),
+
+    filterInputChangeHandler: e => dispatchInputChange(e, FILTER_INPUT_CHANGE),
 
     createExpenseSubmitHandler: e => dispatch(sendRequest(
       CREATE_EXPENSE_REQUEST,
