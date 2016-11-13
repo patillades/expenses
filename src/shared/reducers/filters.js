@@ -6,6 +6,18 @@ import {
   CLEAR_EXPENSES_FILTER,
 } from 'constants/actionTypes';
 
+/**
+ * @typedef {object} FiltersState
+ * @property {?MomentDate} $gte_date
+ * @property {?MomentDate} $lte_date
+ * @property {string} $text
+ * @property {string} $gte_amount
+ * @property {string} $lte_amount
+ */
+
+/**
+ * @type {FiltersState}
+ */
 const initialState = {
   $gte_date: null,
   $lte_date: null,

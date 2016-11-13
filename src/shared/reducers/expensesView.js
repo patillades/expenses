@@ -2,6 +2,15 @@ import {
   TOGGLE_DAY_WEEK_EXPENSES
 } from 'constants/actionTypes';
 
+/**
+ * @typedef {object} ExpensesViewState
+ * @property {boolean} daily
+ * @property {boolean} weekly
+ */
+
+/**
+ * @type {ExpensesViewState}
+ */
 const initialState = {
   daily: true,
   weekly: false,

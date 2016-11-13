@@ -6,6 +6,29 @@ import {
   LOGIN_REQUEST_SUCC,
 } from 'constants/actionTypes';
 
+/**
+ * @typedef {object} RegistrationState
+ * @property {string} name
+ * @property {string} mail
+ * @property {string} password
+ */
+
+/**
+ * @typedef {object} LoginState
+ * @property {string} mail
+ * @property {string} password
+ */
+
+/**
+ * @typedef {object} AuthenticatedState
+ * @property {?string} token
+ * @property {RegistrationState} registration
+ * @property {LoginState} login
+ */
+
+/**
+ * @type {AuthenticatedState}
+ */
 const initialState = {
   token: null,
   registration: {
