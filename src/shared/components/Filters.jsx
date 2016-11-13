@@ -16,100 +16,104 @@ const propTypes = {
 
 function Filters(props) {
   return (
-    <div className="panel-body">
-      <div className="row">
-        <div className="col-xs-4">
-          <p className="text-center">Date</p>
+    <div className="panel panel-info">
+      <div className="panel-heading">Filter the expenses</div>
+
+      <div className="panel-body">
+        <div className="row">
+          <div className="col-xs-4">
+            <p className="text-center">Date</p>
+          </div>
+
+          <div className="col-xs-2">
+            <p className="text-center">Description</p>
+          </div>
+
+          <div className="col-xs-4">
+            <p className="text-center">Amount</p>
+          </div>
         </div>
 
-        <div className="col-xs-2">
-          <p className="text-center">Description</p>
-        </div>
+        <div className="row">
+          <div className="col-xs-2">
+            <p className="text-center">From</p>
 
-        <div className="col-xs-4">
-          <p className="text-center">Amount</p>
-        </div>
-      </div>
+            <DatePicker
+              selected={props.$gte_date}
+              onChange={props.dateChangeHandler.bind(null, '$gte_date')}
+              className="form-control"
+            />
+          </div>
 
-      <div className="row">
-        <div className="col-xs-2">
-          <p className="text-center">From</p>
+          <div className="col-xs-2">
+            <p className="text-center">To</p>
 
-          <DatePicker
-            selected={props.$gte_date}
-            onChange={props.dateChangeHandler.bind(null, '$gte_date')}
-            className="form-control"
-          />
-        </div>
+            <DatePicker
+              selected={props.$lte_date}
+              onChange={props.dateChangeHandler.bind(null, '$lte_date')}
+              className="form-control"
+            />
+          </div>
 
-        <div className="col-xs-2">
-          <p className="text-center">To</p>
+          <div className="col-xs-2">
+            <p className="invisible">Description</p>
 
-          <DatePicker
-            selected={props.$lte_date}
-            onChange={props.dateChangeHandler.bind(null, '$lte_date')}
-            className="form-control"
-          />
-        </div>
+            <Input
+              type="text"
+              isRequired={false}
+              changeHandler={props.inputChangeHandler}
+              value={props.$text}
+              form={props.form}
+              field="$text"
+            />
+          </div>
 
-        <div className="col-xs-2">
-          <p className="invisible">Description</p>
+          <div className="col-xs-2">
+            <p className="text-center">From</p>
 
-          <Input
-            type="text"
-            isRequired={false}
-            changeHandler={props.inputChangeHandler}
-            value={props.$text}
-            form={props.form}
-            field="$text"
-          />
-        </div>
+            <Input
+              type="text"
+              isRequired={false}
+              changeHandler={props.inputChangeHandler}
+              value={props.$gte_amount}
+              form={props.form}
+              field="$gte_amount"
+            />
+          </div>
 
-        <div className="col-xs-2">
-          <p className="text-center">From</p>
+          <div className="col-xs-2">
+            <p className="text-center">To</p>
 
-          <Input
-            type="text"
-            isRequired={false}
-            changeHandler={props.inputChangeHandler}
-            value={props.$gte_amount}
-            form={props.form}
-            field="$gte_amount"
-          />
-        </div>
+            <Input
+              type="text"
+              isRequired={false}
+              changeHandler={props.inputChangeHandler}
+              value={props.$lte_amount}
+              form={props.form}
+              field="$lte_amount"
+            />
+          </div>
 
-        <div className="col-xs-2">
-          <p className="text-center">To</p>
+          <div className="col-xs-2">
+            <Button
+              id="filterExpensesBtn"
+              triggerId={props.triggerId}
+              txt="Apply"
+              loaderSize={8}
+              isLoading={props.isDisabled}
+              clickHandler={props.submitHandler}
+            />
 
-          <Input
-            type="text"
-            isRequired={false}
-            changeHandler={props.inputChangeHandler}
-            value={props.$lte_amount}
-            form={props.form}
-            field="$lte_amount"
-          />
-        </div>
-
-        <div className="col-xs-2">
-          <Button
-            id="filterExpensesBtn"
-            triggerId={props.triggerId}
-            txt="Apply"
-            loaderSize={8}
-            isLoading={props.isDisabled}
-            clickHandler={props.submitHandler}
-          />
-
-          <Button
-            id="clearExpensesFilterBtn"
-            className="btn-warning"
-            triggerId={props.triggerId}
-            txt="Clear"
-            loaderSize={8}
-            isLoading={props.isDisabled}
-            clickHandler={props.clearHandler}
-          />
+            <Button
+              id="clearExpensesFilterBtn"
+              className="btn-warning"
+              triggerId={props.triggerId}
+              txt="Clear"
+              loaderSize={8}
+              isLoading={props.isDisabled}
+              clickHandler={props.clearHandler}
+            />
+          </div>
         </div>
       </div>
     </div>
