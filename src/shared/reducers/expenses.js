@@ -6,20 +6,13 @@ import {
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
   EXPENSES_INPUT_CHANGE,
-  CREATE_EXPENSE_REQUEST,
-  CREATE_EXPENSE_REQUEST_ERR,
   CREATE_EXPENSE_REQUEST_SUCC,
-  GET_EXPENSES_REQUEST,
-  GET_EXPENSES_REQUEST_ERR,
   GET_EXPENSES_REQUEST_SUCC,
-  CLOSE_MODAL,
   DELETE_EXPENSE_REQUEST,
   DELETE_EXPENSE_REQUEST_ERR,
   DELETE_EXPENSE_REQUEST_SUCC,
   EDIT_EXPENSE,
   CANCEL_EDIT_EXPENSE,
-  EDIT_EXPENSE_REQUEST,
-  EDIT_EXPENSE_REQUEST_ERR,
   EDIT_EXPENSE_REQUEST_SUCC
 } from 'constants/actionTypes';
 
@@ -30,12 +23,6 @@ import {
  * @property {string} description
  * @property {number} amount
  * @property {string} comment
- */
-
-/**
- * @typedef {object} ModalState
- * @property {boolean} isOpen
- * @property {?string} msg
  */
 
 /**
@@ -55,9 +42,6 @@ import {
  * @typedef {object} ExpensesState
  * @property {CreateExpenseState} create
  * @property {CreateExpenseState} edit
- * @property {boolean} isFetching
- * @property {?string} triggerId - Id of the element that triggered the API request
- * @property {ModalState} modal
  * @property {ObjectId[]} expenseIds
  * @property {ExpensesById} expensesById
  * @property {?ObjectId} expenseIdToDelete
@@ -82,12 +66,6 @@ const initialState = {
     amount: '',
     comment: '',
   },
-  isFetching: false,
-  triggerId: null,
-  modal: {
-    isOpen: false,
-    msg: null,
-  },
   expenseIds: [],
   expensesById: {},
   expenseIdToDelete: null,
@@ -96,11 +74,6 @@ const initialState = {
 
 function expenses(state = initialState, action) {
   switch (action.type) {
-    case CLOSE_MODAL:
-      return Object.assign({}, state, {
-        modal: { isOpen: false, msg: null },
-      });
-
     case EXPENSE_DATE_CHANGE:
       return merge({}, state, {
         [action.form]: { date: action.date },
@@ -139,35 +112,13 @@ function expenses(state = initialState, action) {
         edit: initialState.edit,
       });
 
-    case CREATE_EXPENSE_REQUEST:
-    case EDIT_EXPENSE_REQUEST:
-    case GET_EXPENSES_REQUEST:
-      return Object.assign({}, state, {
-        isFetching: true,
-        triggerId: action.data.triggerId,
-      });
-
     case DELETE_EXPENSE_REQUEST:
       return Object.assign({}, state, {
-        isFetching: true,
-        triggerId: action.data.triggerId,
         expenseIdToDelete: action.data.expenseId,
-      });
-
-    case CREATE_EXPENSE_REQUEST_ERR:
-    case GET_EXPENSES_REQUEST_ERR:
-    case EDIT_EXPENSE_REQUEST_ERR:
-      return Object.assign({}, state, {
-        isFetching: false,
-        triggerId: null,
-        modal: { isOpen: true, msg: action.msg },
       });
 
     case DELETE_EXPENSE_REQUEST_ERR:
       return Object.assign({}, state, {
-        isFetching: false,
-        triggerId: null,
-        modal: { isOpen: true, msg: action.msg },
         expenseIdToDelete: null,
       });
 
@@ -189,9 +140,6 @@ function expenses(state = initialState, action) {
 
         return Object.assign({}, state, {
           create,
-          isFetching: false,
-          triggerId: null,
-          modal: { isOpen: true, msg: action.msg },
           expenseIds,
           expensesById,
         });
@@ -205,8 +153,6 @@ function expenses(state = initialState, action) {
         action.expenses.forEach(el => addExpense(el, expenseIds, expensesById));
 
         return Object.assign({}, state, {
-          isFetching: false,
-          triggerId: null,
           expenseIds,
           expensesById,
         });
@@ -225,9 +171,6 @@ function expenses(state = initialState, action) {
         delete expensesById[state.expenseIdToDelete];
 
         return Object.assign({}, state, {
-          isFetching: false,
-          triggerId: null,
-          modal: { isOpen: true, msg: action.msg },
           expenseIds,
           expensesById,
           expenseIdToDelete: null,
@@ -270,9 +213,6 @@ function expenses(state = initialState, action) {
         const edit = initialState.edit;
 
         return Object.assign({}, state, {
-          isFetching: false,
-          triggerId: null,
-          modal: { isOpen: true, msg: action.msg },
           expenseIdOnEdition: null,
           edit,
           expenseIds,

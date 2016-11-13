@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 
 import authenticated, { initialState as initialAuthenticatedState } from 'reducers/authenticated';
 import expenses from 'reducers/expenses';
+import requests from 'reducers/requests';
 import filters from 'reducers/filters';
 import expensesView from 'reducers/expensesView';
 
@@ -13,6 +14,7 @@ const store = createStore(
   combineReducers({
     authenticated,
     expenses,
+    requests,
     filters,
     expensesView,
   }),

@@ -38,7 +38,7 @@ function inputChange(type, form, field, value) {
  */
 function modalBtnClick() {
   return (dispatch, getState) => {
-    const modalMsg = getState().authenticated.modal.msg;
+    const modalMsg = getState().requests.modal.msg;
 
     if ([
         MODAL_MESSAGES[REGISTRATION_REQUEST],

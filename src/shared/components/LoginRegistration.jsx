@@ -13,8 +13,8 @@ function LoginRegistration(props) {
       <RegistrationForm
         form="registration"
         {...props.authenticated.registration}
-        triggerId={props.authenticated.triggerId}
-        isDisabled={props.authenticated.isFetching}
+        triggerId={props.requests.triggerId}
+        isDisabled={props.requests.isFetching}
         inputChangeHandler={props.inputChangeHandler}
         submitHandler={props.registrationSubmitHandler}
       />
@@ -22,14 +22,14 @@ function LoginRegistration(props) {
       <LoginForm
         form="login"
         {...props.authenticated.login}
-        triggerId={props.authenticated.triggerId}
-        isDisabled={props.authenticated.isFetching}
+        triggerId={props.requests.triggerId}
+        isDisabled={props.requests.isFetching}
         inputChangeHandler={props.inputChangeHandler}
         submitHandler={props.loginSubmitHandler}
       />
 
       <Modal
-        {...props.authenticated.modal}
+        {...props.requests.modal}
         clickHandler={props.modalBtnHandler}
       />
     </div>

@@ -24,8 +24,8 @@ class UserExpenses extends React.Component {
 
         <NewExpense
           {...this.props.expenses.create}
-          triggerId={this.props.expenses.triggerId}
-          isDisabled={this.props.expenses.isFetching}
+          triggerId={this.props.requests.triggerId}
+          isDisabled={this.props.requests.isFetching}
           dateChangeHandler={this.props.dateChangeHandler.bind(null, 'create')}
           timeChangeHandler={this.props.timeChangeHandler.bind(null, 'create')}
           inputChangeHandler={this.props.inputChangeHandler}
@@ -35,8 +35,8 @@ class UserExpenses extends React.Component {
         <Filters
           form="filters"
           {...this.props.filters}
-          triggerId={this.props.expenses.triggerId}
-          isDisabled={this.props.expenses.isFetching}
+          triggerId={this.props.requests.triggerId}
+          isDisabled={this.props.requests.isFetching}
           dateChangeHandler={this.props.filterDateChangeHandler}
           inputChangeHandler={this.props.filterInputChangeHandler}
           submitHandler={this.props.loadUserExpenses}
@@ -45,8 +45,8 @@ class UserExpenses extends React.Component {
 
         <ToggleDayWeekExpenses
           view={this.props.expensesView}
-          triggerId={this.props.expenses.triggerId}
-          isDisabled={this.props.expenses.isFetching}
+          triggerId={this.props.requests.triggerId}
+          isDisabled={this.props.requests.isFetching}
           clickHandler={this.props.toggleDayWeekExpensesHandler}
         />
 
@@ -55,9 +55,9 @@ class UserExpenses extends React.Component {
           editObj={this.props.expenses.edit}
           expenseIds={this.props.expenses.expenseIds}
           expensesById={this.props.expenses.expensesById}
-          triggerId={this.props.expenses.triggerId}
+          triggerId={this.props.requests.triggerId}
           expenseIdOnEdition={this.props.expenses.expenseIdOnEdition}
-          isDisabled={this.props.expenses.isFetching}
+          isDisabled={this.props.requests.isFetching}
           deleteHandler={this.props.deleteExpenseHandler}
           editHandler={this.props.editExpenseHandler}
           dateChangeHandler={this.props.dateChangeHandler.bind(null, 'edit')}
@@ -74,7 +74,7 @@ class UserExpenses extends React.Component {
         />
 
         <Modal
-          {...this.props.expenses.modal}
+          {...this.props.requests.modal}
           clickHandler={this.props.modalBtnHandler}
         />
       </div>
