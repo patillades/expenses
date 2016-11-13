@@ -20,7 +20,7 @@ mongoose.connect(`mongodb://localhost/${config.get('db')}`);
 
 // set mongoose debugging ON
 mongoose.set('debug', true);
-mongoose.connection.on('error', err=> console.error('MongoDB error: %s', err));
+mongoose.connection.on('error', err => console.error('MongoDB error: %s', err));
 
 const db = mongoose.connection;
 db.on('error', e => {

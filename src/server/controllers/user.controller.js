@@ -5,7 +5,7 @@ const respObj = require('utils/respObj');
 function create(req, res) {
   let user;
 
-  usersModel.create(req.body, 0).then(
+  usersModel.create(req.body).then(
     result => {
       user = result;
 

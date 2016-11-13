@@ -5,14 +5,20 @@ const config = require('config');
 const User = require('models/user.schema');
 const respObj = require('utils/respObj');
 
+const ROLES = {
+  USER: 0,
+  USER_MANAGER: 1,
+  ADMIN: 2,
+};
+
 /**
  * Create a user with the given params and role
  *
  * @param {{name: string, mail: string, password: string}} params
- * @param {number} role
+ * @param {number} [role=ROLES.USER]
  * @returns {Promise.<User, string>}
  */
-function create(params, role) {
+function create(params, role = ROLES.USER) {
   const user = new User(Object.assign(
     {},
     params,
@@ -94,4 +100,4 @@ function signToken(sub) {
   });
 }
 
-module.exports = { create, authenticate, signToken };
+module.exports = { ROLES, create, authenticate, signToken };
