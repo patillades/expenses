@@ -1,5 +1,6 @@
 const expect = require('expect');
 const moment = require('moment');
+const config = require('config');
 
 const testUtils = require('./testUtils');
 
@@ -9,6 +10,8 @@ describe('Expense controller', function () {
   let token;
   const expenseIds = [];
 
+  let adminToken;
+
   before(done => {
     testUser = testUtils.getTestUser();
 
@@ -17,7 +20,13 @@ describe('Expense controller', function () {
 
       ({ id, token } = body);
 
-      done();
+      testUtils.request('POST', '/api/users/login', config.get('admin'), (status, body) => {
+        expect(status).toBe(201);
+
+        adminToken = body.token;
+
+        done();
+      });
     });
   });
 
@@ -130,6 +139,25 @@ describe('Expense controller', function () {
         done();
       }, { Authorization: `Bearer ${token}` });
     });
+
+    it('should return 201 if admin creates the expense on the user behalf', done => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {
+        amount: 30,
+        description: 'admin is tricky',
+        date: moment().add(1, 'd').format(),
+      }, (status, body) => {
+        expect(status).toBe(201);
+        expect(body).toExcludeKey('comment');
+        expect(body).toIncludeKey('id');
+        expect(body).toExcludeKey('userId');
+        expect(body).toExcludeKey('_id');
+        expect(body).toExcludeKey('__v');
+
+        expenseIds.push(body.id);
+
+        done();
+      }, { Authorization: `Bearer ${adminToken}` });
+    });
   });
 
   describe('read', function () {
@@ -178,14 +206,14 @@ describe('Expense controller', function () {
         );
       });
 
-      it('should return one expense with an amount >= 15', done => {
+      it('should return two expenses with an amount >= 15', done => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $gte_amount: 15 },
           (status, body) => {
             expect(status).toBe(200);
             expect(body).toBeAn('array');
-            expect(body.length).toBe(1);
+            expect(body.length).toBe(2);
 
             done();
           }, { Authorization: `Bearer ${token}` }

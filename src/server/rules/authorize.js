@@ -4,14 +4,17 @@ const jwt = require('jsonwebtoken');
 const respObj = require('utils/respObj');
 
 /**
- * Verify that the provided request has a valid JSON Web Token in its Authorization header
+ * Verify that the provided request has a valid JSON Web Token in its Authorization header; and that
+ * the provided user id matches the subject of the token, or that the role that the token was signed
+ * with is allowed in the middleware params
  *
  * @param {Request} req
  * @param {string} userId - The id of the user making the request, it's provided as a named route
  * parameter
+ * @param {number[]} roles
  * @returns {Promise.<boolean, RespObj>}
  */
-function verifyToken(req, userId) {
+function verifyToken(req, userId, roles) {
   const auth = req.get('Authorization');
 
   return new Promise((resolve, reject) => {
@@ -32,7 +35,7 @@ function verifyToken(req, userId) {
       return reject(respObj.getUnauthorizedResp());
     }
 
-    jwt.verify(token, config.get('secret'), { subject: userId }, err => {
+    jwt.verify(token, config.get('secret'), (err, decoded) => {
       if (err) {
         let msg;
 
@@ -43,20 +46,26 @@ function verifyToken(req, userId) {
         return reject(respObj.getUnauthorizedResp(msg));
       }
 
+      if (decoded.sub !== userId  && !roles.includes(decoded.role)) {
+        return reject(respObj.getUnauthorizedResp());
+      }
+
       return resolve(true);
-    })
+    });
   });
 }
 
 /**
  * Middleware call that verifies the presence of a JSON Web Token Authorization header
  *
+ * @param {number[]} roles - users with the roles provided in this array will be authorized without
+ * being the user related to the entity
  * @param req
  * @param res
  * @param next
  */
-function authorize(req, res, next) {
-  verifyToken(req, req.params.userId).then(
+function authorize(roles, req, res, next) {
+  verifyToken(req, req.params.userId, roles).then(
     resolved => next(),
 
     resp => res.status(resp.status).json({ msg: resp.msg })

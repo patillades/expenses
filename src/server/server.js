@@ -13,6 +13,7 @@ const path = require('path');
 const userController = require('controllers/user.controller');
 const expenseController = require('controllers/expense.controller');
 const authorize = require('rules/authorize');
+const ROLES = require('models/users.model').ROLES;
 
 // Use native promises
 mongoose.Promise = global.Promise;
@@ -44,7 +45,11 @@ app.use('/api', apiRoutes);
 apiRoutes.post('/users', userController.create);
 apiRoutes.post('/users/login', userController.login);
 
-apiRoutes.post('/users/:userId/expenses', authorize, expenseController.create);
+apiRoutes.post(
+  '/users/:userId/expenses',
+  authorize.bind(null, [ROLES.ADMIN]),
+  expenseController.create
+);
 apiRoutes.get('/users/:userId/expenses', authorize, expenseController.read);
 apiRoutes.put('/users/:userId/expenses/:expenseId', authorize, expenseController.update);
 apiRoutes.delete('/users/:userId/expenses/:expenseId', authorize, expenseController.remove);
