@@ -42,7 +42,11 @@ app.get('/', (req, res) => res.sendFile(path.resolve(__dirname + '/../../static/
 // add prefix to API routes
 app.use('/api', apiRoutes);
 
+const authAdminManager = authorize.bind(null, [ROLES.ADMIN, ROLES.USER_MANAGER]);
+
 apiRoutes.post('/users', userController.create);
+apiRoutes.get('/users', authAdminManager, userController.read);
+
 apiRoutes.post('/users/login', userController.login);
 
 const authAdmin = authorize.bind(null, [ROLES.ADMIN]);

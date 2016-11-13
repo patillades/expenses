@@ -49,6 +49,15 @@ function create(params, role = ROLES.USER) {
 }
 
 /**
+ * Read users
+ *
+ * @returns {Promise.<User[], Error>}
+ */
+function read() {
+  return User.find();
+}
+
+/**
  * Verify that the given mail/password pair match to a user in the db
  *
  * @param {string} mail
@@ -106,4 +115,4 @@ function signToken(user) {
   });
 }
 
-module.exports = { ROLES, create, authenticate, signToken };
+module.exports = { ROLES, create, read, authenticate, signToken };

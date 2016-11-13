@@ -24,6 +24,17 @@ function create(req, res) {
   );
 }
 
+function read(req, res) {
+  usersModel.read().then(
+    result => res.status(200).json(
+      result.map(user => user.toObject())
+    ),
+
+    // @todo add log
+    err => respObj.getInternalErrResp()
+  );
+}
+
 function login(req, res) {
   usersModel.authenticate(req.body.mail, req.body.password).then(
     result => {
@@ -43,4 +54,4 @@ function login(req, res) {
   );
 }
 
-module.exports = { create, login };
+module.exports = { create, read, login };

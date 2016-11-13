@@ -1,4 +1,5 @@
 const expect = require('expect');
+const config = require('config');
 
 const testUtils = require('./testUtils');
 
@@ -6,11 +7,22 @@ describe('User controller', function () {
   let testUser;
   let mail;
   let password;
+  let token;
 
-  before(() => {
+  let managerToken;
+
+  before(done => {
     testUser = testUtils.getTestUser();
 
     ({ mail, password } = testUser);
+
+    testUtils.request('POST', '/api/users/login', config.get('user_manager'), (status, body) => {
+      expect(status).toBe(201);
+
+      managerToken = body.token;
+
+      done();
+    });
   });
 
   describe('create', function () {
@@ -52,8 +64,10 @@ describe('User controller', function () {
         expect(status).toBe(201);
         expect(body.token).toBeA('string');
 
+        token = body.token;
+
         done();
-      })
+      });
     });
 
     it('should return 400 if password is wrong', done => {
@@ -61,7 +75,7 @@ describe('User controller', function () {
         expect(status).toBe(400);
 
         done();
-      })
+      });
     });
 
     it('should return 400 if mail is wrong', done => {
@@ -69,7 +83,7 @@ describe('User controller', function () {
         expect(status).toBe(400);
 
         done();
-      })
+      });
     });
 
     it('should return 400 if missing params', done => {
@@ -77,7 +91,38 @@ describe('User controller', function () {
         expect(status).toBe(400);
 
         done();
-      })
+      });
+    });
+  });
+
+  describe('read', function () {
+    it('should be unauthorized', done => {
+      testUtils.request('GET', '/api/users', {}, (status, body) => {
+        expect(status).toBe(401);
+        expect(body.msg).toBeA('string');
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+  });
+
+  describe('user manager access', function () {
+    it('should be able to read users', done => {
+      testUtils.request('GET', '/api/users', {}, (status, body) => {
+        expect(status).toBe(200);
+        expect(body).toBeAn('array');
+
+        expect(body[0]).toExcludeKey('_id');
+        expect(body[0]).toExcludeKey('__v');
+        expect(body[0]).toExcludeKey('role');
+        expect(body[0]).toExcludeKey('password');
+
+        expect(body[0].id).toBeA('string');
+        expect(body[0].name).toBeA('string');
+        expect(body[0].mail).toBeA('string');
+
+        done();
+      }, { Authorization: `Bearer ${managerToken}` });
     });
   });
 });
