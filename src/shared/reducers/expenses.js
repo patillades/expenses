@@ -97,6 +97,8 @@ const initialState = {
     $gte_date: null,
     $lte_date: null,
     $text: '',
+    $gte_amount: '',
+    $lte_amount: '',
   },
 };
 

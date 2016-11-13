@@ -4,7 +4,7 @@ const propTypes = {
   label: PropTypes.string,
   labelClass: PropTypes.string,
   type: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
   isRequired: PropTypes.bool.isRequired,
   changeHandler: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([

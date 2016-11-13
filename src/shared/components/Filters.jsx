@@ -39,6 +39,7 @@ function Filters(props) {
             className="form-control"
           />
         </div>
+
         <div className="col-xs-2">
           <p className="text-center">To</p>
 
@@ -54,7 +55,6 @@ function Filters(props) {
 
           <Input
             type="text"
-            placeholder=""
             isRequired={false}
             changeHandler={props.inputChangeHandler}
             value={props.$text}
@@ -63,8 +63,31 @@ function Filters(props) {
           />
         </div>
 
-        <div className="col-xs-2"></div>
-        <div className="col-xs-2"></div>
+        <div className="col-xs-2">
+          <p className="text-center">From</p>
+
+          <Input
+            type="text"
+            isRequired={false}
+            changeHandler={props.inputChangeHandler}
+            value={props.$gte_amount}
+            form={props.form}
+            field="$gte_amount"
+          />
+        </div>
+
+        <div className="col-xs-2">
+          <p className="text-center">To</p>
+
+          <Input
+            type="text"
+            isRequired={false}
+            changeHandler={props.inputChangeHandler}
+            value={props.$lte_amount}
+            form={props.form}
+            field="$lte_amount"
+          />
+        </div>
 
         <div className="col-xs-2">
           <Button
