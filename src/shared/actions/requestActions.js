@@ -103,7 +103,7 @@ function sessionExpired() {
  *
  * @param {ActionType} type
  * @param {object} [data={}] - Optional payload that can be added when initiating the request
- * @returns {{type: string}}
+ * @returns {{type: ActionType, data: object}}
  */
 function initRequest(type, data = {}) {
   return { type, data };

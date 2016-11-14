@@ -21,6 +21,7 @@ import {
   TOGGLE_DAY_WEEK_EXPENSES,
   CREATE_EXPENSE_REQUEST,
   GET_EXPENSES_REQUEST,
+  GET_EXPENSES_REQUEST_ON_LOAD,
   DELETE_EXPENSE_REQUEST,
   CANCEL_EDIT_EXPENSE,
   EDIT_EXPENSE_REQUEST
@@ -31,11 +32,12 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  // on app start, it's called on componentWillMount@UserExpenses, so there's no e argument
+  // on app start, it's called on componentWillMount@UserExpenses, so there's no e argument and
+  // we'll use a constant instead so we know that the loader has to be shown
   function loadUserExpenses(e) {
     return dispatch(sendRequest(
       GET_EXPENSES_REQUEST,
-      { triggerId: e ? e.target.id : null }
+      { triggerId: e ? e.target.id : GET_EXPENSES_REQUEST_ON_LOAD }
     ));
   }
 
