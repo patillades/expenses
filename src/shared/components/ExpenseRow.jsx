@@ -82,6 +82,7 @@ function ExpenseRow(props) {
           isLoading={props.isDisabled}
           clickHandler={props.editHandler}
           dataset={{ expense_id: props.id }}
+          type="button"
         />
 
         <InlineButton
@@ -94,6 +95,7 @@ function ExpenseRow(props) {
           isLoading={props.isDisabled}
           clickHandler={props.deleteHandler}
           dataset={{ expense_id: props.id }}
+          type="button"
         />
       </td>
     </tr>

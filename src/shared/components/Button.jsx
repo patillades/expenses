@@ -3,6 +3,9 @@ import Loader from 'halogen/PulseLoader';
 import classnames from 'classnames';
 
 const propTypes = {
+  // type defaults to "submit", change it to "button" to prevent strange form submissions when there
+  // are multiple buttons (ExpensesTable)
+  type: PropTypes.string,
   id: PropTypes.string.isRequired,
   triggerId: PropTypes.string,
   txt: PropTypes.string,
@@ -13,7 +16,7 @@ const propTypes = {
   isInline: PropTypes.bool,
   className: PropTypes.string, // used to replace the "btn-primary" class
   loaderSize: PropTypes.number,
-  dataset: PropTypes.object
+  dataset: PropTypes.object,
 };
 
 function Button(props) {
@@ -50,6 +53,7 @@ function Button(props) {
       className={btnClass}
       onClick={props.clickHandler}
       disabled={props.isLoading}
+      type={props.type ? props.type : 'submit'}
       {...dataset}
     >
       <span className={txtClass}>
