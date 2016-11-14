@@ -10,6 +10,23 @@ const propTypes = {
 };
 
 function Header(props) {
+  let button;
+
+  if (props.hasLogOutBtn) {
+    button = <Button
+      id="logOutBtn"
+      triggerId={props.triggerId}
+      txt="Log out"
+      title="Log out"
+      isLoading={props.isDisabled}
+      clickHandler={props.clickHandler}
+      className="btn-link pull-right"
+      isInline
+    />;
+  } else {
+    button = null;
+  }
+
   return (
     <div>
 
@@ -17,20 +34,7 @@ function Header(props) {
         <h1>
           <span>Expenses tracker</span>
 
-          {
-            props.hasLogOutBtn
-              ? <Button
-                  id="logOutBtn"
-                  triggerId={props.triggerId}
-                  txt="Log out"
-                  title="Log out"
-                  isLoading={props.isDisabled}
-                  clickHandler={props.clickHandler}
-                  className="btn-link pull-right"
-                  isInline
-                />
-              : null
-          }
+          {button}
         </h1>
       </div>
     </div>

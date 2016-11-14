@@ -16,6 +16,24 @@ function ExpensesPerWeek(props) {
 
   const { weekNums, totalPerWeekNum } = groupExpensesByWeek(props.expenseIds, props.expensesById);
 
+  let body;
+
+  if (weekNums.length) {
+    body = weekNums.map(weekNum => <WeeklyExpenseRow
+      key={`week_${weekNum}`}
+      weekNum={weekNum}
+      expenses={totalPerWeekNum[weekNum]}
+    />);
+  } else {
+    body = (
+      <tr>
+        <td colSpan="3" className="text-center">
+          There are no expenses to show
+        </td>
+      </tr>
+    );
+  }
+
   return (
     <table className={tblClass}>
       <thead>
@@ -27,19 +45,7 @@ function ExpensesPerWeek(props) {
       </thead>
 
       <tbody>
-        {
-          weekNums.length
-            ? weekNums.map(weekNum => <WeeklyExpenseRow
-                key={`week_${weekNum}`}
-                weekNum={weekNum}
-                expenses={totalPerWeekNum[weekNum]}
-              />)
-            : <tr>
-                <td colSpan="3" className="text-center">
-                  There are no expenses to show
-                </td>
-              </tr>
-        }
+        {body}
       </tbody>
     </table>
   );

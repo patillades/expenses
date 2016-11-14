@@ -16,18 +16,24 @@ const propTypes = {
 };
 
 function Input(props) {
+  let label;
+
+  if (props.label) {
+    label = (
+      <label
+        htmlFor={`${props.form}_${props.field}`}
+        className={props.labelClass}
+      >
+        {props.label}
+      </label>
+    );
+  } else {
+    label = null;
+  }
+
   return (
     <div className="form-group">
-      {
-        props.label
-          ? <label
-            htmlFor={`${props.form}_${props.field}`}
-            className={props.labelClass}
-          >
-            {props.label}
-          </label>
-          : null
-      }
+      {label}
 
       <input
         type={props.type}
