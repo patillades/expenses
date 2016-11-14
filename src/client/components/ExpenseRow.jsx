@@ -34,6 +34,21 @@ const propTypes = {
   cancelEditHandler: PropTypes.func.isRequired,
 };
 
+/**
+ * Format the expense's date
+ *
+ * @param {MomentDate} date
+ * @return {{date: string, time: string}}
+ */
+function formatDate(date) {
+  const dateObj = moment(date);
+
+  return {
+    date: dateObj.format('M/D/YYYY'),
+    time: dateObj.format('HH:mm'),
+  };
+}
+
 function ExpenseRow(props) {
   if (props.isOnEdition) {
     return (
@@ -111,20 +126,5 @@ function ExpenseRow(props) {
 }
 
 ExpenseRow.propTypes = propTypes;
-
-/**
- * Format the expense's date
- *
- * @param {MomentDate} date
- * @return {{date: string, time: string}}
- */
-function formatDate(date) {
-  const dateObj = moment(date);
-
-  return {
-    date: dateObj.format('M/D/YYYY'),
-    time: dateObj.format('HH:mm'),
-  };
-}
 
 export default ExpenseRow;

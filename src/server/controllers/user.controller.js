@@ -7,7 +7,7 @@ function create(req, res) {
   let user;
 
   usersModel.create(req.body).then(
-    result => {
+    (result) => {
       user = result;
 
       return usersModel.signToken({ id: user.id, role: user.role });
@@ -15,7 +15,7 @@ function create(req, res) {
 
     msg => Promise.reject(respObj.getBadReqResp(msg))
   ).then(
-    token => {
+    (token) => {
       const result = Object.assign({}, user.toObject(), { token });
 
       return res.status(201).json(result);
@@ -38,7 +38,7 @@ function read(req, res) {
 
 function update(req, res) {
   usersModel.update(req.params.userId, req.body).then(
-    result => {
+    (result) => {
       if (!result) {
         return res.status(404).json({ msg: errMsgs.USER_NOT_FOUND });
       }
@@ -52,7 +52,7 @@ function update(req, res) {
 
 function remove(req, res) {
   usersModel.remove(req.params.userId).then(
-    result => {
+    (result) => {
       if (!result) {
         return res.status(404).json({ msg: errMsgs.USER_NOT_FOUND });
       }
@@ -60,7 +60,7 @@ function remove(req, res) {
       return res.status(200).json({});
     },
 
-    err => {
+    (err) => {
       // the userId had a wrong format
       if (err.name === 'CastError') {
         return res.status(404).json({ msg: errMsgs.USER_NOT_FOUND });
@@ -76,7 +76,7 @@ function remove(req, res) {
 
 function login(req, res) {
   usersModel.authenticate(req.body.mail, req.body.password).then(
-    result => {
+    (result) => {
       if (result) {
         return usersModel.signToken(result);
       }

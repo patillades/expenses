@@ -33,12 +33,13 @@ function filters(state = initialState, action) {
         [action.form]: action.date,
       });
 
-    case FILTER_INPUT_CHANGE:
+    case FILTER_INPUT_CHANGE: {
       const { field, value } = action;
 
       return merge({}, state, {
         [field]: value,
       });
+    }
 
     case CLEAR_EXPENSES_FILTER:
       return merge({}, state, initialState);

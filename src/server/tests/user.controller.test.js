@@ -3,7 +3,7 @@ const config = require('config');
 
 const testUtils = require('./testUtils');
 
-describe('User controller', function () {
+describe('User controller', () => {
   let testUser;
   let id;
   let mail;
@@ -12,7 +12,7 @@ describe('User controller', function () {
 
   let managerToken;
 
-  before(done => {
+  before((done) => {
     testUser = testUtils.getTestUser();
 
     ({ mail, password } = testUser);
@@ -26,8 +26,8 @@ describe('User controller', function () {
     });
   });
 
-  describe('create', function () {
-    it('should return 400 and an error msg if missing params', done => {
+  describe('create', () => {
+    it('should return 400 and an error msg if missing params', (done) => {
       testUtils.request('POST', '/api/users', {}, (status, body) => {
         expect(status).toBe(400);
         expect(body.msg).toInclude('required');
@@ -36,7 +36,7 @@ describe('User controller', function () {
       });
     });
 
-    it('should return 400 if using a wrong mail', done => {
+    it('should return 400 if using a wrong mail', (done) => {
       const user = Object.assign({}, testUser);
       user.mail = 'notamail';
 
@@ -48,7 +48,7 @@ describe('User controller', function () {
       });
     });
 
-    it('should return 400 if using a short password', done => {
+    it('should return 400 if using a short password', (done) => {
       const user = Object.assign({}, testUser);
       user.password = 'shortpw';
 
@@ -60,7 +60,7 @@ describe('User controller', function () {
       });
     });
 
-    it('should return 400 if using a short name', done => {
+    it('should return 400 if using a short name', (done) => {
       const user = Object.assign({}, testUser);
       user.name = 'a';
 
@@ -72,7 +72,7 @@ describe('User controller', function () {
       });
     });
 
-    it('should return 400 if using a name with invalid characters', done => {
+    it('should return 400 if using a name with invalid characters', (done) => {
       const user = Object.assign({}, testUser);
       user.name = 'player9-';
 
@@ -84,7 +84,7 @@ describe('User controller', function () {
       });
     });
 
-    it('should return 201 and the user and token if it worked', done => {
+    it('should return 201 and the user and token if it worked', (done) => {
       testUtils.request('POST', '/api/users', testUser, (status, body) => {
         expect(status).toBe(201);
         expect(body.name).toBe(testUser.name);
@@ -99,7 +99,7 @@ describe('User controller', function () {
       });
     });
 
-    it('should return 400 if mail already exists', done => {
+    it('should return 400 if mail already exists', (done) => {
       testUtils.request('POST', '/api/users', testUser, (status, body) => {
         expect(status).toBe(400);
         expect(body.msg).toInclude('already registered');
@@ -110,7 +110,7 @@ describe('User controller', function () {
   });
 
   describe('login', function () {
-    it('should return 201 if it worked', done => {
+    it('should return 201 if it worked', (done) => {
       testUtils.request('POST', '/api/users/login', { mail, password }, (status, body) => {
         expect(status).toBe(201);
         expect(body.token).toBeA('string');
@@ -121,7 +121,7 @@ describe('User controller', function () {
       });
     });
 
-    it('should return 400 if password is wrong', done => {
+    it('should return 400 if password is wrong', (done) => {
       testUtils.request('POST', '/api/users/login', { mail, password: 'wrong' }, status => {
         expect(status).toBe(400);
 
@@ -129,7 +129,7 @@ describe('User controller', function () {
       });
     });
 
-    it('should return 400 if mail is wrong', done => {
+    it('should return 400 if mail is wrong', (done) => {
       testUtils.request('POST', '/api/users/login', { mail: 'notamail', password }, status => {
         expect(status).toBe(400);
 
@@ -137,7 +137,7 @@ describe('User controller', function () {
       });
     });
 
-    it('should return 400 if missing params', done => {
+    it('should return 400 if missing params', (done) => {
       testUtils.request('POST', '/api/users/login', {}, status => {
         expect(status).toBe(400);
 
@@ -146,8 +146,8 @@ describe('User controller', function () {
     });
   });
 
-  describe('read', function () {
-    it('should be unauthorized', done => {
+  describe('read', () => {
+    it('should be unauthorized', (done) => {
       testUtils.request('GET', '/api/users', {}, (status, body) => {
         expect(status).toBe(401);
         expect(body.msg).toBeA('string');
@@ -157,8 +157,8 @@ describe('User controller', function () {
     });
   });
 
-  describe('update', function () {
-    it('should be unauthorized', done => {
+  describe('update', () => {
+    it('should be unauthorized', (done) => {
       testUtils.request('PUT', `/api/users/${id}`, { name: 'john' }, (status, body) => {
         expect(status).toBe(401);
         expect(body.msg).toBeA('string');
@@ -168,8 +168,8 @@ describe('User controller', function () {
     });
   });
 
-  describe('delete', function () {
-    it('should be unauthorized', done => {
+  describe('delete', () => {
+    it('should be unauthorized', (done) => {
       testUtils.request('DELETE', `/api/users/${id}`, {}, (status, body) => {
         expect(status).toBe(401);
         expect(body.msg).toBeA('string');
@@ -179,8 +179,8 @@ describe('User controller', function () {
     });
   });
 
-  describe('user manager access', function () {
-    it('should be able to read users', done => {
+  describe('user manager access', () => {
+    it('should be able to read users', (done) => {
       testUtils.request('GET', '/api/users', {}, (status, body) => {
         expect(status).toBe(200);
         expect(body).toBeAn('array');
@@ -198,7 +198,7 @@ describe('User controller', function () {
       }, { Authorization: `Bearer ${managerToken}` });
     });
 
-    it('should be able to update users', done => {
+    it('should be able to update users', (done) => {
       testUtils.request('PUT', `/api/users/${id}`, { name: 'john' }, (status, body) => {
         expect(status).toBe(204);
         expect(body).toNotExist();
@@ -207,7 +207,7 @@ describe('User controller', function () {
       }, { Authorization: `Bearer ${managerToken}` });
     });
 
-    it('should get err when updating with wrong mail', done => {
+    it('should get err when updating with wrong mail', (done) => {
       testUtils.request('PUT', `/api/users/${id}`, { mail: 'notamail' }, (status, body) => {
         expect(status).toBe(400);
         expect(body.msg).toInclude('not an accepted');
@@ -216,7 +216,7 @@ describe('User controller', function () {
       }, { Authorization: `Bearer ${managerToken}` });
     });
 
-    it('should get err when updating with short password', done => {
+    it('should get err when updating with short password', (done) => {
       testUtils.request('PUT', `/api/users/${id}`, { password: 'shortpw' }, (status, body) => {
         expect(status).toBe(400);
         expect(body.msg).toInclude('minimum allowed length');
@@ -225,7 +225,7 @@ describe('User controller', function () {
       }, { Authorization: `Bearer ${managerToken}` });
     });
 
-    it('should get err when updating without a required field', done => {
+    it('should get err when updating without a required field', (done) => {
       testUtils.request('PUT', `/api/users/${id}`, { name: '' }, (status, body) => {
         expect(status).toBe(400);
         expect(body.msg).toInclude('required');
@@ -234,7 +234,7 @@ describe('User controller', function () {
       }, { Authorization: `Bearer ${managerToken}` });
     });
 
-    it('should get err when updating without a short name', done => {
+    it('should get err when updating without a short name', (done) => {
       testUtils.request('PUT', `/api/users/${id}`, { name: 'a' }, (status, body) => {
         expect(status).toBe(400);
         expect(body.msg).toInclude('has to be at least');
@@ -243,7 +243,7 @@ describe('User controller', function () {
       }, { Authorization: `Bearer ${managerToken}` });
     });
 
-    it('should get err when updating with a name with invalid characters', done => {
+    it('should get err when updating with a name with invalid characters', (done) => {
       testUtils.request('PUT', `/api/users/${id}`, { name: 'player9-' }, (status, body) => {
         expect(status).toBe(400);
         expect(body.msg).toInclude('can only contain letters, spaces');
@@ -252,8 +252,8 @@ describe('User controller', function () {
       }, { Authorization: `Bearer ${managerToken}` });
     });
 
-    it('should get err when updating wrong user id', done => {
-      testUtils.request('PUT', `/api/users/id`, { name: 'john' }, (status, body) => {
+    it('should get err when updating wrong user id', (done) => {
+      testUtils.request('PUT', '/api/users/id', { name: 'john' }, (status, body) => {
         expect(status).toBe(404);
         expect(body.msg).toInclude('not found');
 
@@ -261,7 +261,7 @@ describe('User controller', function () {
       }, { Authorization: `Bearer ${managerToken}` });
     });
 
-    it('should be able to delete users', done => {
+    it('should be able to delete users', (done) => {
       testUtils.request('DELETE', `/api/users/${id}`, {}, (status, body) => {
         expect(status).toBe(200);
         expect(body).toBeAn('object');
@@ -270,8 +270,8 @@ describe('User controller', function () {
       }, { Authorization: `Bearer ${managerToken}` });
     });
 
-    it('should get err when deleting wrong user', done => {
-      testUtils.request('DELETE', `/api/users/id`, {}, (status, body) => {
+    it('should get err when deleting wrong user', (done) => {
+      testUtils.request('DELETE', '/api/users/id', {}, (status, body) => {
         expect(status).toBe(404);
         expect(body.msg).toInclude('not found');
 

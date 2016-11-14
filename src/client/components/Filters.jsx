@@ -46,7 +46,7 @@ function Filters(props) {
 
               <DatePicker
                 selected={props.$gte_date}
-                onChange={props.dateChangeHandler.bind(null, '$gte_date')}
+                onChange={date => props.dateChangeHandler('$gte_date', date)}
                 className="form-control"
               />
             </div>
@@ -56,7 +56,7 @@ function Filters(props) {
 
               <DatePicker
                 selected={props.$lte_date}
-                onChange={props.dateChangeHandler.bind(null, '$lte_date')}
+                onChange={date => props.dateChangeHandler('$lte_date', date)}
                 className="form-control"
               />
             </div>

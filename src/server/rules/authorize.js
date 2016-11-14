@@ -79,7 +79,7 @@ function verifyToken(req, userId, roles, onlyToRoles) {
  */
 function authorize(roles, onlyToRoles, req, res, next) {
   verifyToken(req, req.params.userId, roles, onlyToRoles).then(
-    resolved => next(),
+    () => next(),
 
     resp => res.status(resp.status).json({ msg: resp.msg })
   );

@@ -30,37 +30,6 @@ function create(params, userId) {
 }
 
 /**
- * Read a user's expenses
- *
- * @param {ObjectId} userId
- * @param {object} queryParams
- * @returns {Promise.<Expense[], RespObj>}
- */
-function read(userId, queryParams) {
-  const conditions = _.reduce(queryParams, queryParamsToConditions, { userId });
-
-  return Expense
-    .find(conditions)
-    .sort('-date')
-    .then(
-      result => result,
-
-      err => {
-        if (err.name === 'CastError') {
-          return Promise.reject(
-            errMsgs.getCastErrorMsg(err.path, Expense.modelName)
-          );
-        }
-
-        // @todo log error
-        return Promise.reject(
-          respObj.getInternalErrResp()
-        );
-      }
-    );
-}
-
-/**
  * Convert the submitted query params to mongoose query conditions
  *
  * @param {object} conditions
@@ -95,6 +64,37 @@ function queryParamsToConditions(conditions, value, key) {
 }
 
 /**
+ * Read a user's expenses
+ *
+ * @param {ObjectId} userId
+ * @param {object} queryParams
+ * @returns {Promise.<Expense[], RespObj>}
+ */
+function read(userId, queryParams) {
+  const conditions = _.reduce(queryParams, queryParamsToConditions, { userId });
+
+  return Expense
+    .find(conditions)
+    .sort('-date')
+    .then(
+      result => result,
+
+      (err) => {
+        if (err.name === 'CastError') {
+          return Promise.reject(
+            errMsgs.getCastErrorMsg(err.path, Expense.modelName)
+          );
+        }
+
+        // @todo log error
+        return Promise.reject(
+          respObj.getInternalErrResp()
+        );
+      }
+    );
+}
+
+/**
  * Update an expense with the given params
  *
  * @param {ObjectId} _id
@@ -108,7 +108,7 @@ function update(_id, userId, params) {
     .then(
       result => result,
 
-      err => {
+      (err) => {
         if (err.name === 'ValidationError') {
           return Promise.reject(
             respObj.getBadReqResp(errMsgs.getValidationErrorMsg(err, Expense.modelName))

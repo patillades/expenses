@@ -1,6 +1,6 @@
 import merge from 'lodash/merge';
 
-import { MODAL_MESSAGES } from 'constants/messages';
+import MODAL_MESSAGES from 'constants/messages';
 import {
   LOGIN_REGISTRATION_INPUT_CHANGE,
   SESSION_EXPIRED,
@@ -10,7 +10,7 @@ import {
   CREATE_EXPENSE_REQUEST_ERR,
   GET_EXPENSES_REQUEST_ERR,
   EDIT_EXPENSE_REQUEST_ERR,
-  DELETE_EXPENSE_REQUEST_ERR
+  DELETE_EXPENSE_REQUEST_ERR,
 } from 'constants/actionTypes';
 
 /**
@@ -51,12 +51,13 @@ const initialState = {
 
 function authenticated(state = initialState, action) {
   switch (action.type) {
-    case LOGIN_REGISTRATION_INPUT_CHANGE:
+    case LOGIN_REGISTRATION_INPUT_CHANGE: {
       const { form, field, value } = action;
 
       return merge({}, state, {
         [form]: { [field]: value },
       });
+    }
 
     case REGISTRATION_REQUEST_SUCC:
     case LOGIN_REQUEST_SUCC:

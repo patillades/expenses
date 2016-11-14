@@ -72,7 +72,7 @@ function update(_id, params) {
     .then(
       result => result,
 
-      err => {
+      (err) => {
         if (err.name === 'ValidationError') {
           return Promise.reject(
             respObj.getBadReqResp(errMsgs.getValidationErrorMsg(err, User.modelName))
@@ -119,7 +119,7 @@ function authenticate(mail, password) {
 
   return new Promise((resolve, reject) => {
     user.then(
-      result => {
+      (result) => {
         // user not found
         if (!result) {
           return resolve(false);

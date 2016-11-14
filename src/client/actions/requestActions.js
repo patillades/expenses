@@ -1,7 +1,7 @@
 import jwtDecode from 'jwt-decode';
 
 import objToQueryString from 'utils/objToQueryString';
-import { MODAL_MESSAGES } from 'constants/messages';
+import MODAL_MESSAGES from 'constants/messages';
 import {
   ERROR,
   SUCCESS,
@@ -11,7 +11,7 @@ import {
   CREATE_EXPENSE_REQUEST,
   GET_EXPENSES_REQUEST,
   DELETE_EXPENSE_REQUEST,
-  EDIT_EXPENSE_REQUEST
+  EDIT_EXPENSE_REQUEST,
 } from 'constants/actionTypes';
 
 // regexp for HTTP success' status
@@ -29,61 +29,14 @@ const successStatus = /^2\d{2}$/;
  */
 
 /**
- * Send a request to the API
+ * A request of the given type has been sent to the API
  *
  * @param {ActionType} type
  * @param {object} [data={}] - Optional payload that can be added when initiating the request
- * @returns {function: (Promise)} If it worked, dispatch the token found on the response object,
- * or the error message. If it was rejected, dispatch an error message.
+ * @returns {{type: ActionType, data: object}}
  */
-function sendRequest(type, data = {}) {
-  return (dispatch, getState) => {
-    dispatch(initRequest(type, data));
-
-    const state = getState();
-    const { token } = state.authenticated;
-
-    let userId = null;
-
-    // when the request needs the user's id, attempt to get it from token and dispatch a
-    // sessionExpired action if there's an exception so the token is cleared from localStorage and
-    // the user logs in again
-    if (
-      [
-        CREATE_EXPENSE_REQUEST,
-        GET_EXPENSES_REQUEST,
-        DELETE_EXPENSE_REQUEST,
-        EDIT_EXPENSE_REQUEST,
-      ].includes(type)
-    ) {
-      try {
-        userId = jwtDecode(token).sub;
-      } catch (e) {
-        return dispatch(sessionExpired());
-      }
-    }
-
-    fetchRequest(type, state, token, userId).then(
-      response => {
-        // 204 (no content) comes without a body and JSON parsing woul throw an error
-        const bodyData = response.status === 204 ? 'text' : 'json';
-
-        response[bodyData]().then(
-          resp => {
-            if (successStatus.test(response.status)) {
-              return dispatch(requestSucceeded(type, resp));
-            }
-
-            return dispatch(requestFailed(type, resp.msg));
-          },
-
-          rejected => dispatch(internalError(type))
-        );
-      },
-
-      rejected => dispatch(internalError(type))
-    );
-  };
+function initRequest(type, data = {}) {
+  return { type, data };
 }
 
 /**
@@ -96,45 +49,6 @@ function sessionExpired() {
     type: SESSION_EXPIRED,
     msg: MODAL_MESSAGES[SESSION_EXPIRED],
   };
-}
-
-/**
- * A request of the given type has been sent to the API
- *
- * @param {ActionType} type
- * @param {object} [data={}] - Optional payload that can be added when initiating the request
- * @returns {{type: ActionType, data: object}}
- */
-function initRequest(type, data = {}) {
-  return { type, data };
-}
-
-/**
- * Fill the fetch request with the options associated to each action type
- *
- * @param {ActionType} type
- * @param {object} state - The state of redux's store
- * @param {?string} token
- * @param {?ObjectId} userId
- * @return {Promise}
- */
-function fetchRequest(type, state, token, userId) {
-  const { uri, method } = getRequestData(type, state, userId);
-
-  const options = {
-    method,
-    headers: {
-      Authorization: token ? ('Bearer ' + token) : null,
-    },
-  };
-
-  if (['POST', 'PUT'].includes(method)) {
-    options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-
-    options.body = objToQueryString(getBodyObj(type, state));
-  }
-
-  return fetch(uri, options);
 }
 
 /**
@@ -165,13 +79,14 @@ function getRequestData(type, state, userId) {
         uri: `/api/users/${userId}/expenses`,
       };
 
-    case GET_EXPENSES_REQUEST:
+    case GET_EXPENSES_REQUEST: {
       const query = objToQueryString(state.filters, true);
 
       return {
         method: 'GET',
         uri: `/api/users/${userId}/expenses?${query}`,
       };
+    }
 
     case DELETE_EXPENSE_REQUEST:
       return {
@@ -216,23 +131,31 @@ function getBodyObj(type, state) {
 }
 
 /**
- * Get the request body for create/edit requests
+ * Fill the fetch request with the options associated to each action type
  *
- * @param {CreateExpenseState} expenseData
- * @return {{date: MomentDate, description: string, amount: number, comment: string }}
+ * @param {ActionType} type
+ * @param {object} state - The state of redux's store
+ * @param {?string} token
+ * @param {?ObjectId} userId
+ * @return {Promise}
  */
-function getCreateOrEditExpenseBody(expenseData) {
-  const body = Object.assign({}, expenseData);
-  const { time } = body;
+function fetchRequest(type, state, token, userId) {
+  const { uri, method } = getRequestData(type, state, userId);
 
-  body.date
-    .hours(time.hours())
-    .minutes(time.minutes())
-    .seconds(0);
+  const options = {
+    method,
+    headers: {
+      Authorization: token ? (`Bearer ${token}`) : null,
+    },
+  };
 
-  delete body.time;
+  if (['POST', 'PUT'].includes(method)) {
+    options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
-  return body;
+    options.body = objToQueryString(getBodyObj(type, state));
+  }
+
+  return fetch(uri, options);
 }
 
 /**
@@ -295,6 +218,84 @@ function internalError(type) {
     type,
     'something wrong happened, please try again later'
   );
+}
+
+/**
+ * Send a request to the API
+ *
+ * @param {ActionType} type
+ * @param {object} [data={}] - Optional payload that can be added when initiating the request
+ * @returns {function: (Promise)} If it worked, dispatch the token found on the response object,
+ * or the error message. If it was rejected, dispatch an error message.
+ */
+function sendRequest(type, data = {}) {
+  return (dispatch, getState) => {
+    dispatch(initRequest(type, data));
+
+    const state = getState();
+    const { token } = state.authenticated;
+
+    let userId = null;
+
+    // when the request needs the user's id, attempt to get it from token and dispatch a
+    // sessionExpired action if there's an exception so the token is cleared from localStorage and
+    // the user logs in again
+    if (
+      [
+        CREATE_EXPENSE_REQUEST,
+        GET_EXPENSES_REQUEST,
+        DELETE_EXPENSE_REQUEST,
+        EDIT_EXPENSE_REQUEST,
+      ].includes(type)
+    ) {
+      try {
+        userId = jwtDecode(token).sub;
+      } catch (e) {
+        return dispatch(sessionExpired());
+      }
+    }
+
+    fetchRequest(type, state, token, userId).then(
+      (response) => {
+        // 204 (no content) comes without a body and JSON parsing woul throw an error
+        const bodyData = response.status === 204 ? 'text' : 'json';
+
+        response[bodyData]().then(
+          (resp) => {
+            if (successStatus.test(response.status)) {
+              return dispatch(requestSucceeded(type, resp));
+            }
+
+            return dispatch(requestFailed(type, resp.msg));
+          },
+
+          () => dispatch(internalError(type))
+        );
+      },
+
+      () => dispatch(internalError(type))
+    );
+  };
+}
+
+/**
+ * Get the request body for create/edit requests
+ *
+ * @param {CreateExpenseState} expenseData
+ * @return {{date: MomentDate, description: string, amount: number, comment: string }}
+ */
+function getCreateOrEditExpenseBody(expenseData) {
+  const body = Object.assign({}, expenseData);
+  const { time } = body;
+
+  body.date
+    .hours(time.hours())
+    .minutes(time.minutes())
+    .seconds(0);
+
+  delete body.time;
+
+  return body;
 }
 
 export { sessionExpired };

@@ -36,7 +36,7 @@ const expenseSchema = new mongoose.Schema({
       delete ret.__v;
 
       return ret;
-    }
+    },
   },
 });
 

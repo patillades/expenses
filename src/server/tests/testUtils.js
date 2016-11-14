@@ -36,12 +36,14 @@ function request(method, path, params, cb, additionalHeaders = {}) {
     method,
     path,
     headers,
-  }, res => {
+  }, (res) => {
     res.setEncoding('utf8');
 
     let body;
 
-    res.on('data', chunk => body = JSON.parse(chunk));
+    res.on('data', (chunk) => {
+      body = JSON.parse(chunk);
+    });
     res.on('end', () => cb(res.statusCode, body));
   });
 

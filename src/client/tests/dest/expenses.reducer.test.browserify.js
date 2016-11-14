@@ -15082,15 +15082,26 @@ var _hashHistory = require('react-router/lib/hashHistory');
 
 var _hashHistory2 = _interopRequireDefault(_hashHistory);
 
+var _messages = require('constants/messages');
+
+var _messages2 = _interopRequireDefault(_messages);
+
+var _actionTypes = require('constants/actionTypes');
+
 var _requestActions = require('./requestActions');
 
 var _requestActions2 = _interopRequireDefault(_requestActions);
 
-var _messages = require('constants/messages');
-
-var _actionTypes = require('constants/actionTypes');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Create an action with no payload
+ *
+ * @returns {{type: string}}
+ */
+function action(type) {
+  return { type: type };
+}
 
 /**
  * Change event on a form input
@@ -15120,9 +15131,9 @@ function modalBtnClick() {
   return function (dispatch, getState) {
     var modalMsg = getState().requests.modal.msg;
 
-    if ([_messages.MODAL_MESSAGES[_actionTypes.REGISTRATION_REQUEST], _messages.MODAL_MESSAGES[_actionTypes.LOGIN_REQUEST]].includes(modalMsg)) {
+    if ([_messages2.default[_actionTypes.REGISTRATION_REQUEST], _messages2.default[_actionTypes.LOGIN_REQUEST]].includes(modalMsg)) {
       _hashHistory2.default.push('/');
-    } else if (modalMsg === _messages.MODAL_MESSAGES[_actionTypes.SESSION_EXPIRED]) {
+    } else if (modalMsg === _messages2.default[_actionTypes.SESSION_EXPIRED]) {
       _hashHistory2.default.push('/login');
     }
 
@@ -15157,15 +15168,6 @@ function expenseDatetimeChange(type, form, date) {
  */
 function editExpense(expenseId) {
   return { type: _actionTypes.EDIT_EXPENSE, expenseId: expenseId };
-}
-
-/**
- * Create an action with no payload
- *
- * @returns {{type: string}}
- */
-function action(type) {
-  return { type: type };
 }
 
 /**
@@ -15206,6 +15208,8 @@ var _objToQueryString2 = _interopRequireDefault(_objToQueryString);
 
 var _messages = require('constants/messages');
 
+var _messages2 = _interopRequireDefault(_messages);
+
 var _actionTypes = require('constants/actionTypes');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -15225,68 +15229,6 @@ var successStatus = /^2\d{2}$/;
  */
 
 /**
- * Send a request to the API
- *
- * @param {ActionType} type
- * @param {object} [data={}] - Optional payload that can be added when initiating the request
- * @returns {function: (Promise)} If it worked, dispatch the token found on the response object,
- * or the error message. If it was rejected, dispatch an error message.
- */
-function sendRequest(type) {
-  var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-  return function (dispatch, getState) {
-    dispatch(initRequest(type, data));
-
-    var state = getState();
-    var token = state.authenticated.token;
-
-
-    var userId = null;
-
-    // when the request needs the user's id, attempt to get it from token and dispatch a
-    // sessionExpired action if there's an exception so the token is cleared from localStorage and
-    // the user logs in again
-    if ([_actionTypes.CREATE_EXPENSE_REQUEST, _actionTypes.GET_EXPENSES_REQUEST, _actionTypes.DELETE_EXPENSE_REQUEST, _actionTypes.EDIT_EXPENSE_REQUEST].includes(type)) {
-      try {
-        userId = (0, _jwtDecode2.default)(token).sub;
-      } catch (e) {
-        return dispatch(sessionExpired());
-      }
-    }
-
-    fetchRequest(type, state, token, userId).then(function (response) {
-      // 204 (no content) comes without a body and JSON parsing woul throw an error
-      var bodyData = response.status === 204 ? 'text' : 'json';
-
-      response[bodyData]().then(function (resp) {
-        if (successStatus.test(response.status)) {
-          return dispatch(requestSucceeded(type, resp));
-        }
-
-        return dispatch(requestFailed(type, resp.msg));
-      }, function (rejected) {
-        return dispatch(internalError(type));
-      });
-    }, function (rejected) {
-      return dispatch(internalError(type));
-    });
-  };
-}
-
-/**
- * The user's token has expired
- *
- * @return {{type: string, msg: string}}
- */
-function sessionExpired() {
-  return {
-    type: _actionTypes.SESSION_EXPIRED,
-    msg: _messages.MODAL_MESSAGES[_actionTypes.SESSION_EXPIRED]
-  };
-}
-
-/**
  * A request of the given type has been sent to the API
  *
  * @param {ActionType} type
@@ -15297,6 +15239,70 @@ function initRequest(type) {
   var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   return { type: type, data: data };
+}
+
+/**
+ * The user's token has expired
+ *
+ * @return {{type: string, msg: string}}
+ */
+function sessionExpired() {
+  return {
+    type: _actionTypes.SESSION_EXPIRED,
+    msg: _messages2.default[_actionTypes.SESSION_EXPIRED]
+  };
+}
+
+/**
+ * Get the API endpoint URI related to the given action type
+ *
+ * @param {ActionType} type
+ * @param {object} state - The state of redux's store
+ * @param {?ObjectId} userId
+ * @returns {string}
+ */
+function getRequestData(type, state, userId) {
+  switch (type) {
+    case _actionTypes.REGISTRATION_REQUEST:
+      return {
+        method: 'POST',
+        uri: '/api/users'
+      };
+
+    case _actionTypes.LOGIN_REQUEST:
+      return {
+        method: 'POST',
+        uri: '/api/users/login'
+      };
+
+    case _actionTypes.CREATE_EXPENSE_REQUEST:
+      return {
+        method: 'POST',
+        uri: '/api/users/' + userId + '/expenses'
+      };
+
+    case _actionTypes.GET_EXPENSES_REQUEST:
+      {
+        var query = (0, _objToQueryString2.default)(state.filters, true);
+
+        return {
+          method: 'GET',
+          uri: '/api/users/' + userId + '/expenses?' + query
+        };
+      }
+
+    case _actionTypes.DELETE_EXPENSE_REQUEST:
+      return {
+        method: 'DELETE',
+        uri: '/api/users/' + userId + '/expenses/' + state.expenses.expenseIdToDelete
+      };
+
+    case _actionTypes.EDIT_EXPENSE_REQUEST:
+      return {
+        method: 'PUT',
+        uri: '/api/users/' + userId + '/expenses/' + state.expenses.expenseIdOnEdition
+      };
+  }
 }
 
 /**
@@ -15330,105 +15336,6 @@ function fetchRequest(type, state, token, userId) {
 }
 
 /**
- * Get the API endpoint URI related to the given action type
- *
- * @param {ActionType} type
- * @param {object} state - The state of redux's store
- * @param {?ObjectId} userId
- * @returns {string}
- */
-function getRequestData(type, state, userId) {
-  switch (type) {
-    case _actionTypes.REGISTRATION_REQUEST:
-      return {
-        method: 'POST',
-        uri: '/api/users'
-      };
-
-    case _actionTypes.LOGIN_REQUEST:
-      return {
-        method: 'POST',
-        uri: '/api/users/login'
-      };
-
-    case _actionTypes.CREATE_EXPENSE_REQUEST:
-      return {
-        method: 'POST',
-        uri: '/api/users/' + userId + '/expenses'
-      };
-
-    case _actionTypes.GET_EXPENSES_REQUEST:
-      var query = (0, _objToQueryString2.default)(state.filters, true);
-
-      return {
-        method: 'GET',
-        uri: '/api/users/' + userId + '/expenses?' + query
-      };
-
-    case _actionTypes.DELETE_EXPENSE_REQUEST:
-      return {
-        method: 'DELETE',
-        uri: '/api/users/' + userId + '/expenses/' + state.expenses.expenseIdToDelete
-      };
-
-    case _actionTypes.EDIT_EXPENSE_REQUEST:
-      return {
-        method: 'PUT',
-        uri: '/api/users/' + userId + '/expenses/' + state.expenses.expenseIdOnEdition
-      };
-  }
-}
-
-/**
- * Get the object to be used as the body of a API POST request
- *
- * @param {ActionType} type
- * @param {object} state
- * @returns {object}
- */
-function getBodyObj(type, state) {
-  var _state$authenticated = state.authenticated,
-      registration = _state$authenticated.registration,
-      login = _state$authenticated.login;
-
-
-  switch (type) {
-    case _actionTypes.REGISTRATION_REQUEST:
-      return registration;
-
-    case _actionTypes.LOGIN_REQUEST:
-      return login;
-
-    case _actionTypes.CREATE_EXPENSE_REQUEST:
-      return getCreateOrEditExpenseBody(state.expenses.create);
-
-    case _actionTypes.EDIT_EXPENSE_REQUEST:
-      return getCreateOrEditExpenseBody(state.expenses.edit);
-
-    default:
-      return {};
-  }
-}
-
-/**
- * Get the request body for create/edit requests
- *
- * @param {CreateExpenseState} expenseData
- * @return {{date: MomentDate, description: string, amount: number, comment: string }}
- */
-function getCreateOrEditExpenseBody(expenseData) {
-  var body = Object.assign({}, expenseData);
-  var time = body.time;
-
-
-  body.date.hours(time.hours()).minutes(time.minutes()).seconds(0);
-
-  delete body.time;
-
-  return body;
-}
-
-/**
  * The API request ended successfully
  *
  * @param {ActionType} actionType
@@ -15440,7 +15347,7 @@ function getCreateOrEditExpenseBody(expenseData) {
  * expenses: Expense[]|undefined}}
  */
 function requestSucceeded(actionType, resp) {
-  var msg = _messages.MODAL_MESSAGES[actionType];
+  var msg = _messages2.default[actionType];
 
   // the action to be dispatched is the SUCCESS version of the current request
   var type = actionType + _actionTypes.SUCCESS;
@@ -15485,6 +15392,105 @@ function requestFailed(type, msg) {
  */
 function internalError(type) {
   return requestFailed(type, 'something wrong happened, please try again later');
+}
+
+/**
+ * Send a request to the API
+ *
+ * @param {ActionType} type
+ * @param {object} [data={}] - Optional payload that can be added when initiating the request
+ * @returns {function: (Promise)} If it worked, dispatch the token found on the response object,
+ * or the error message. If it was rejected, dispatch an error message.
+ */
+function sendRequest(type) {
+  var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  return function (dispatch, getState) {
+    dispatch(initRequest(type, data));
+
+    var state = getState();
+    var token = state.authenticated.token;
+
+
+    var userId = null;
+
+    // when the request needs the user's id, attempt to get it from token and dispatch a
+    // sessionExpired action if there's an exception so the token is cleared from localStorage and
+    // the user logs in again
+    if ([_actionTypes.CREATE_EXPENSE_REQUEST, _actionTypes.GET_EXPENSES_REQUEST, _actionTypes.DELETE_EXPENSE_REQUEST, _actionTypes.EDIT_EXPENSE_REQUEST].includes(type)) {
+      try {
+        userId = (0, _jwtDecode2.default)(token).sub;
+      } catch (e) {
+        return dispatch(sessionExpired());
+      }
+    }
+
+    fetchRequest(type, state, token, userId).then(function (response) {
+      // 204 (no content) comes without a body and JSON parsing woul throw an error
+      var bodyData = response.status === 204 ? 'text' : 'json';
+
+      response[bodyData]().then(function (resp) {
+        if (successStatus.test(response.status)) {
+          return dispatch(requestSucceeded(type, resp));
+        }
+
+        return dispatch(requestFailed(type, resp.msg));
+      }, function () {
+        return dispatch(internalError(type));
+      });
+    }, function () {
+      return dispatch(internalError(type));
+    });
+  };
+}
+
+/**
+ * Get the request body for create/edit requests
+ *
+ * @param {CreateExpenseState} expenseData
+ * @return {{date: MomentDate, description: string, amount: number, comment: string }}
+ */
+function getCreateOrEditExpenseBody(expenseData) {
+  var body = Object.assign({}, expenseData);
+  var time = body.time;
+
+
+  body.date.hours(time.hours()).minutes(time.minutes()).seconds(0);
+
+  delete body.time;
+
+  return body;
+}
+
+/**
+ * Get the object to be used as the body of a API POST request
+ *
+ * @param {ActionType} type
+ * @param {object} state
+ * @returns {object}
+ */
+function getBodyObj(type, state) {
+  var _state$authenticated = state.authenticated,
+      registration = _state$authenticated.registration,
+      login = _state$authenticated.login;
+
+
+  switch (type) {
+    case _actionTypes.REGISTRATION_REQUEST:
+      return registration;
+
+    case _actionTypes.LOGIN_REQUEST:
+      return login;
+
+    case _actionTypes.CREATE_EXPENSE_REQUEST:
+      return getCreateOrEditExpenseBody(state.expenses.create);
+
+    case _actionTypes.EDIT_EXPENSE_REQUEST:
+      return getCreateOrEditExpenseBody(state.expenses.edit);
+
+    default:
+      return {};
+  }
 }
 
 exports.sessionExpired = sessionExpired;
@@ -15581,7 +15587,6 @@ exports.EDIT_EXPENSE_REQUEST_SUCC = EDIT_EXPENSE_REQUEST_SUCC;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.MODAL_MESSAGES = undefined;
 
 var _MODAL_MESSAGES;
 
@@ -15591,7 +15596,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var MODAL_MESSAGES = (_MODAL_MESSAGES = {}, _defineProperty(_MODAL_MESSAGES, _actionTypes.SESSION_EXPIRED, 'Your session has expired, please log in again'), _defineProperty(_MODAL_MESSAGES, _actionTypes.REGISTRATION_REQUEST, 'registration successful'), _defineProperty(_MODAL_MESSAGES, _actionTypes.LOGIN_REQUEST, 'login successful'), _defineProperty(_MODAL_MESSAGES, _actionTypes.CREATE_EXPENSE_REQUEST, 'expense created successfully'), _defineProperty(_MODAL_MESSAGES, _actionTypes.DELETE_EXPENSE_REQUEST, 'expense deleted successfully'), _defineProperty(_MODAL_MESSAGES, _actionTypes.EDIT_EXPENSE_REQUEST, 'expense updated successfully'), _MODAL_MESSAGES);
 
-exports.MODAL_MESSAGES = MODAL_MESSAGES;
+exports.default = MODAL_MESSAGES;
 
 },{"./actionTypes":214}],216:[function(require,module,exports){
 'use strict';
@@ -15677,6 +15682,24 @@ var initialState = {
   expenseIdOnEdition: null
 };
 
+/**
+ * Add an expense to the expenseIds array and the expensesById object
+ *
+ * @param {Expense} obj
+ * @param {ObjectId[]} expenseIds
+ * @param {ExpensesById} expensesById
+ */
+function addExpense(obj, expenseIds, expensesById) {
+  var expense = (0, _merge5.default)({}, obj);
+  var id = expense.id;
+
+
+  delete expense.id;
+
+  expenseIds.push(id);
+  expensesById[id] = expense;
+}
+
 function expenses() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
   var action = arguments[1];
@@ -15689,12 +15712,14 @@ function expenses() {
       return (0, _merge5.default)({}, state, _defineProperty({}, action.form, { time: action.date }));
 
     case _actionTypes.EXPENSES_INPUT_CHANGE:
-      var form = action.form,
-          field = action.field,
-          value = action.value;
+      {
+        var form = action.form,
+            field = action.field,
+            value = action.value;
 
 
-      return (0, _merge5.default)({}, state, _defineProperty({}, form, _defineProperty({}, field, value)));
+        return (0, _merge5.default)({}, state, _defineProperty({}, form, _defineProperty({}, field, value)));
+      }
 
     case _actionTypes.EDIT_EXPENSE:
       {
@@ -15852,24 +15877,6 @@ function expenses() {
   }
 }
 
-/**
- * Add an expense to the expenseIds array and the expensesById object
- *
- * @param {Expense} obj
- * @param {ObjectId[]} expenseIds
- * @param {ExpensesById} expensesById
- */
-function addExpense(obj, expenseIds, expensesById) {
-  var expense = (0, _merge5.default)({}, obj);
-  var id = expense.id;
-
-
-  delete expense.id;
-
-  expenseIds.push(id);
-  expensesById[id] = expense;
-}
-
 exports.initialState = initialState;
 exports.default = expenses;
 
@@ -15937,8 +15944,10 @@ function objToQueryString() {
   var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var excludeEmpty = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
+  var params = void 0;
+
   if (excludeEmpty) {
-    obj = Object.keys(obj).reduce(function (result, key) {
+    params = Object.keys(obj).reduce(function (result, key) {
       if (!obj[key]) {
         return result;
       }
@@ -15947,9 +15956,11 @@ function objToQueryString() {
 
       return result;
     }, {});
+  } else {
+    params = obj;
   }
 
-  return Object.keys(obj).map(function (key) {
+  return Object.keys(params).map(function (key) {
     return encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]);
   }).join('&');
 }

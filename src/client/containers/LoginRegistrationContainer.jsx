@@ -2,14 +2,13 @@ import connect from 'react-redux/lib/components/connect';
 
 import {
   inputChange,
-  initRequest,
   sendRequest,
-  modalBtnClick
+  modalBtnClick,
 } from 'actions/actions';
 import {
   LOGIN_REGISTRATION_INPUT_CHANGE,
   REGISTRATION_REQUEST,
-  LOGIN_REQUEST
+  LOGIN_REQUEST,
 } from 'constants/actionTypes';
 
 import LoginRegistration from 'components/LoginRegistration.jsx';

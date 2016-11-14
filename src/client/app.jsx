@@ -9,7 +9,7 @@ import store from 'store';
 import LoginRegistrationContainer from 'containers/LoginRegistrationContainer.jsx';
 import UserExpensesContainer from 'containers/UserExpensesContainer.jsx';
 
-hashHistory.listen(location => {
+hashHistory.listen((location) => {
   const { token } = store.getState().authenticated;
 
   // send users to login page if they are not authenticated

@@ -5,17 +5,15 @@ import expenses, { initialState } from 'reducers/expenses';
 import {
   inputChange,
   expenseDatetimeChange,
-  initRequest
 } from 'actions/actions';
 import {
   EXPENSES_INPUT_CHANGE,
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
-  CREATE_EXPENSE_REQUEST
 } from 'constants/actionTypes';
 
-describe('Expenses reducer', function () {
-  it('should reflect changes on the expense create inputs', function () {
+describe('Expenses reducer', () => {
+  it('should reflect changes on the expense create inputs', () => {
     const field = 'description';
     const value = 'foo';
 
@@ -27,7 +25,7 @@ describe('Expenses reducer', function () {
     expect(newState.create[field]).toBe(value);
   });
 
-  it('should reflect changes on the create date/time inputs', function () {
+  it('should reflect changes on the create date/time inputs', () => {
     const date = moment().add({ days: 1, months: 1, years: 1 });
 
     let newState = expenses(

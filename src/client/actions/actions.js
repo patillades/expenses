@@ -1,18 +1,25 @@
 import 'whatwg-fetch';
 import hashHistory from 'react-router/lib/hashHistory';
 
-import sendRequest, { sessionExpired } from './requestActions';
-import { MODAL_MESSAGES } from 'constants/messages';
+import MODAL_MESSAGES from 'constants/messages';
 import {
-  CLEAR_EXPENSES_FILTER,
   CLOSE_MODAL,
   SESSION_EXPIRED,
   LOG_OUT,
   REGISTRATION_REQUEST,
   LOGIN_REQUEST,
   EDIT_EXPENSE,
-  CANCEL_EDIT_EXPENSE,
 } from 'constants/actionTypes';
+import sendRequest, { sessionExpired } from './requestActions';
+
+/**
+ * Create an action with no payload
+ *
+ * @returns {{type: string}}
+ */
+function action(type) {
+  return { type };
+}
 
 /**
  * Change event on a form input
@@ -43,9 +50,9 @@ function modalBtnClick() {
     const modalMsg = getState().requests.modal.msg;
 
     if ([
-        MODAL_MESSAGES[REGISTRATION_REQUEST],
-        MODAL_MESSAGES[LOGIN_REQUEST],
-      ].includes(modalMsg)
+      MODAL_MESSAGES[REGISTRATION_REQUEST],
+      MODAL_MESSAGES[LOGIN_REQUEST],
+    ].includes(modalMsg)
     ) {
       hashHistory.push('/');
     } else if (modalMsg === MODAL_MESSAGES[SESSION_EXPIRED]) {
@@ -83,15 +90,6 @@ function expenseDatetimeChange(type, form, date) {
  */
 function editExpense(expenseId) {
   return { type: EDIT_EXPENSE, expenseId };
-}
-
-/**
- * Create an action with no payload
- *
- * @returns {{type: string}}
- */
-function action(type) {
-  return { type };
 }
 
 /**

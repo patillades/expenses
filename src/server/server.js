@@ -24,7 +24,7 @@ mongoose.set('debug', true);
 mongoose.connection.on('error', err => console.error('MongoDB error: %s', err));
 
 const db = mongoose.connection;
-db.on('error', e => {
+db.on('error', (e) => {
   console.log('db error', e);
 
   process.exit();
@@ -35,9 +35,9 @@ const app = express();
 const apiRoutes = express.Router();
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(__dirname + '/../../static'));
+app.use(express.static(`${__dirname}/../../static`));
 
-app.get('/', (req, res) => res.sendFile(path.resolve(__dirname + '/../../static/index.html')));
+app.get('/', (req, res) => res.sendFile(path.resolve(`${__dirname}/../../static/index.html`)));
 
 // add prefix to API routes
 app.use('/api', apiRoutes);

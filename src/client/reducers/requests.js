@@ -18,7 +18,7 @@ import {
   EDIT_EXPENSE_REQUEST,
   EDIT_EXPENSE_REQUEST_ERR,
   EDIT_EXPENSE_REQUEST_SUCC,
-  CLOSE_MODAL
+  CLOSE_MODAL,
 } from 'constants/actionTypes';
 
 /**

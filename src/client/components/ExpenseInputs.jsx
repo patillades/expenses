@@ -13,6 +13,8 @@ const propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]).isRequired,
+  comment: PropTypes.string.isRequired,
+  children: PropTypes.element,
   inputChangeHandler: PropTypes.func.isRequired,
   dateChangeHandler: PropTypes.func.isRequired,
   timeChangeHandler: PropTypes.func.isRequired,

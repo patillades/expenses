@@ -16,7 +16,7 @@ mongoose.connect(`mongodb://localhost/${config.get('db')}`);
 mongoose.connection.on('error', err => console.error('MongoDB error: %s', err));
 
 const db = mongoose.connection;
-db.on('error', e => {
+db.on('error', (e) => {
   console.log('db error', e);
 
   process.exit();
@@ -35,10 +35,10 @@ const expenses = [
   { description: 'subway ticket', amount: 2, date: moment().subtract(10, 'd') },
 ];
 
-describe('admin users setup', function () {
+describe('admin users setup', () => {
   before(done => db.once('open', done));
 
-  it('should insert a test user or fail if already registered', done => {
+  it('should insert a test user or fail if already registered', (done) => {
     usersModel.create(
       config.get('test_user'),
       usersModel.ROLES.ADMIN
@@ -49,13 +49,13 @@ describe('admin users setup', function () {
 
       err => Promise.reject(err)
     ).then(
-      result => {
+      (result) => {
         expect(result.length).toBe(expenses.length);
 
         done();
       },
 
-      err => {
+      (err) => {
         expect(err).toBe('mail already registered');
 
         done();

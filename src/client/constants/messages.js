@@ -4,7 +4,7 @@ import {
   CREATE_EXPENSE_REQUEST,
   DELETE_EXPENSE_REQUEST,
   EDIT_EXPENSE_REQUEST,
-  SESSION_EXPIRED
+  SESSION_EXPIRED,
 } from './actionTypes';
 
 const MODAL_MESSAGES = {
@@ -17,4 +17,4 @@ const MODAL_MESSAGES = {
   [EDIT_EXPENSE_REQUEST]: 'expense updated successfully',
 };
 
-export { MODAL_MESSAGES };
+export default MODAL_MESSAGES;

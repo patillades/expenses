@@ -4,12 +4,11 @@ import UserExpenses from 'components/UserExpenses.jsx';
 import {
   expenseDatetimeChange,
   inputChange,
-  initRequest,
   sendRequest,
   modalBtnClick,
   editExpense,
   action,
-  logOut
+  logOut,
 } from 'actions/actions';
 import {
   EXPENSES_INPUT_CHANGE,
@@ -24,7 +23,7 @@ import {
   GET_EXPENSES_REQUEST_ON_LOAD,
   DELETE_EXPENSE_REQUEST,
   CANCEL_EDIT_EXPENSE,
-  EDIT_EXPENSE_REQUEST
+  EDIT_EXPENSE_REQUEST,
 } from 'constants/actionTypes';
 
 function mapStateToProps(state) {
@@ -99,13 +98,13 @@ function mapDispatchToProps(dispatch) {
 
     cancelEditExpenseHandler: () => dispatch(action(CANCEL_EDIT_EXPENSE)),
 
-    clearExpensesFilterHandler: e => {
+    clearExpensesFilterHandler: (e) => {
       dispatch(action(CLEAR_EXPENSES_FILTER));
 
       loadUserExpenses(e);
     },
 
-    toggleDayWeekExpensesHandler: e => dispatch(action(TOGGLE_DAY_WEEK_EXPENSES)),
+    toggleDayWeekExpensesHandler: () => dispatch(action(TOGGLE_DAY_WEEK_EXPENSES)),
 
     logOutHandler: () => dispatch(logOut()),
   };

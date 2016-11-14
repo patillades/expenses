@@ -9,10 +9,6 @@ import ExpensesTable from './ExpensesTable.jsx';
 import Modal from './Modal.jsx';
 
 class UserExpenses extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   // if the user is authenticated (state or preloaded through localStorage), get the user's expenses
   componentWillMount() {
     if (this.props.authenticated.token) {
@@ -68,8 +64,8 @@ class UserExpenses extends React.Component {
           isDisabled={this.props.requests.isFetching}
           deleteHandler={this.props.deleteExpenseHandler}
           editHandler={this.props.editExpenseHandler}
-          dateChangeHandler={this.props.dateChangeHandler.bind(null, 'edit')}
-          timeChangeHandler={this.props.timeChangeHandler.bind(null, 'edit')}
+          dateChangeHandler={date => this.props.dateChangeHandler('edit', date)}
+          timeChangeHandler={date => this.props.timeChangeHandler('edit', date)}
           inputChangeHandler={this.props.inputChangeHandler}
           editSubmitHandler={this.props.editExpenseSubmitHandler}
           cancelEditHandler={this.props.cancelEditExpenseHandler}

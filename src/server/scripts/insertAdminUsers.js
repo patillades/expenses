@@ -14,16 +14,16 @@ mongoose.connect(`mongodb://localhost/${config.get('db')}`);
 mongoose.connection.on('error', err => console.error('MongoDB error: %s', err));
 
 const db = mongoose.connection;
-db.on('error', e => {
+db.on('error', (e) => {
   console.log('db error', e);
 
   process.exit();
 });
 
-describe('admin users setup', function () {
+describe('admin users setup', () => {
   before(done => db.once('open', done));
 
-  it('should insert two users or fail if already registered', done => {
+  it('should insert two users or fail if already registered', (done) => {
     Promise.all([
       usersModel.create(
         config.get('admin'),
@@ -34,13 +34,13 @@ describe('admin users setup', function () {
         usersModel.ROLES.USER_MANAGER
       ),
     ]).then(
-      results => {
+      (results) => {
         expect(results.length).toBe(2);
 
         done();
       },
 
-      err => {
+      (err) => {
         expect(err).toBe('mail already registered');
 
         done();

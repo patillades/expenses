@@ -1,8 +1,8 @@
 const respObj = require('utils/respObj');
 
 const NOT_FOUND = ' not found';
-const EXPENSE_NOT_FOUND = 'expense' + NOT_FOUND;
-const USER_NOT_FOUND = 'user' + NOT_FOUND;
+const EXPENSE_NOT_FOUND = `expense${NOT_FOUND}`;
+const USER_NOT_FOUND = `user${NOT_FOUND}`;
 const AMOUNT_SHOULD_BE_NUM = 'amount has to be a number';
 const DATE_SHOULD_BE_DATE = 'date has a wrong format, use "m/d/Y (H:i)" instead';
 

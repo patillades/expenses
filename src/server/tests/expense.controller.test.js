@@ -12,7 +12,7 @@ describe('Expense controller', function () {
 
   let adminToken;
 
-  before(done => {
+  before((done) => {
     testUser = testUtils.getTestUser();
 
     testUtils.request('POST', '/api/users', testUser, (status, body) => {
@@ -30,73 +30,73 @@ describe('Expense controller', function () {
     });
   });
 
-  describe('JWT access', function () {
-    it('should return 401 if no Authorization header', done => {
-      testUtils.request('POST', `/api/users/${id}/expenses`, {}, status => {
+  describe('JWT access', () => {
+    it('should return 401 if no Authorization header', (done) => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {}, (status) => {
         expect(status).toBe(401);
 
         done();
       });
     });
 
-    it('should return 401 if Authorization header has wrong scheme', done => {
-      testUtils.request('POST', `/api/users/${id}/expenses`, {}, status => {
+    it('should return 401 if Authorization header has wrong scheme', (done) => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {}, (status) => {
         expect(status).toBe(401);
 
         done();
       }, { Authorization: 'someauth' });
     });
 
-    it('should return 401 if Authorization header has wrong scheme', done => {
-      testUtils.request('POST', `/api/users/${id}/expenses`, {}, status => {
+    it('should return 401 if Authorization header has wrong scheme', (done) => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {}, (status) => {
         expect(status).toBe(401);
 
         done();
       }, { Authorization: 'token token' });
     });
 
-    it('should return 401 if Authorization header has wrong token', done => {
-      testUtils.request('POST', `/api/users/${id}/expenses`, {}, status => {
+    it('should return 401 if Authorization header has wrong token', (done) => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {}, (status) => {
         expect(status).toBe(401);
 
         done();
       }, { Authorization: 'Bearer token' });
     });
 
-    it('should return 401 if the token subject does not match the user id', done => {
-      testUtils.request('POST', `/api/users/notanid/expenses`, {}, status => {
+    it('should return 401 if the token subject does not match the user id', (done) => {
+      testUtils.request('POST', `/api/users/notanid/expenses`, {}, (status) => {
         expect(status).toBe(401);
 
         done();
       }, { Authorization: `Bearer ${token}` });
     });
 
-    it('should return 400 if Authorization header is ok but missing params', done => {
-      testUtils.request('POST', `/api/users/${id}/expenses`, {}, status => {
+    it('should return 400 if Authorization header is ok but missing params', (done) => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {}, (status) => {
         expect(status).toBe(400);
 
         done();
       }, { Authorization: `Bearer ${token}` });
     });
 
-    it('should return 400 if Authorization header is ok but amount is not number', done => {
+    it('should return 400 if Authorization header is ok but amount is not number', (done) => {
       testUtils.request('POST', `/api/users/${id}/expenses`, {
         amount: 'notnumber',
         description: 'some stuff',
         date: Date.now(),
-      }, status => {
+      }, (status) => {
         expect(status).toBe(400);
 
         done();
       }, { Authorization: `Bearer ${token}` });
     });
 
-    it('should return 400 if Authorization header is ok but date is not a date', done => {
+    it('should return 400 if Authorization header is ok but date is not a date', (done) => {
       testUtils.request('POST', `/api/users/${id}/expenses`, {
         amount: 20,
         description: 'some stuff',
         date: 'yesterday',
-      }, status => {
+      }, (status) => {
         expect(status).toBe(400);
 
         done();
@@ -105,7 +105,7 @@ describe('Expense controller', function () {
   });
 
   describe('create', function () {
-    it('should return 201 if everything ok', done => {
+    it('should return 201 if everything ok', (done) => {
       testUtils.request('POST', `/api/users/${id}/expenses`, {
         amount: 10,
         description: 'I bought some great stuff on the city center',
@@ -124,7 +124,7 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${token}` });
     });
 
-    it('should return 201 and comment if everything ok', done => {
+    it('should return 201 and comment if everything ok', (done) => {
       testUtils.request('POST', `/api/users/${id}/expenses`, {
         amount: 20,
         description: 'Went to the supermarket and picked a lot of tasty stuff',
@@ -142,7 +142,7 @@ describe('Expense controller', function () {
   });
 
   describe('read', function () {
-    it('should return 200 and an array of expenses', done => {
+    it('should return 200 and an array of expenses', (done) => {
       testUtils.request('GET', `/api/users/${id}/expenses`, {}, (status, body) => {
         expect(status).toBe(200);
         expect(body).toBeAn('array');
@@ -160,8 +160,8 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${token}` });
     });
 
-    describe('filters', function () {
-      it('should return 400 if amount not a number', done => {
+    describe('filters', () => {
+      it('should return 400 if amount not a number', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $gte_amount: 'notanumber' },
@@ -174,7 +174,7 @@ describe('Expense controller', function () {
         );
       });
 
-      it('should return 400 if date not a date', done => {
+      it('should return 400 if date not a date', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $gte_date: 'notadate' },
@@ -187,7 +187,7 @@ describe('Expense controller', function () {
         );
       });
 
-      it('should return one expense with an amount >= 15', done => {
+      it('should return one expense with an amount >= 15', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $gte_amount: 15 },
@@ -201,7 +201,7 @@ describe('Expense controller', function () {
         );
       });
 
-      it('should return one expense with an amount <= 18', done => {
+      it('should return one expense with an amount <= 18', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $lte_amount: 18 },
@@ -215,7 +215,7 @@ describe('Expense controller', function () {
         );
       });
 
-      it('should return two expenses with amount >=10 <= 20', done => {
+      it('should return two expenses with amount >=10 <= 20', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $gte_amount: 10, $lte_amount: 20 },
@@ -229,7 +229,7 @@ describe('Expense controller', function () {
         );
       });
 
-      it('should return no expenses with date >= +2days', done => {
+      it('should return no expenses with date >= +2days', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $gte_date: moment().add(2, 'd').format() },
@@ -243,7 +243,7 @@ describe('Expense controller', function () {
         );
       });
 
-      it('should return one expense with date <= -1days', done => {
+      it('should return one expense with date <= -1days', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $lte_date: moment().subtract(1, 'd').format() },
@@ -257,7 +257,7 @@ describe('Expense controller', function () {
         );
       });
 
-      it('should return two expenses with the word "stuff"', done => {
+      it('should return two expenses with the word "stuff"', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $text: 'stuff' },
@@ -271,7 +271,7 @@ describe('Expense controller', function () {
         );
       });
 
-      it('should return one expenses with the word "stuff" and amount >= 15', done => {
+      it('should return one expenses with the word "stuff" and amount >= 15', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $text: 'stuff', $gte_amount: 15 },
@@ -285,7 +285,7 @@ describe('Expense controller', function () {
         );
       });
 
-      it('should return one expenses with the word "supermarket"', done => {
+      it('should return one expenses with the word "supermarket"', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $text: 'supermarket' },
@@ -299,7 +299,7 @@ describe('Expense controller', function () {
         );
       });
 
-      it('should return no expenses with the word "table"', done => {
+      it('should return no expenses with the word "table"', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $text: 'table' },
@@ -313,7 +313,7 @@ describe('Expense controller', function () {
         );
       });
 
-      it('should return one expenses with the phrase "a lot of tasty stuff"', done => {
+      it('should return one expenses with the phrase "a lot of tasty stuff"', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $text: '"a lot of tasty stuff"' },
@@ -330,7 +330,7 @@ describe('Expense controller', function () {
   });
 
   describe('delete', function () {
-    it('should return 200 if expense found', done => {
+    it('should return 200 if expense found', (done) => {
       const uri = `/api/users/${id}/expenses/${expenseIds[0]}`;
 
       testUtils.request('DELETE', uri, {}, (status, body) => {
@@ -341,7 +341,7 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${token}` });
     });
 
-    it('should return 404 if expense not found', done => {
+    it('should return 404 if expense not found', (done) => {
       const uri = `/api/users/${id}/expenses/${expenseIds[0]}`;
 
       testUtils.request('DELETE', uri, {}, (status, body) => {
@@ -352,7 +352,7 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${token}` });
     });
 
-    it('should return 404 if wrong expense id', done => {
+    it('should return 404 if wrong expense id', (done) => {
       const uri = `/api/users/${id}/expenses/notanid`;
 
       testUtils.request('DELETE', uri, {}, (status, body) => {
@@ -365,7 +365,7 @@ describe('Expense controller', function () {
   });
 
   describe('update', function () {
-    it('should return 404 if expense not found', done => {
+    it('should return 404 if expense not found', (done) => {
       const uri = `/api/users/${id}/expenses/${expenseIds[0]}`;
 
       testUtils.request('PUT', uri, {}, (status, body) => {
@@ -376,7 +376,7 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${token}` });
     });
 
-    it('should return 404 if wrong expense id', done => {
+    it('should return 404 if wrong expense id', (done) => {
       const uri = `/api/users/${id}/expenses/notanid`;
 
       testUtils.request('PUT', uri, {}, (status, body) => {
@@ -387,7 +387,7 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${token}` });
     });
 
-    it('should return 400 if amount is empty', done => {
+    it('should return 400 if amount is empty', (done) => {
       const uri = `/api/users/${id}/expenses/${expenseIds[1]}`;
 
       testUtils.request('PUT', uri, { amount: '' }, (status, body) => {
@@ -398,7 +398,7 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${token}` });
     });
 
-    it('should return 400 if amount is not a number', done => {
+    it('should return 400 if amount is not a number', (done) => {
       const uri = `/api/users/${id}/expenses/${expenseIds[1]}`;
 
       testUtils.request('PUT', uri, { amount: 'not an amount' }, (status, body) => {
@@ -409,7 +409,7 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${token}` });
     });
 
-    it('should return 400 if date is not a date', done => {
+    it('should return 400 if date is not a date', (done) => {
       const uri = `/api/users/${id}/expenses/${expenseIds[1]}`;
 
       testUtils.request('PUT', uri, { date: 'not a date' }, (status, body) => {
@@ -420,7 +420,7 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${token}` });
     });
 
-    it('should return 204 if it worked', done => {
+    it('should return 204 if it worked', (done) => {
       const uri = `/api/users/${id}/expenses/${expenseIds[1]}`;
 
       testUtils.request('PUT', uri, { description: 'new description' }, (status, body) => {
@@ -433,7 +433,7 @@ describe('Expense controller', function () {
   });
 
   describe('admin access', function () {
-    it('should be able to create an expense on the user\'s behalf', done => {
+    it('should be able to create an expense on the user\'s behalf', (done) => {
       testUtils.request('POST', `/api/users/${id}/expenses`, {
         amount: 30,
         description: 'The admin is shady',
@@ -452,7 +452,7 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${adminToken}` });
     });
 
-    it('should be able to read a user\'s expenses', done => {
+    it('should be able to read a user\'s expenses', (done) => {
       testUtils.request('GET', `/api/users/${id}/expenses`, {}, (status, body) => {
         expect(status).toBe(200);
         expect(body).toBeAn('array');
@@ -472,7 +472,7 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${adminToken}` });
     });
 
-    it('should be able to update an expense on the user\'s behalf', done => {
+    it('should be able to update an expense on the user\'s behalf', (done) => {
       const uri = `/api/users/${id}/expenses/${expenseIds[1]}`;
 
       testUtils.request('PUT', uri, { description: 'admin mind tricks' }, (status, body) => {
@@ -483,7 +483,7 @@ describe('Expense controller', function () {
       }, { Authorization: `Bearer ${adminToken}` });
     });
 
-    it('should be able to delete an expense on the user\'s behalf', done => {
+    it('should be able to delete an expense on the user\'s behalf', (done) => {
       const uri = `/api/users/${id}/expenses/${expenseIds[1]}`;
 
       testUtils.request('DELETE', uri, {}, (status, body) => {

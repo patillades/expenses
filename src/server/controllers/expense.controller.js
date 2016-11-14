@@ -27,7 +27,7 @@ function update(req, res) {
   const { expenseId, userId } = req.params;
 
   expensesModel.update(expenseId, userId, req.body).then(
-    result => {
+    (result) => {
       if (!result) {
         return res.status(404).json({ msg: errMsgs.EXPENSE_NOT_FOUND });
       }
@@ -43,7 +43,7 @@ function remove(req, res) {
   const { expenseId, userId } = req.params;
 
   expensesModel.remove(expenseId, userId).then(
-    result => {
+    (result) => {
       if (!result) {
         return res.status(404).json({ msg: errMsgs.EXPENSE_NOT_FOUND });
       }
@@ -51,7 +51,7 @@ function remove(req, res) {
       return res.status(200).json({});
     },
 
-    err => {
+    (err) => {
       // the expenseId had a wrong format
       if (err.name === 'CastError') {
         return res.status(404).json({ msg: errMsgs.EXPENSE_NOT_FOUND });

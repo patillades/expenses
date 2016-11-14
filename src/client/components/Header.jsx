@@ -13,16 +13,18 @@ function Header(props) {
   let button;
 
   if (props.hasLogOutBtn) {
-    button = <Button
-      id="logOutBtn"
-      triggerId={props.triggerId}
-      txt="Log out"
-      title="Log out"
-      isLoading={props.isDisabled}
-      clickHandler={props.clickHandler}
-      className="btn-link pull-right"
-      isInline
-    />;
+    button = (
+      <Button
+        id="logOutBtn"
+        triggerId={props.triggerId}
+        txt="Log out"
+        title="Log out"
+        isLoading={props.isDisabled}
+        clickHandler={props.clickHandler}
+        className="btn-link pull-right"
+        isInline
+      />
+    );
   } else {
     button = null;
   }

@@ -7,8 +7,10 @@
  * @returns {string}
  */
 function objToQueryString(obj = {}, excludeEmpty = false) {
+  let params;
+
   if (excludeEmpty) {
-    obj = Object.keys(obj).reduce((result, key) => {
+    params = Object.keys(obj).reduce((result, key) => {
       if (!obj[key]) {
         return result;
       }
@@ -17,10 +19,12 @@ function objToQueryString(obj = {}, excludeEmpty = false) {
 
       return result;
     }, {});
+  } else {
+    params = obj;
   }
 
-  return Object.keys(obj).map(key =>
-    encodeURIComponent(key) + '=' + encodeURIComponent(obj[key])
+  return Object.keys(params).map(key =>
+    `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`
   ).join('&');
 }
 

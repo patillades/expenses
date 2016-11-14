@@ -1,6 +1,4 @@
-import {
-  TOGGLE_DAY_WEEK_EXPENSES
-} from 'constants/actionTypes';
+import { TOGGLE_DAY_WEEK_EXPENSES } from 'constants/actionTypes';
 
 /**
  * @typedef {object} ExpensesViewState

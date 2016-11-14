@@ -2,23 +2,14 @@ import React, { PropTypes } from 'react';
 import classnames from 'classnames';
 import Loader from 'halogen/PulseLoader';
 
-import ExpenseRow from './ExpenseRow.jsx';
 import { GET_EXPENSES_REQUEST_ON_LOAD } from 'constants/actionTypes';
+import ExpenseRow from './ExpenseRow.jsx';
 
 const propTypes = {
   isVisible: PropTypes.bool.isRequired,
-  editObj: PropTypes.object.isRequired,
   triggerId: PropTypes.string,
-  expenseIdOnEdition: PropTypes.string,
   isDisabled: PropTypes.bool.isRequired,
   expenseIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-  expensesById: PropTypes.objectOf(PropTypes.object).isRequired,
-  deleteHandler: PropTypes.func.isRequired,
-  editHandler: PropTypes.func.isRequired,
-  dateChangeHandler: PropTypes.func.isRequired,
-  timeChangeHandler: PropTypes.func.isRequired,
-  inputChangeHandler: PropTypes.func.isRequired,
-  editSubmitHandler: PropTypes.func.isRequired,
   cancelEditHandler: PropTypes.func.isRequired,
 };
 
