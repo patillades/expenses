@@ -10,12 +10,12 @@ const propTypes = {
 };
 
 function ToggleDayWeekExpenses(props) {
-  const txt = `Expenses per ${props.view.daily ? 'week' : 'day'}`;
+  const txt = `Switch to expenses per ${props.view.daily ? 'week' : 'day'}`;
 
   return (
     <Button
       id="toggleDayWeekBtn"
-      className="btn-primary btn-lg"
+      className="btn-info"
       triggerId={props.triggerId}
       txt={txt}
       isLoading={props.isDisabled}
