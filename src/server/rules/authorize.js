@@ -3,6 +3,10 @@ const jwt = require('jsonwebtoken');
 
 const respObj = require('utils/respObj');
 
+// @see this message MUST be the same as
+// MODAL_MESSAGES[SESSION_EXPIRED]@src/shared/constants/messages.js
+const SESSION_EXPIRED = 'Your session has expired, please log in again';
+
 /**
  * Verify that the provided request has a valid JSON Web Token in its Authorization header; and that
  * the provided user id matches the subject of the token, or that the role that the token was signed
@@ -41,7 +45,7 @@ function verifyToken(req, userId, roles, onlyToRoles) {
         let msg;
 
         if (err.name === 'TokenExpiredError') {
-          msg = err.name;
+          msg = SESSION_EXPIRED;
         }
 
         return reject(respObj.getUnauthorizedResp(msg));

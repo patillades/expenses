@@ -8,12 +8,13 @@ import {
 } from './actionTypes';
 
 const MODAL_MESSAGES = {
+  // @see this message MUST be the same as SESSION_EXPIRED@src/server/rules/authorize.js
+  [SESSION_EXPIRED]: 'Your session has expired, please log in again',
   [REGISTRATION_REQUEST]: 'registration successful',
   [LOGIN_REQUEST]: 'login successful',
   [CREATE_EXPENSE_REQUEST]: 'expense created successfully',
   [DELETE_EXPENSE_REQUEST]: 'expense deleted successfully',
   [EDIT_EXPENSE_REQUEST]: 'expense updated successfully',
-  [SESSION_EXPIRED]: 'Your session has expired, please log in again',
 };
 
 export { MODAL_MESSAGES };
