@@ -15899,29 +15899,23 @@ describe('Expenses reducer', function () {
     var field = 'description';
     var value = 'foo';
 
-    var newState = (0, _expenses2.default)(_expenses.initialState, (0, _actions.inputChange)(field, value));
+    var newState = (0, _expenses2.default)(_expenses.initialState, (0, _actions.inputChange)(_actionTypes.EXPENSES_INPUT_CHANGE, 'create', field, value));
 
     (0, _expect2.default)(newState.create[field]).toBe(value);
   });
 
-  it('should reflect changes on the date/time inputs', function () {
+  it('should reflect changes on the create date/time inputs', function () {
     var date = (0, _moment2.default)().add({ days: 1, months: 1, years: 1 });
 
-    var newState = (0, _expenses2.default)(_expenses.initialState, (0, _actions.expenseDatetimeChange)(_actionTypes.EXPENSE_DATE_CHANGE, date));
+    var newState = (0, _expenses2.default)(_expenses.initialState, (0, _actions.expenseDatetimeChange)(_actionTypes.EXPENSE_DATE_CHANGE, 'create', date));
 
     (0, _expect2.default)(newState.create.date.format('M/D/YYYY')).toBe(date.format('M/D/YYYY'));
 
     var time = (0, _moment2.default)().add({ hours: 1, minutes: 1 });
 
-    newState = (0, _expenses2.default)(_expenses.initialState, (0, _actions.expenseDatetimeChange)(_actionTypes.EXPENSE_TIME_CHANGE, time));
+    newState = (0, _expenses2.default)(_expenses.initialState, (0, _actions.expenseDatetimeChange)(_actionTypes.EXPENSE_TIME_CHANGE, 'create', time));
 
     (0, _expect2.default)(newState.create.time.format('HH:mm')).toBe(time.format('HH:mm'));
-  });
-
-  it('should reflect fetching on initRequest', function () {
-    var newState = (0, _expenses2.default)(_expenses.initialState, (0, _actions.initRequest)(_actionTypes.CREATE_EXPENSE_REQUEST));
-
-    (0, _expect2.default)(newState.isFetching).toBe(true);
   });
 });
 

@@ -8,6 +8,7 @@ import {
   initRequest
 } from 'actions/actions';
 import {
+  EXPENSES_INPUT_CHANGE,
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
   CREATE_EXPENSE_REQUEST
@@ -20,18 +21,18 @@ describe('Expenses reducer', function () {
 
     const newState = expenses(
       initialState,
-      inputChange(field, value)
+      inputChange(EXPENSES_INPUT_CHANGE, 'create', field, value)
     );
 
     expect(newState.create[field]).toBe(value);
   });
 
-  it('should reflect changes on the date/time inputs', function () {
+  it('should reflect changes on the create date/time inputs', function () {
     const date = moment().add({ days: 1, months: 1, years: 1 });
 
     let newState = expenses(
       initialState,
-      expenseDatetimeChange(EXPENSE_DATE_CHANGE, date)
+      expenseDatetimeChange(EXPENSE_DATE_CHANGE, 'create', date)
     );
 
     expect(newState.create.date.format('M/D/YYYY')).toBe(date.format('M/D/YYYY'));
@@ -40,18 +41,9 @@ describe('Expenses reducer', function () {
 
     newState = expenses(
       initialState,
-      expenseDatetimeChange(EXPENSE_TIME_CHANGE, time)
+      expenseDatetimeChange(EXPENSE_TIME_CHANGE, 'create', time)
     );
 
     expect(newState.create.time.format('HH:mm')).toBe(time.format('HH:mm'));
-  });
-
-  it('should reflect fetching on initRequest', function () {
-    const newState = expenses(
-      initialState,
-      initRequest(CREATE_EXPENSE_REQUEST)
-    );
-
-    expect(newState.isFetching).toBe(true);
   });
 });
