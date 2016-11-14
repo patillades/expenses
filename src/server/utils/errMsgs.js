@@ -4,7 +4,7 @@ const NOT_FOUND = ' not found';
 const EXPENSE_NOT_FOUND = 'expense' + NOT_FOUND;
 const USER_NOT_FOUND = 'user' + NOT_FOUND;
 const AMOUNT_SHOULD_BE_NUM = 'amount has to be a number';
-const DATE_SHOULD_BE_DATE = 'date has to be in the "Y-m-d (H:i)" format';
+const DATE_SHOULD_BE_DATE = 'date has a wrong format, use "m/d/Y (H:i)" instead';
 
 /**
  * Get the msg related to a CastError depending on the field where it happened
