@@ -1,11 +1,12 @@
 import 'whatwg-fetch';
 import hashHistory from 'react-router/lib/hashHistory';
 
-import sendRequest from './requestActions';
+import sendRequest, { sessionExpired } from './requestActions';
 import { MODAL_MESSAGES } from 'constants/messages';
 import {
   CLEAR_EXPENSES_FILTER,
   CLOSE_MODAL,
+  SESSION_EXPIRED,
   REGISTRATION_REQUEST,
   LOGIN_REQUEST,
   EDIT_EXPENSE,
@@ -46,6 +47,8 @@ function modalBtnClick() {
       ].includes(modalMsg)
     ) {
       hashHistory.push('/');
+    } else if (modalMsg === MODAL_MESSAGES[SESSION_EXPIRED]) {
+      hashHistory.push('/login');
     }
 
     return dispatch(action(CLOSE_MODAL));
@@ -93,6 +96,7 @@ function action(type) {
 export {
   inputChange,
   sendRequest,
+  sessionExpired,
   modalBtnClick,
   action,
   expenseDatetimeChange,

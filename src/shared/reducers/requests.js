@@ -1,4 +1,5 @@
 import {
+  SESSION_EXPIRED,
   REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,
   REGISTRATION_REQUEST_SUCC,
@@ -69,6 +70,7 @@ function requests(state = initialState, action) {
     case EDIT_EXPENSE_REQUEST_SUCC:
     case DELETE_EXPENSE_REQUEST_ERR:
     case DELETE_EXPENSE_REQUEST_SUCC:
+    case SESSION_EXPIRED:
       return Object.assign({}, state, {
         isFetching: false,
         triggerId: null,

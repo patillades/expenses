@@ -1,9 +1,15 @@
 import merge from 'lodash/merge';
 
+import { MODAL_MESSAGES } from 'constants/messages';
 import {
   LOGIN_REGISTRATION_INPUT_CHANGE,
+  SESSION_EXPIRED,
   REGISTRATION_REQUEST_SUCC,
   LOGIN_REQUEST_SUCC,
+  CREATE_EXPENSE_REQUEST_ERR,
+  GET_EXPENSES_REQUEST_ERR,
+  EDIT_EXPENSE_REQUEST_ERR,
+  DELETE_EXPENSE_REQUEST_ERR
 } from 'constants/actionTypes';
 
 /**
@@ -57,6 +63,23 @@ function authenticated(state = initialState, action) {
         registration: initialState.registration,
         login: initialState.login,
         token: action.token,
+      });
+
+    case CREATE_EXPENSE_REQUEST_ERR:
+    case GET_EXPENSES_REQUEST_ERR:
+    case EDIT_EXPENSE_REQUEST_ERR:
+    case DELETE_EXPENSE_REQUEST_ERR:
+      if (action.msg !== MODAL_MESSAGES[SESSION_EXPIRED]) {
+        return state;
+      }
+
+      return Object.assign({}, state, {
+        token: null,
+      });
+
+    case SESSION_EXPIRED:
+      return Object.assign({}, state, {
+        token: null,
       });
 
     default:

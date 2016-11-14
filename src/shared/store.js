@@ -37,7 +37,11 @@ function shouldUpdateStoredToken(authState) {
 
   storedToken = token;
 
-  localStorage.setItem('token', token);
+  if (!token) {
+    localStorage.removeItem('token');
+  } else {
+    localStorage.setItem('token', token);
+  }
 
   return true;
 }
