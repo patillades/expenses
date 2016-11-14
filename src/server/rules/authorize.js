@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const respObj = require('utils/respObj');
 
 // @see this message MUST be the same as
-// MODAL_MESSAGES[SESSION_EXPIRED]@src/shared/constants/messages.js
+// MODAL_MESSAGES[SESSION_EXPIRED]@src/client/constants/messages.js
 const SESSION_EXPIRED = 'Your session has expired, please log in again';
 
 /**
