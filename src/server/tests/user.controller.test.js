@@ -60,6 +60,30 @@ describe('User controller', function () {
       });
     });
 
+    it('should return 400 if using a short name', done => {
+      const user = Object.assign({}, testUser);
+      user.name = 'a';
+
+      testUtils.request('POST', '/api/users', user, (status, body) => {
+        expect(status).toBe(400);
+        expect(body.msg).toInclude('has to be at least');
+
+        done();
+      });
+    });
+
+    it('should return 400 if using a name with invalid characters', done => {
+      const user = Object.assign({}, testUser);
+      user.name = 'player9-';
+
+      testUtils.request('POST', '/api/users', user, (status, body) => {
+        expect(status).toBe(400);
+        expect(body.msg).toInclude('can only contain letters, spaces');
+
+        done();
+      });
+    });
+
     it('should return 201 and the user and token if it worked', done => {
       testUtils.request('POST', '/api/users', testUser, (status, body) => {
         expect(status).toBe(201);
@@ -201,10 +225,28 @@ describe('User controller', function () {
       }, { Authorization: `Bearer ${managerToken}` });
     });
 
-    it('should get err when updating with wrong fields', done => {
+    it('should get err when updating without a required field', done => {
       testUtils.request('PUT', `/api/users/${id}`, { name: '' }, (status, body) => {
         expect(status).toBe(400);
         expect(body.msg).toInclude('required');
+
+        done();
+      }, { Authorization: `Bearer ${managerToken}` });
+    });
+
+    it('should get err when updating without a short name', done => {
+      testUtils.request('PUT', `/api/users/${id}`, { name: 'a' }, (status, body) => {
+        expect(status).toBe(400);
+        expect(body.msg).toInclude('has to be at least');
+
+        done();
+      }, { Authorization: `Bearer ${managerToken}` });
+    });
+
+    it('should get err when updating with a name with invalid characters', done => {
+      testUtils.request('PUT', `/api/users/${id}`, { name: 'player9-' }, (status, body) => {
+        expect(status).toBe(400);
+        expect(body.msg).toInclude('can only contain letters, spaces');
 
         done();
       }, { Authorization: `Bearer ${managerToken}` });
