@@ -12,9 +12,10 @@ const respObj = require('utils/respObj');
  * @param {string} userId - The id of the user making the request, it's provided as a named route
  * parameter
  * @param {number[]} roles
+ * @param {boolean} onlyToRoles
  * @returns {Promise.<boolean, RespObj>}
  */
-function verifyToken(req, userId, roles) {
+function verifyToken(req, userId, roles, onlyToRoles) {
   const auth = req.get('Authorization');
 
   return new Promise((resolve, reject) => {
@@ -46,7 +47,13 @@ function verifyToken(req, userId, roles) {
         return reject(respObj.getUnauthorizedResp(msg));
       }
 
-      if (decoded.sub !== userId  && !roles.includes(decoded.role)) {
+      if (
+        !roles.includes(decoded.role)
+        && (
+          onlyToRoles
+          || decoded.sub !== userId
+        )
+      ) {
         return reject(respObj.getUnauthorizedResp());
       }
 
@@ -58,14 +65,16 @@ function verifyToken(req, userId, roles) {
 /**
  * Middleware call that verifies the presence of a JSON Web Token Authorization header
  *
- * @param {number[]} roles - users with the roles provided in this array will be authorized without
- * being the user related to the entity
+ * @param {number[]} roles - users with the roles provided in this array will be authorized even if
+ * their token's "sub" claim doesn't match the route's :userId param
+ * @param {boolean} onlyToRoles - when set to true, authorization for the route this middleware is
+ * intercepting is ONLY allowed to the users with a role included in the roles parameter
  * @param req
  * @param res
  * @param next
  */
-function authorize(roles, req, res, next) {
-  verifyToken(req, req.params.userId, roles).then(
+function authorize(roles, onlyToRoles, req, res, next) {
+  verifyToken(req, req.params.userId, roles, onlyToRoles).then(
     resolved => next(),
 
     resp => res.status(resp.status).json({ msg: resp.msg })
