@@ -35,6 +35,20 @@ function read(req, res) {
   );
 }
 
+function update(req, res) {
+  usersModel.update(req.params.userId, req.body).then(
+    result => {
+      if (!result) {
+        return res.status(404).json({ msg: errMsgs.USER_NOT_FOUND });
+      }
+
+      return res.status(204).json({});
+    },
+
+    resp => res.status(resp.status).json({ msg: resp.msg })
+  );
+}
+
 function login(req, res) {
   usersModel.authenticate(req.body.mail, req.body.password).then(
     result => {
@@ -54,4 +68,4 @@ function login(req, res) {
   );
 }
 
-module.exports = { create, read, login };
+module.exports = { create, read, update, login };

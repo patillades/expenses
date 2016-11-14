@@ -4,6 +4,7 @@ const config = require('config');
 
 const User = require('models/user.schema');
 const respObj = require('utils/respObj');
+const errMsgs = require('utils/errMsgs');
 
 const ROLES = {
   USER: 0,
@@ -55,6 +56,40 @@ function create(params, role = ROLES.USER) {
  */
 function read() {
   return User.find();
+}
+
+/**
+ * Update a user with the given params
+ *
+ * @param {ObjectId} _id
+ * @param {object} params - fields to be updated
+ * @return {Promise.<Expense, RespObj>}
+ */
+function update(_id, params) {
+  return User
+    .findByIdAndUpdate(_id, params, { runValidators: true })
+    .then(
+      result => result,
+
+      err => {
+        if (err.name === 'ValidationError') {
+          return Promise.reject(
+            respObj.getBadReqResp(errMsgs.getValidationErrorMsg(err, User.modelName))
+          );
+        }
+
+        if (err.name === 'CastError') {
+          return Promise.reject(
+            errMsgs.getCastErrorMsg(err.path, User.modelName)
+          );
+        }
+
+        // @todo log error
+        return Promise.reject(
+          respObj.getInternalErrResp()
+        );
+      }
+    );
 }
 
 /**
@@ -115,4 +150,4 @@ function signToken(user) {
   });
 }
 
-module.exports = { ROLES, create, read, authenticate, signToken };
+module.exports = { ROLES, create, read, update, authenticate, signToken };

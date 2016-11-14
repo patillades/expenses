@@ -5,6 +5,7 @@ const testUtils = require('./testUtils');
 
 describe('User controller', function () {
   let testUser;
+  let id;
   let mail;
   let password;
   let token;
@@ -43,6 +44,8 @@ describe('User controller', function () {
         expect(body.token).toBeA('string');
         expect(body.id).toBeA('string');
         expect(body).toExcludeKey('password');
+
+        id = body.id;
 
         done();
       });
@@ -106,6 +109,17 @@ describe('User controller', function () {
     });
   });
 
+  describe('update', function () {
+    it('should be unauthorized', done => {
+      testUtils.request('PUT', `/api/users/${id}`, { name: 'john' }, (status, body) => {
+        expect(status).toBe(401);
+        expect(body.msg).toBeA('string');
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+  });
+
   describe('user manager access', function () {
     it('should be able to read users', done => {
       testUtils.request('GET', '/api/users', {}, (status, body) => {
@@ -120,6 +134,33 @@ describe('User controller', function () {
         expect(body[0].id).toBeA('string');
         expect(body[0].name).toBeA('string');
         expect(body[0].mail).toBeA('string');
+
+        done();
+      }, { Authorization: `Bearer ${managerToken}` });
+    });
+
+    it('should be able to update users', done => {
+      testUtils.request('PUT', `/api/users/${id}`, { name: 'john' }, (status, body) => {
+        expect(status).toBe(204);
+        expect(body).toNotExist();
+
+        done();
+      }, { Authorization: `Bearer ${managerToken}` });
+    });
+
+    it('should get err when updating with wrong fields', done => {
+      testUtils.request('PUT', `/api/users/${id}`, { name: '' }, (status, body) => {
+        expect(status).toBe(400);
+        expect(body.msg).toInclude('required');
+
+        done();
+      }, { Authorization: `Bearer ${managerToken}` });
+    });
+
+    it('should get err when updating wrong user id', done => {
+      testUtils.request('PUT', `/api/users/id`, { name: 'john' }, (status, body) => {
+        expect(status).toBe(404);
+        expect(body.msg).toInclude('not found');
 
         done();
       }, { Authorization: `Bearer ${managerToken}` });
