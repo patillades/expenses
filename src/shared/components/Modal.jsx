@@ -25,6 +25,7 @@ function Modal(props) {
       isOpen={props.isOpen}
       style={style}
       contentLabel="Modal"
+      onRequestClose={props.clickHandler}
     >
       <h2 className="text-center">{props.msg}</h2>
 
