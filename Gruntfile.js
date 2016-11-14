@@ -1,25 +1,25 @@
 module.exports = function (grunt) {
   grunt.initConfig({
     browserify: {
-      dev: {
+      default: {
         files: {
           'static/app.js': 'src/client/app.jsx',
         },
         options: {
           browserifyOptions: {
-            paths: ['src/shared'],
+            paths: ['src/client'],
           },
           transform: ['babelify'],
         },
       },
       test: {
         files: {
-          'src/shared/tests/dest/expenses.reducer.test.browserify.js':
-            'src/shared/tests/src/expenses.reducer.test.js',
+          'src/client/tests/dest/expenses.reducer.test.browserify.js':
+            'src/client/tests/src/expenses.reducer.test.js',
         },
         options: {
           browserifyOptions: {
-            paths: ['src/shared'],
+            paths: ['src/client'],
           },
           transform: ['babelify'],
         },
@@ -52,12 +52,12 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
-  grunt.registerTask('default', ['dev']);
-
   grunt.registerTask(
-    'dev',
+    'default',
     [
-      'browserify:dev',
+      'browserify',
+      'uglify',
+      'cssmin',
     ]
   );
 };
