@@ -120,6 +120,17 @@ describe('User controller', function () {
     });
   });
 
+  describe('delete', function () {
+    it('should be unauthorized', done => {
+      testUtils.request('DELETE', `/api/users/${id}`, {}, (status, body) => {
+        expect(status).toBe(401);
+        expect(body.msg).toBeA('string');
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+  });
+
   describe('user manager access', function () {
     it('should be able to read users', done => {
       testUtils.request('GET', '/api/users', {}, (status, body) => {
@@ -159,6 +170,24 @@ describe('User controller', function () {
 
     it('should get err when updating wrong user id', done => {
       testUtils.request('PUT', `/api/users/id`, { name: 'john' }, (status, body) => {
+        expect(status).toBe(404);
+        expect(body.msg).toInclude('not found');
+
+        done();
+      }, { Authorization: `Bearer ${managerToken}` });
+    });
+
+    it('should be able to delete users', done => {
+      testUtils.request('DELETE', `/api/users/${id}`, {}, (status, body) => {
+        expect(status).toBe(200);
+        expect(body).toBeAn('object');
+
+        done();
+      }, { Authorization: `Bearer ${managerToken}` });
+    });
+
+    it('should get err when deleting wrong user', done => {
+      testUtils.request('DELETE', `/api/users/id`, {}, (status, body) => {
         expect(status).toBe(404);
         expect(body.msg).toInclude('not found');
 

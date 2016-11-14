@@ -1,6 +1,7 @@
 const usersModel = require('models/users.model');
 
 const respObj = require('utils/respObj');
+const errMsgs = require('utils/errMsgs');
 
 function create(req, res) {
   let user;
@@ -49,6 +50,30 @@ function update(req, res) {
   );
 }
 
+function remove(req, res) {
+  usersModel.remove(req.params.userId).then(
+    result => {
+      if (!result) {
+        return res.status(404).json({ msg: errMsgs.USER_NOT_FOUND });
+      }
+
+      return res.status(200).json({});
+    },
+
+    err => {
+      // the userId had a wrong format
+      if (err.name === 'CastError') {
+        return res.status(404).json({ msg: errMsgs.USER_NOT_FOUND });
+      }
+
+      // @todo log
+      const resp = respObj.getInternalErrResp();
+
+      return res.status(resp.status).json({ msg: resp.msg });
+    }
+  );
+}
+
 function login(req, res) {
   usersModel.authenticate(req.body.mail, req.body.password).then(
     result => {
@@ -68,4 +93,4 @@ function login(req, res) {
   );
 }
 
-module.exports = { create, read, update, login };
+module.exports = { create, read, update, remove, login };

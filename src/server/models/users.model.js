@@ -63,7 +63,7 @@ function read() {
  *
  * @param {ObjectId} _id
  * @param {object} params - fields to be updated
- * @return {Promise.<Expense, RespObj>}
+ * @return {Promise.<User, RespObj>}
  */
 function update(_id, params) {
   return User
@@ -90,6 +90,16 @@ function update(_id, params) {
         );
       }
     );
+}
+
+/**
+ * Remove a given user
+ *
+ * @param {ObjectId} _id - The id of the user to be removed
+ * @return {Promise.<User, Error>}
+ */
+function remove(_id) {
+  return User.findByIdAndRemove(_id);
 }
 
 /**
@@ -150,4 +160,4 @@ function signToken(user) {
   });
 }
 
-module.exports = { ROLES, create, read, update, authenticate, signToken };
+module.exports = { ROLES, create, read, update, remove, authenticate, signToken };

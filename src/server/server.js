@@ -47,6 +47,7 @@ const authOnlyAdminManager = authorize.bind(null, [ROLES.ADMIN, ROLES.USER_MANAG
 apiRoutes.post('/users', userController.create);
 apiRoutes.get('/users', authOnlyAdminManager, userController.read);
 apiRoutes.put('/users/:userId', authOnlyAdminManager, userController.update);
+apiRoutes.delete('/users/:userId', authOnlyAdminManager, userController.remove);
 
 apiRoutes.post('/users/login', userController.login);
 
