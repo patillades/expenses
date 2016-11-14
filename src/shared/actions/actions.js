@@ -7,6 +7,7 @@ import {
   CLEAR_EXPENSES_FILTER,
   CLOSE_MODAL,
   SESSION_EXPIRED,
+  LOG_OUT,
   REGISTRATION_REQUEST,
   LOGIN_REQUEST,
   EDIT_EXPENSE,
@@ -93,12 +94,24 @@ function action(type) {
   return { type };
 }
 
+/**
+ * Log user out and redirect to login page
+ *
+ * @return {{type: string}}
+ */
+function logOut() {
+  hashHistory.push('/login');
+
+  return { type: LOG_OUT };
+}
+
 export {
   inputChange,
   sendRequest,
   sessionExpired,
   modalBtnClick,
   action,
+  logOut,
   expenseDatetimeChange,
   editExpense,
 };

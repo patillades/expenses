@@ -4,6 +4,7 @@ import { MODAL_MESSAGES } from 'constants/messages';
 import {
   LOGIN_REGISTRATION_INPUT_CHANGE,
   SESSION_EXPIRED,
+  LOG_OUT,
   REGISTRATION_REQUEST_SUCC,
   LOGIN_REQUEST_SUCC,
   CREATE_EXPENSE_REQUEST_ERR,
@@ -78,6 +79,7 @@ function authenticated(state = initialState, action) {
       });
 
     case SESSION_EXPIRED:
+    case LOG_OUT:
       return Object.assign({}, state, {
         token: null,
       });

@@ -23,7 +23,12 @@ class UserExpenses extends React.Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header
+          hasLogOutBtn
+          triggerId={this.props.requests.triggerId}
+          isDisabled={this.props.requests.isFetching}
+          clickHandler={this.props.logOutHandler}
+        />
 
         <NewExpense
           {...this.props.expenses.create}

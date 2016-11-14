@@ -8,7 +8,9 @@ import Modal from './Modal.jsx';
 function LoginRegistration(props) {
   return (
     <div>
-      <Header />
+      <Header
+        hasLogOutBtn={false}
+      />
 
       <RegistrationForm
         form="registration"

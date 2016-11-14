@@ -8,7 +8,8 @@ import {
   sendRequest,
   modalBtnClick,
   editExpense,
-  action
+  action,
+  logOut
 } from 'actions/actions';
 import {
   EXPENSES_INPUT_CHANGE,
@@ -103,6 +104,8 @@ function mapDispatchToProps(dispatch) {
     },
 
     toggleDayWeekExpensesHandler: e => dispatch(action(TOGGLE_DAY_WEEK_EXPENSES)),
+
+    logOutHandler: () => dispatch(logOut()),
   };
 }
 
