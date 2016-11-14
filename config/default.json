@@ -7,8 +7,13 @@
     "password": "toptal_admin"
   },
   "user_manager": {
-    "name": "user_manager",
+    "name": "user manager",
     "mail": "user_manager@toptal.com",
     "password": "toptal_user_manager"
+  },
+  "test_user": {
+    "name": "test user",
+    "mail": "test_user@toptal.com",
+    "password": "toptal_test_user"
   }
 }

@@ -20,7 +20,7 @@ db.on('error', e => {
   process.exit();
 });
 
-describe('db setup', function () {
+describe('admin users setup', function () {
   before(done => db.once('open', done));
 
   it('should insert two users or fail if already registered', done => {

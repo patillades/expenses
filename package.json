@@ -7,6 +7,8 @@
     "start": "node src/server/server.js",
     "insert_admin_users": "mocha src/server/scripts/insertAdminUsers.js",
     "insert_admin_users_on_test": "NODE_ENV=test npm run insert_admin_users",
+    "insert_test_user": "mocha src/server/scripts/insertTestUser.js",
+    "insert_test_user_on_test": "NODE_ENV=test npm run insert_test_user",
     "stop": "pkill --signal SIGINT expenses",
     "start_test_env": "NODE_ENV=test npm start",
     "test": "mocha src/server/tests",
