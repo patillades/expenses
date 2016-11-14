@@ -13,8 +13,11 @@ class UserExpenses extends React.Component {
     super(props);
   }
 
+  // if the user is authenticated (state or preloaded through localStorage), get the user's expenses
   componentWillMount() {
-    this.props.loadUserExpenses();
+    if (this.props.authenticated.token) {
+      this.props.loadUserExpenses();
+    }
   }
 
   render() {
