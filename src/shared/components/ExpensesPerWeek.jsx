@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
+import sortBy from 'lodash/sortBy';
 
 import WeeklyExpenseRow from './WeeklyExpenseRow.jsx';
 
@@ -13,8 +14,7 @@ const propTypes = {
 function ExpensesPerWeek(props) {
   const tblClass = classnames('table', { hidden: !props.isVisible });
 
-  const expensesPerWeek = groupExpensesByWeek(props.expenseIds, props.expensesById);
-  const weeks = Object.keys(expensesPerWeek);
+  const { weekNums, totalPerWeekNum } = groupExpensesByWeek(props.expenseIds, props.expensesById);
 
   return (
     <table className={tblClass}>
@@ -28,11 +28,11 @@ function ExpensesPerWeek(props) {
 
       <tbody>
         {
-          weeks.length
-            ? weeks.map(week => <WeeklyExpenseRow
-                key={week}
-                week={week}
-                expenses={expensesPerWeek[week]}
+          weekNums.length
+            ? weekNums.map(weekNum => <WeeklyExpenseRow
+                key={`week_${weekNum}`}
+                weekNum={weekNum}
+                expenses={totalPerWeekNum[weekNum]}
               />)
             : <tr>
                 <td colSpan="3" className="text-center">
@@ -58,23 +58,44 @@ function ExpensesPerWeek(props) {
  * @return {object.<WeekStartEndDates, {total: number}>}
  */
 function groupExpensesByWeek(expenseIds, expensesById) {
-  return expenseIds.reduce((result, id) => {
+  // get the total amount spent per week number
+  const totalPerWeekNum = expenseIds.reduce((result, id) => {
     const expense = expensesById[id];
 
     const weekNum = moment(expense.date).week();
-    const weekStart = moment().week(weekNum);
-    const weekEnd = moment(weekStart).add(6, 'd');
 
-    const key = `${weekStart.format('M/D/YYYY')} - ${weekEnd.format('M/D/YYYY')}`;
-
-    if (!result[key]) {
-      result[key] = { total: 0 };
+    if (!result[weekNum]) {
+      result[weekNum] = { total: 0 };
     }
 
-    result[key].total += expense.amount;
+    result[weekNum].total += expense.amount;
 
     return result;
   }, {});
+
+  // sort the week numbers descending
+  const sortedWeekNums = sortBy(
+    Object.keys(totalPerWeekNum),
+    weekNum => -Number(weekNum)
+  );
+
+  // fill the array with the weeks where the user hasn't spent
+  const weekNums = sortedWeekNums.reduce((result, el, index, array) => {
+    let weekNum = Number(el);
+
+    result.push(weekNum);
+
+    while (
+      index < array.length
+      && --weekNum > Number(array[index + 1])
+    ) {
+      result.push(weekNum);
+    }
+
+    return result;
+  }, []);
+
+  return { weekNums, totalPerWeekNum };
 }
 
 ExpensesPerWeek.propTypes = propTypes;

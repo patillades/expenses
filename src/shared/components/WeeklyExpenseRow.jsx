@@ -1,19 +1,26 @@
 import React, { PropTypes } from 'react';
+import moment from 'moment';
 
 const propTypes = {
-  week: PropTypes.string.isRequired,
+  weekNum: PropTypes.number.isRequired,
   expenses: PropTypes.shape({
     total: PropTypes.number.isRequired,
-  }).isRequired,
+  }),
 };
 
 function WeeklyExpenseRow(props) {
-  const avg = props.expenses.total / 7;
+  const weekStart = moment().week(props.weekNum);
+  const weekEnd = moment(weekStart).add(6, 'd');
+
+  const week = `${weekStart.format('M/D/YYYY')} - ${weekEnd.format('M/D/YYYY')}`;
+
+  const total = props.expenses ? props.expenses.total : 0;
+  const avg = total / 7;
 
   return (
     <tr>
-      <td>{props.week}</td>
-      <td>{props.expenses.total}</td>
+      <td>{week}</td>
+      <td>{total}</td>
       <td>{avg.toFixed(2)}</td>
     </tr>
   );
