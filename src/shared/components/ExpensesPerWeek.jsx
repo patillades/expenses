@@ -11,32 +11,37 @@ const propTypes = {
 };
 
 function ExpensesPerWeek(props) {
-  const formClass = classnames({ hidden: !props.isVisible });
+  const tblClass = classnames('table', { hidden: !props.isVisible });
 
   const expensesPerWeek = groupExpensesByWeek(props.expenseIds, props.expensesById);
+  const weeks = Object.keys(expensesPerWeek);
 
   return (
-    <form className={formClass}>
-      <fieldset disabled={props.isDisabled}>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Week</th>
-              <th>Total</th>
-              <th>Daily average</th>
-            </tr>
-          </thead>
+    <table className={tblClass}>
+      <thead>
+        <tr>
+          <th>Week</th>
+          <th>Total</th>
+          <th>Daily average</th>
+        </tr>
+      </thead>
 
-          <tbody>
-            {Object.keys(expensesPerWeek).map(week => <WeeklyExpenseRow
-              key={week}
-              week={week}
-              expenses={expensesPerWeek[week]}
-            />)}
-          </tbody>
-        </table>
-      </fieldset>
-    </form>
+      <tbody>
+        {
+          weeks.length
+            ? weeks.map(week => <WeeklyExpenseRow
+                key={week}
+                week={week}
+                expenses={expensesPerWeek[week]}
+              />)
+            : <tr>
+                <td colSpan="3" className="text-center">
+                  There are no expenses to show
+                </td>
+              </tr>
+        }
+      </tbody>
+    </table>
   );
 }
 

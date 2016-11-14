@@ -34,27 +34,33 @@ function ExpensesTable(props) {
               <th>Description</th>
               <th>Amount</th>
               <th>Comment</th>
-              <th></th>
+              <th>&nbsp;</th>
             </tr>
           </thead>
 
           <tbody>
-            {props.expenseIds.map(id => <ExpenseRow
-              key={id}
-              id={id}
-              editObj={props.editObj}
-              expense={props.expensesById[id]}
-              triggerId={props.triggerId}
-              isDisabled={props.isDisabled}
-              isOnEdition={props.expenseIdOnEdition === id}
-              deleteHandler={props.deleteHandler}
-              editHandler={props.editHandler}
-              dateChangeHandler={props.dateChangeHandler}
-              timeChangeHandler={props.timeChangeHandler}
-              inputChangeHandler={props.inputChangeHandler}
-              editSubmitHandler={props.editSubmitHandler}
-              cancelEditHandler={props.cancelEditHandler}
-            />)}
+            {
+              props.expenseIds.length
+                ? props.expenseIds.map(id => <ExpenseRow
+                    key={id}
+                    id={id}
+                    editObj={props.editObj}
+                    expense={props.expensesById[id]}
+                    triggerId={props.triggerId}
+                    isDisabled={props.isDisabled}
+                    isOnEdition={props.expenseIdOnEdition === id}
+                    deleteHandler={props.deleteHandler}
+                    editHandler={props.editHandler}
+                    dateChangeHandler={props.dateChangeHandler}
+                    timeChangeHandler={props.timeChangeHandler}
+                    inputChangeHandler={props.inputChangeHandler}
+                    editSubmitHandler={props.editSubmitHandler}
+                    cancelEditHandler={props.cancelEditHandler}
+                  />)
+                : <tr>
+                    <td colSpan="6" className="text-center">There are no expenses to show</td>
+                  </tr>
+            }
           </tbody>
         </table>
       </fieldset>
