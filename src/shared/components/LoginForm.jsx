@@ -1,7 +1,17 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import Input from './Input.jsx';
 import Button from './Button.jsx';
+
+const propTypes = {
+  form: PropTypes.string.isRequired,
+  mail: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
+  triggerId: PropTypes.string,
+  isDisabled: PropTypes.bool.isRequired,
+  inputChangeHandler: PropTypes.func.isRequired,
+  submitHandler: PropTypes.func.isRequired,
+};
 
 function LoginForm(props) {
   return (
@@ -46,5 +56,7 @@ function LoginForm(props) {
     </div>
   );
 }
+
+LoginForm.propTypes = propTypes;
 
 export default LoginForm;

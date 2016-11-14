@@ -1,7 +1,21 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import ExpenseInputs from './ExpenseInputs.jsx';
 import { InlineButton } from './Button.jsx';
+
+const propTypes = {
+  date: PropTypes.object.isRequired,
+  time: PropTypes.object,
+  description: PropTypes.string.isRequired,
+  amount: PropTypes.string.isRequired,
+  comment: PropTypes.string.isRequired,
+  triggerId: PropTypes.string,
+  isDisabled: PropTypes.bool.isRequired,
+  dateChangeHandler: PropTypes.func.isRequired,
+  timeChangeHandler: PropTypes.func.isRequired,
+  inputChangeHandler: PropTypes.func.isRequired,
+  submitHandler: PropTypes.func.isRequired,
+};
 
 function NewExpense(props) {
   return (
@@ -36,5 +50,7 @@ function NewExpense(props) {
     </form>
   );
 }
+
+NewExpense.propTypes = propTypes;
 
 export default NewExpense;

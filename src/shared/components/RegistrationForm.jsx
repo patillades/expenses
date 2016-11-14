@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import Input from './Input.jsx';
 import Button from './Button.jsx';
+
+const propTypes = {
+  form: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  mail: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
+  triggerId: PropTypes.string,
+  isDisabled: PropTypes.bool.isRequired,
+  inputChangeHandler: PropTypes.func.isRequired,
+  submitHandler: PropTypes.func.isRequired,
+};
 
 function RegistrationForm(props) {
   return (
@@ -57,5 +68,7 @@ function RegistrationForm(props) {
     </div>
   );
 }
+
+RegistrationForm.propTypes = propTypes;
 
 export default RegistrationForm;

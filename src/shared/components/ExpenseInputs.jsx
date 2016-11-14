@@ -7,12 +7,12 @@ import { InlineInput } from './Input.jsx';
 const propTypes = {
   form: PropTypes.string.isRequired,
   date: PropTypes.object.isRequired,
-  time: PropTypes.object.isRequired,
+  time: PropTypes.object,
   description: PropTypes.string.isRequired,
   amount: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
-  ]),
+  ]).isRequired,
   inputChangeHandler: PropTypes.func.isRequired,
   dateChangeHandler: PropTypes.func.isRequired,
   timeChangeHandler: PropTypes.func.isRequired,

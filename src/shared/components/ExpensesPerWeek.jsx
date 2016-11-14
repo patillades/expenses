@@ -46,16 +46,10 @@ function ExpensesPerWeek(props) {
 }
 
 /**
- * A date in "M/D/YYYY - M/D/YYYY" format, representing the start and dates of a week
- *
- * @typedef {string} WeekStartEndDates
- */
-
-/**
  *
  * @param {ObjectId[]} expenseIds
  * @param {ExpensesById} expensesById
- * @return {object.<WeekStartEndDates, {total: number}>}
+ * @return {{weekNums: number[], totalPerWeekNum: object.<string, {total: number}>}}
  */
 function groupExpensesByWeek(expenseIds, expensesById) {
   // get the total amount spent per week number

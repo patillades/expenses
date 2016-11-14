@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import ReactModal from 'react-modal';
 
 const style = {
@@ -11,6 +11,12 @@ const style = {
     transform: 'translate(-50%, -50%)',
     padding: '10px 50px 20px 50px',
   },
+};
+
+const propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  msg: PropTypes.string,
+  clickHandler: PropTypes.func.isRequired,
 };
 
 function Modal(props) {
@@ -31,5 +37,7 @@ function Modal(props) {
     </ReactModal>
   );
 }
+
+Modal.propTypes = propTypes;
 
 export default Modal;
