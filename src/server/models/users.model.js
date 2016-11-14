@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 
 const User = require('models/user.schema');
+const Expense = require('models/expense.schema');
 const respObj = require('utils/respObj');
 const errMsgs = require('utils/errMsgs');
 
@@ -93,13 +94,16 @@ function update(_id, params) {
 }
 
 /**
- * Remove a given user
+ * Remove a given user and all its expenses
  *
  * @param {ObjectId} _id - The id of the user to be removed
  * @return {Promise.<User, Error>}
  */
 function remove(_id) {
-  return User.findByIdAndRemove(_id);
+  return Promise.all([
+    User.findByIdAndRemove(_id),
+    Expense.remove({ userId: _id }),
+  ]);
 }
 
 /**
