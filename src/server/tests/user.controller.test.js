@@ -48,6 +48,18 @@ describe('User controller', function () {
       });
     });
 
+    it('should return 400 if using a short password', done => {
+      const user = Object.assign({}, testUser);
+      user.password = 'shortpw';
+
+      testUtils.request('POST', '/api/users', user, (status, body) => {
+        expect(status).toBe(400);
+        expect(body.msg).toInclude('minimum allowed length');
+
+        done();
+      });
+    });
+
     it('should return 201 and the user and token if it worked', done => {
       testUtils.request('POST', '/api/users', testUser, (status, body) => {
         expect(status).toBe(201);
@@ -175,6 +187,15 @@ describe('User controller', function () {
       testUtils.request('PUT', `/api/users/${id}`, { mail: 'notamail' }, (status, body) => {
         expect(status).toBe(400);
         expect(body.msg).toInclude('not an accepted');
+
+        done();
+      }, { Authorization: `Bearer ${managerToken}` });
+    });
+
+    it('should get err when updating with short password', done => {
+      testUtils.request('PUT', `/api/users/${id}`, { password: 'shortpw' }, (status, body) => {
+        expect(status).toBe(400);
+        expect(body.msg).toInclude('minimum allowed length');
 
         done();
       }, { Authorization: `Bearer ${managerToken}` });
