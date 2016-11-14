@@ -1,7 +1,6 @@
 const expensesModel = require('models/expenses.model');
 const respObj = require('utils/respObj');
-
-// curl -i -X POST -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ODFkYmI2NDcwZTUyZjI5ZmE5ZWM0YmIiLCJpYXQiOjE0Nzg0MzE2MjUsImV4cCI6MTQ3ODUxODAyNX0.mSSjTez3iZwxNTiyxto9Q4ZeNWI7MfEHPAWiVMOvDIg" -d amount=15 -d description='caca' -d date='2016-11-6 12:59' -d comment="com" localhost:3000/api/users/581dbb6470e52f29fa9ec4bb/expenses
+const errMsgs = require('utils/errMsgs');
 
 function create(req, res) {
   expensesModel.create(req.body, req.params.userId).then(
@@ -30,7 +29,7 @@ function update(req, res) {
   expensesModel.update(expenseId, userId, req.body).then(
     result => {
       if (!result) {
-        return res.status(404).json({ msg: expensesModel.EXPENSE_NOT_FOUND });
+        return res.status(404).json({ msg: errMsgs.EXPENSE_NOT_FOUND });
       }
 
       return res.status(204).json({});
@@ -46,7 +45,7 @@ function remove(req, res) {
   expensesModel.remove(expenseId, userId).then(
     result => {
       if (!result) {
-        return res.status(404).json({ msg: expensesModel.EXPENSE_NOT_FOUND });
+        return res.status(404).json({ msg: errMsgs.EXPENSE_NOT_FOUND });
       }
 
       return res.status(200).json({});
@@ -55,7 +54,7 @@ function remove(req, res) {
     err => {
       // the expenseId had a wrong format
       if (err.name === 'CastError') {
-        return res.status(404).json({ msg: expensesModel.EXPENSE_NOT_FOUND });
+        return res.status(404).json({ msg: errMsgs.EXPENSE_NOT_FOUND });
       }
 
       // @todo log

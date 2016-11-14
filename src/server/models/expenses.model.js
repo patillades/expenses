@@ -3,6 +3,7 @@ const _ = require('lodash');
 
 const Expense = require('models/expense.schema');
 const respObj = require('utils/respObj');
+const errMsgs = require('utils/errMsgs');
 
 /**
  * Create an expense with the given params and user
@@ -24,7 +25,7 @@ function create(params, userId) {
   return expense.save().then(
     result => result,
 
-    err => Promise.reject(getValidationErrorMsg(err))
+    err => Promise.reject(errMsgs.getValidationErrorMsg(err, Expense.modelName))
   );
 }
 
@@ -47,7 +48,7 @@ function read(userId, queryParams) {
       err => {
         if (err.name === 'CastError') {
           return Promise.reject(
-            getCastErrorMsg(err.path)
+            errMsgs.getCastErrorMsg(err.path, Expense.modelName)
           );
         }
 
@@ -110,13 +111,13 @@ function update(_id, userId, params) {
       err => {
         if (err.name === 'ValidationError') {
           return Promise.reject(
-            respObj.getBadReqResp(getValidationErrorMsg(err))
+            respObj.getBadReqResp(errMsgs.getValidationErrorMsg(err, Expense.modelName))
           );
         }
 
         if (err.name === 'CastError') {
           return Promise.reject(
-            getCastErrorMsg(err.path)
+            errMsgs.getCastErrorMsg(err.path, Expense.modelName)
           );
         }
 
@@ -140,54 +141,7 @@ function remove(_id, userId) {
     .findOneAndRemove({ _id, userId });
 }
 
-/**
- * Get the message belonging to the first key when a mongoose validation error happens
- *
- * @param {ValidationError} err
- * @return {string}
- */
-function getValidationErrorMsg(err) {
-  const errField = Object.keys(err.errors)[0];
-
-  if (err.errors[errField].name === 'CastError') {
-    return getCastErrorMsg(errField).msg;
-  }
-
-  return err.errors[errField].message;
-}
-
-const EXPENSE_NOT_FOUND = 'expense not found';
-const USER_NOT_FOUND = 'user not found';
-const AMOUNT_SHOULD_BE_NUM = 'amount has to be a number';
-const DATE_SHOULD_BE_DATE = 'date has to be in the "Y-m-d (H:i)" format';
-
-/**
- * Get the msg related to a CastError depending on the field where it happened
- *
- * @param {string} field
- * @return {RespObj}
- */
-function getCastErrorMsg(field) {
-  switch (field) {
-    case '_id':
-      return respObj.getNotFoundResp(EXPENSE_NOT_FOUND);
-
-    case 'userId':
-      return respObj.getNotFoundResp(USER_NOT_FOUND);
-
-    case 'amount':
-      return respObj.getBadReqResp(AMOUNT_SHOULD_BE_NUM);
-
-    case 'date':
-      return respObj.getBadReqResp(DATE_SHOULD_BE_DATE);
-  }
-}
-
 module.exports = {
-  EXPENSE_NOT_FOUND,
-  USER_NOT_FOUND,
-  AMOUNT_SHOULD_BE_NUM,
-  DATE_SHOULD_BE_DATE,
   create,
   read,
   update,
