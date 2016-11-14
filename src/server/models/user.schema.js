@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+const isEmail = require('validator/lib/isEmail');
 const bcrypt = require('bcrypt');
+
 const SALT_WORK_FACTOR = 10;
 
 /**
@@ -17,6 +19,10 @@ const userSchema = new mongoose.Schema({
     required: [true, '{PATH} is required!'],
     index: true,
     unique: true,
+    validate: [
+      val => isEmail(val),
+      '{VALUE} is not an accepted {PATH} address!',
+    ],
   },
   password: {
     type: String,
@@ -36,8 +42,8 @@ const userSchema = new mongoose.Schema({
       delete ret.password;
 
       return ret;
-    }
-  }
+    },
+  },
 });
 
 userSchema.pre('save', function (next) {

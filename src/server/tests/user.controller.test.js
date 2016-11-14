@@ -36,6 +36,18 @@ describe('User controller', function () {
       });
     });
 
+    it('should return 400 if using a wrong mail', done => {
+      const user = Object.assign({}, testUser);
+      user.mail = 'notamail';
+
+      testUtils.request('POST', '/api/users', user, (status, body) => {
+        expect(status).toBe(400);
+        expect(body.msg).toInclude('not an accepted');
+
+        done();
+      });
+    });
+
     it('should return 201 and the user and token if it worked', done => {
       testUtils.request('POST', '/api/users', testUser, (status, body) => {
         expect(status).toBe(201);
@@ -154,6 +166,15 @@ describe('User controller', function () {
       testUtils.request('PUT', `/api/users/${id}`, { name: 'john' }, (status, body) => {
         expect(status).toBe(204);
         expect(body).toNotExist();
+
+        done();
+      }, { Authorization: `Bearer ${managerToken}` });
+    });
+
+    it('should get err when updating with wrong mail', done => {
+      testUtils.request('PUT', `/api/users/${id}`, { mail: 'notamail' }, (status, body) => {
+        expect(status).toBe(400);
+        expect(body.msg).toInclude('not an accepted');
 
         done();
       }, { Authorization: `Bearer ${managerToken}` });
