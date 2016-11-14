@@ -12,6 +12,7 @@ const FILTER_INPUT_CHANGE = 'filter_input_change';
 const CLEAR_EXPENSES_FILTER = 'clear_expenses__filter';
 const TOGGLE_DAY_WEEK_EXPENSES = 'toggle_day_week_expenses';
 const CLOSE_MODAL = 'close_modal';
+const SESSION_EXPIRED = 'session_expired';
 
 const REGISTRATION_REQUEST = 'registration' + REQUEST;
 const REGISTRATION_REQUEST_ERR = REGISTRATION_REQUEST + ERROR;
@@ -51,6 +52,7 @@ export {
   CLEAR_EXPENSES_FILTER,
   TOGGLE_DAY_WEEK_EXPENSES,
   CLOSE_MODAL,
+  SESSION_EXPIRED,
   REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,
   REGISTRATION_REQUEST_SUCC,
