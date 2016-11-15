@@ -209,10 +209,13 @@ function expenses(state = initialState, action) {
       // by API
       const { time } = expense;
 
-      expense.date
-        .hours(time.hours())
-        .minutes(time.minutes())
-        .seconds(0);
+      // time can be null if the user clicks on the "X" that closes the timepicker
+      if (time) {
+        expense.date
+          .hours(time.hours())
+          .minutes(time.minutes())
+          .seconds(0);
+      }
 
       expense.date = expense.date.format();
 

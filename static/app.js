@@ -42393,7 +42393,7 @@ function getRequestData(type, state, userId) {
 }
 
 /**
- * Get the request body for create/edit requests
+ * Get the body for create/edit requests
  *
  * @param {CreateExpenseState} expenseData
  * @return {{date: MomentDate, description: string, amount: number, comment: string }}
@@ -42402,8 +42402,11 @@ function getCreateOrEditExpenseBody(expenseData) {
   var body = Object.assign({}, expenseData);
   var time = body.time;
 
+  // time can be null if the user clicks on the "X" that closes the timepicker
 
-  body.date.hours(time.hours()).minutes(time.minutes()).seconds(0);
+  if (time) {
+    body.date.hours(time.hours()).minutes(time.minutes()).seconds(0);
+  }
 
   delete body.time;
 
@@ -44453,6 +44456,7 @@ function WeeklyExpenseRow(props) {
 
   var avg = props.total / 7;
 
+  // color rows depending on the month of the start date
   var rowClass = (0, _classnames2.default)({ active: weekStart.month() % 2 });
 
   return _react2.default.createElement(
@@ -45097,8 +45101,11 @@ function expenses() {
           // by API
           var time = expense.time;
 
+          // time can be null if the user clicks on the "X" that closes the timepicker
 
-          expense.date.hours(time.hours()).minutes(time.minutes()).seconds(0);
+          if (time) {
+            expense.date.hours(time.hours()).minutes(time.minutes()).seconds(0);
+          }
 
           expense.date = expense.date.format();
 

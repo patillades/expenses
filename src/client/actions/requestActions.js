@@ -103,7 +103,7 @@ function getRequestData(type, state, userId) {
 }
 
 /**
- * Get the request body for create/edit requests
+ * Get the body for create/edit requests
  *
  * @param {CreateExpenseState} expenseData
  * @return {{date: MomentDate, description: string, amount: number, comment: string }}
@@ -112,10 +112,13 @@ function getCreateOrEditExpenseBody(expenseData) {
   const body = Object.assign({}, expenseData);
   const { time } = body;
 
-  body.date
-    .hours(time.hours())
-    .minutes(time.minutes())
-    .seconds(0);
+  // time can be null if the user clicks on the "X" that closes the timepicker
+  if (time) {
+    body.date
+      .hours(time.hours())
+      .minutes(time.minutes())
+      .seconds(0);
+  }
 
   delete body.time;
 
