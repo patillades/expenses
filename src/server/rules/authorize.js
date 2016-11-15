@@ -13,7 +13,7 @@ const SESSION_EXPIRED = 'Your session has expired, please log in again';
  * with is allowed in the middleware params
  *
  * @param {Request} req
- * @param {string} userId - The id of the user making the request, it's provided as a named route
+ * @param {ObjectId} userId - The id of the user making the request, it's provided as a named route
  * parameter
  * @param {number[]} roles
  * @param {boolean} onlyToRoles
