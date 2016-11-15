@@ -40,25 +40,30 @@ function LoginRegistration(props) {
       />
 
       <div className="row">
-        <RegistrationForm
-          form="registration"
-          {...props.authenticated.registration}
-          triggerId={props.requests.triggerId}
-          isDisabled={props.requests.isFetching}
-          inputChangeHandler={props.inputChangeHandler}
-          submitHandler={props.registrationSubmitHandler}
-        />
+        <div className="col-xs-4 col-xs-offset-1">
+          <RegistrationForm
+            form="registration"
+            {...props.authenticated.registration}
+            triggerId={props.requests.triggerId}
+            isDisabled={props.requests.isFetching}
+            inputChangeHandler={props.inputChangeHandler}
+            submitHandler={props.registrationSubmitHandler}
+          />
+        </div>
 
         <div className="col-xs-2" />
 
-        <LoginForm
-          form="login"
-          {...props.authenticated.login}
-          triggerId={props.requests.triggerId}
-          isDisabled={props.requests.isFetching}
-          inputChangeHandler={props.inputChangeHandler}
-          submitHandler={props.loginSubmitHandler}
-        />
+        <div className="col-xs-4">
+          <LoginForm
+            form="login"
+            {...props.authenticated.login}
+            triggerId={props.requests.triggerId}
+            isDisabled={props.requests.isFetching}
+            inputChangeHandler={props.inputChangeHandler}
+            submitHandler={props.loginSubmitHandler}
+          />
+        </div>
+
       </div>
 
       <Modal
