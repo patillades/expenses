@@ -8,6 +8,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const config = require('config');
+const winston = require('winston');
 const path = require('path');
 
 const userController = require('controllers/user.controller');
@@ -21,15 +22,15 @@ mongoose.connect(`mongodb://localhost/${config.get('db')}`);
 
 // set mongoose debugging ON
 mongoose.set('debug', true);
-mongoose.connection.on('error', err => console.error('MongoDB error: %s', err));
+mongoose.connection.on('error', err => winston.error('MongoDB error: %s', err));
 
 const db = mongoose.connection;
 db.on('error', (e) => {
-  console.log('db error', e);
+  winston.error('db error', e);
 
   process.exit();
 });
-db.once('open', () => console.log('db connection established'));
+db.once('open', () => winston.info('db connection established'));
 
 const app = express();
 const apiRoutes = express.Router();
@@ -58,4 +59,4 @@ apiRoutes.get('/users/:userId/expenses', authAdmin, expenseController.read);
 apiRoutes.put('/users/:userId/expenses/:expenseId', authAdmin, expenseController.update);
 apiRoutes.delete('/users/:userId/expenses/:expenseId', authAdmin, expenseController.remove);
 
-app.listen(3000, () => console.log('listening on port 3000'));
+app.listen(3000, () => winston.info('listening on port 3000'));

@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const winston = require('winston');
 
 const User = require('models/user.schema');
 const Expense = require('models/expense.schema');
@@ -85,7 +86,8 @@ function update(_id, params) {
           );
         }
 
-        // @todo log error
+        winston.error('Unhandled error on update@users.model', err);
+
         return Promise.reject(
           respObj.getInternalErrResp()
         );
@@ -154,8 +156,9 @@ function signToken(user) {
     const payload = { sub: user.id, role: user.role };
 
     jwt.sign(payload, config.get('secret'), { expiresIn: '1d' }, (err, token) => {
-      // @todo add log
       if (err) {
+        winston.error('Unhandled error on signToken@users.model', err);
+
         return reject(respObj.getInternalErrResp());
       }
 

@@ -4,6 +4,7 @@ require('app-module-path').addPath(`${__dirname}/..`);
 const mongoose = require('mongoose');
 const moment = require('moment');
 const config = require('config');
+const winston = require('winston');
 const expect = require('expect');
 
 const usersModel = require('models/users.model');
@@ -13,11 +14,11 @@ const expensesModel = require('models/expenses.model');
 mongoose.Promise = global.Promise;
 mongoose.connect(`mongodb://localhost/${config.get('db')}`);
 
-mongoose.connection.on('error', err => console.error('MongoDB error: %s', err));
+mongoose.connection.on('error', err => winston.error('MongoDB error: %s', err));
 
 const db = mongoose.connection;
 db.on('error', (e) => {
-  console.log('db error', e);
+  winston.error('db error', e);
 
   process.exit();
 });

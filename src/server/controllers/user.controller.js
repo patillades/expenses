@@ -1,5 +1,6 @@
-const usersModel = require('models/users.model');
+const winston = require('winston');
 
+const usersModel = require('models/users.model');
 const respObj = require('utils/respObj');
 const errMsgs = require('utils/errMsgs');
 
@@ -31,8 +32,11 @@ function read(req, res) {
       result.map(user => user.toObject())
     ),
 
-    // @todo add log
-    err => respObj.getInternalErrResp()
+    (err) => {
+      winston.error('Unhandled error on read@user.controller', err);
+
+      return respObj.getInternalErrResp();
+    }
   );
 }
 
@@ -66,7 +70,8 @@ function remove(req, res) {
         return res.status(404).json({ msg: errMsgs.USER_NOT_FOUND });
       }
 
-      // @todo log
+      winston.error('Unhandled error on remove@user.controller', err);
+
       const resp = respObj.getInternalErrResp();
 
       return res.status(resp.status).json({ msg: resp.msg });
@@ -84,8 +89,11 @@ function login(req, res) {
       return Promise.reject(respObj.getBadReqResp('wrong combination of user and password'));
     },
 
-    // @todo add log
-    err => Promise.reject(respObj.getInternalErrResp())
+    (err) => {
+      winston.error('Unhandled error on login@user.controller', err);
+
+      return Promise.reject(respObj.getInternalErrResp());
+    }
   ).then(
     token => res.status(201).json({ token }),
 

@@ -1,3 +1,5 @@
+const winston = require('winston');
+
 const expensesModel = require('models/expenses.model');
 const respObj = require('utils/respObj');
 const errMsgs = require('utils/errMsgs');
@@ -57,7 +59,8 @@ function remove(req, res) {
         return res.status(404).json({ msg: errMsgs.EXPENSE_NOT_FOUND });
       }
 
-      // @todo log
+      winston.error('Unhandled error on remove@expense.controller', err);
+
       const resp = respObj.getInternalErrResp();
 
       return res.status(resp.status).json({ msg: resp.msg });

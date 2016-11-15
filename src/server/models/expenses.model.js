@@ -1,5 +1,6 @@
 const moment = require('moment');
 const _ = require('lodash');
+const winston = require('winston');
 
 const Expense = require('models/expense.schema');
 const respObj = require('utils/respObj');
@@ -86,7 +87,8 @@ function read(userId, queryParams) {
           );
         }
 
-        // @todo log error
+        winston.error('Unhandled error on read@expenses.model', err);
+
         return Promise.reject(
           respObj.getInternalErrResp()
         );
@@ -121,7 +123,8 @@ function update(_id, userId, params) {
           );
         }
 
-        // @todo log error
+        winston.error('Unhandled error on update@expenses.model', err);
+
         return Promise.reject(
           respObj.getInternalErrResp()
         );
