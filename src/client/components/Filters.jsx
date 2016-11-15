@@ -62,7 +62,7 @@ function Filters(props) {
             </div>
 
             <div className="col-xs-2">
-              <p className="invisible">Description</p>
+              <p>&nbsp;</p>
 
               <Input
                 type="text"
