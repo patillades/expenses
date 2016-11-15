@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import classnames from 'classnames';
 import moment from 'moment';
 
 const propTypes = {
@@ -23,8 +24,11 @@ function WeeklyExpenseRow(props) {
 
   const avg = props.total / 7;
 
+  // color rows depending on the month of the start date
+  const rowClass = classnames({ active: weekStart.month() % 2 });
+
   return (
-    <tr>
+    <tr className={rowClass}>
       <td>{week}</td>
       <td>{props.total}</td>
       <td>{avg.toFixed(2)}</td>

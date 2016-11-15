@@ -58,7 +58,7 @@ function ExpensesTable(props) {
   return (
     <form className={formClass}>
       <fieldset disabled={props.isDisabled}>
-        <table className="table">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th>Date</th>

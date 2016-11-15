@@ -43052,10 +43052,6 @@ var _merge = require('lodash/merge');
 
 var _merge2 = _interopRequireDefault(_merge);
 
-var _sortBy = require('lodash/sortBy');
-
-var _sortBy2 = _interopRequireDefault(_sortBy);
-
 var _WeeklyExpenseRow = require('./WeeklyExpenseRow.jsx');
 
 var _WeeklyExpenseRow2 = _interopRequireDefault(_WeeklyExpenseRow);
@@ -43070,6 +43066,36 @@ var propTypes = {
   expensesById: _react.PropTypes.objectOf(_react.PropTypes.object).isRequired
 };
 
+/**
+ * @typedef {number} YearKey
+ */
+
+/**
+ * @typedef {number} IsoWeekKey
+ */
+
+/**
+ * @typedef {object.<YearKey, object.<IsoWeekKey, {total: number}>>} YearWeekTotals
+ */
+
+/**
+ * @typedef {object} TotalPerWeek
+ * @property {number} year
+ * @property {number} isoWeek
+ * @property {number} total
+ */
+
+/**
+ * Starting from the last known date where the user had an expense, iterate until the first known
+ * date in order to get the weeks where the user didn't make expenses. While getting the weeks, fill
+ * them with the total amount spent calculated previously
+ *
+ * @param {YearWeekTotals} yearWeekTotals
+ * @param {MomentDate} lastDate
+ * @param {MomentDate} firstDate
+ * @param {TotalPerWeek[]} [weeklyTotalsArr=[]]
+ * @return {TotalPerWeek[]}
+ */
 function setTotalsPerWeek(yearWeekTotals, lastDate, firstDate) {
   var weeklyTotalsArr = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
 
@@ -43102,13 +43128,18 @@ function setTotalsPerWeek(yearWeekTotals, lastDate, firstDate) {
  *
  * @param {ObjectId[]} expenseIds
  * @param {ExpensesById} expensesById
- * @return {{weekNums: number[], totalPerWeekNum: object.<string, {total: number}>}}
+ * @return {TotalPerWeek[]}
  */
 function getWeeklyTotals(expenseIds, expensesById) {
   if (!expenseIds.length) {
     return [];
   }
 
+  /**
+   * Iterate the expense ids to group them by total amount spent per isoWeek and year
+   *
+   * @type {YearWeekTotals}
+   */
   var yearWeekTotals = expenseIds.reduce(function (resultObj, id) {
     var result = (0, _merge2.default)({}, resultObj);
 
@@ -43196,7 +43227,7 @@ ExpensesPerWeek.propTypes = propTypes;
 
 exports.default = ExpensesPerWeek;
 
-},{"./WeeklyExpenseRow.jsx":517,"classnames":9,"lodash/merge":271,"lodash/sortBy":273,"moment":277,"react":484}],506:[function(require,module,exports){
+},{"./WeeklyExpenseRow.jsx":517,"classnames":9,"lodash/merge":271,"moment":277,"react":484}],506:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -43289,7 +43320,7 @@ function ExpensesTable(props) {
       { disabled: props.isDisabled },
       _react2.default.createElement(
         'table',
-        { className: 'table' },
+        { className: 'table table-striped' },
         _react2.default.createElement(
           'thead',
           null,
@@ -44390,6 +44421,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
 var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
@@ -44405,6 +44440,8 @@ var propTypes = {
 function WeeklyExpenseRow(props) {
   var strIsoWeek = '' + props.isoWeek;
 
+  // add a leading 0 when the week only has 1 digit because the format expected by moment when
+  // generating dates through year and ISO week requires "ww" (2 digits)
   if (strIsoWeek.length === 1) {
     strIsoWeek = '0' + strIsoWeek;
   }
@@ -44416,9 +44453,11 @@ function WeeklyExpenseRow(props) {
 
   var avg = props.total / 7;
 
+  var rowClass = (0, _classnames2.default)({ active: weekStart.month() % 2 });
+
   return _react2.default.createElement(
     'tr',
-    null,
+    { className: rowClass },
     _react2.default.createElement(
       'td',
       null,
@@ -44441,7 +44480,7 @@ WeeklyExpenseRow.propTypes = propTypes;
 
 exports.default = WeeklyExpenseRow;
 
-},{"moment":277,"react":484}],518:[function(require,module,exports){
+},{"classnames":9,"moment":277,"react":484}],518:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
