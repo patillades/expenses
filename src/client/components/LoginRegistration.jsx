@@ -39,23 +39,27 @@ function LoginRegistration(props) {
         hasLogOutBtn={false}
       />
 
-      <RegistrationForm
-        form="registration"
-        {...props.authenticated.registration}
-        triggerId={props.requests.triggerId}
-        isDisabled={props.requests.isFetching}
-        inputChangeHandler={props.inputChangeHandler}
-        submitHandler={props.registrationSubmitHandler}
-      />
+      <div className="row">
+        <RegistrationForm
+          form="registration"
+          {...props.authenticated.registration}
+          triggerId={props.requests.triggerId}
+          isDisabled={props.requests.isFetching}
+          inputChangeHandler={props.inputChangeHandler}
+          submitHandler={props.registrationSubmitHandler}
+        />
 
-      <LoginForm
-        form="login"
-        {...props.authenticated.login}
-        triggerId={props.requests.triggerId}
-        isDisabled={props.requests.isFetching}
-        inputChangeHandler={props.inputChangeHandler}
-        submitHandler={props.loginSubmitHandler}
-      />
+        <div className="col-xs-2" />
+
+        <LoginForm
+          form="login"
+          {...props.authenticated.login}
+          triggerId={props.requests.triggerId}
+          isDisabled={props.requests.isFetching}
+          inputChangeHandler={props.inputChangeHandler}
+          submitHandler={props.loginSubmitHandler}
+        />
+      </div>
 
       <Modal
         {...props.requests.modal}

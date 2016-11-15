@@ -15,43 +15,45 @@ const propTypes = {
 
 function LoginForm(props) {
   return (
-    <div className="panel panel-default">
-      <div className="panel-heading">Sign in if you already have an account</div>
+    <div className="col-xs-4">
+      <div className="panel panel-default">
+        <div className="panel-heading">Sign in if you already have an account</div>
 
-      <div className="panel-body">
-        <form>
-          <fieldset disabled={props.isDisabled}>
-            <Input
-              label="Email address"
-              type="email"
-              placeholder="Email"
-              isRequired
-              changeHandler={props.inputChangeHandler}
-              value={props.mail}
-              form={props.form}
-              field="mail"
-            />
+        <div className="panel-body">
+          <form>
+            <fieldset disabled={props.isDisabled}>
+              <Input
+                label="Email address"
+                type="email"
+                placeholder="Email"
+                isRequired
+                changeHandler={props.inputChangeHandler}
+                value={props.mail}
+                form={props.form}
+                field="mail"
+              />
 
-            <Input
-              label="Password"
-              type="password"
-              placeholder="Password"
-              isRequired
-              changeHandler={props.inputChangeHandler}
-              value={props.password}
-              form={props.form}
-              field="password"
-            />
+              <Input
+                label="Password"
+                type="password"
+                placeholder="Password"
+                isRequired
+                changeHandler={props.inputChangeHandler}
+                value={props.password}
+                form={props.form}
+                field="password"
+              />
 
-            <Button
-              id="loginBtn"
-              triggerId={props.triggerId}
-              txt="Sign in"
-              isLoading={props.isDisabled}
-              clickHandler={props.submitHandler}
-            />
-          </fieldset>
-        </form>
+              <Button
+                id="loginBtn"
+                triggerId={props.triggerId}
+                txt="Sign in"
+                isLoading={props.isDisabled}
+                clickHandler={props.submitHandler}
+              />
+            </fieldset>
+          </form>
+        </div>
       </div>
     </div>
   );
