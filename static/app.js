@@ -4266,7 +4266,7 @@ var replaceLocation = exports.replaceLocation = function replaceLocation(locatio
 var go = exports.go = function go(n) {
   if (n) window.history.go(n);
 };
-},{"./DOMStateStorage":98,"./DOMUtils":99,"./ExecutionEnvironment":100,"./LocationUtils":102,"./PathUtils":103}],98:[function(require,module,exports){
+},{"./DOMStateStorage":98,"./DOMUtils":99,"./ExecutionEnvironment":100,"./LocationUtils":101,"./PathUtils":102}],98:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -4405,145 +4405,6 @@ var canUseDOM = exports.canUseDOM = !!(typeof window !== 'undefined' && window.d
 'use strict';
 
 exports.__esModule = true;
-exports.replaceLocation = exports.pushLocation = exports.startListener = exports.getCurrentLocation = exports.go = exports.getUserConfirmation = undefined;
-
-var _BrowserProtocol = require('./BrowserProtocol');
-
-Object.defineProperty(exports, 'getUserConfirmation', {
-  enumerable: true,
-  get: function get() {
-    return _BrowserProtocol.getUserConfirmation;
-  }
-});
-Object.defineProperty(exports, 'go', {
-  enumerable: true,
-  get: function get() {
-    return _BrowserProtocol.go;
-  }
-});
-
-var _warning = require('warning');
-
-var _warning2 = _interopRequireDefault(_warning);
-
-var _LocationUtils = require('./LocationUtils');
-
-var _DOMUtils = require('./DOMUtils');
-
-var _DOMStateStorage = require('./DOMStateStorage');
-
-var _PathUtils = require('./PathUtils');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var HashChangeEvent = 'hashchange';
-
-var getHashPath = function getHashPath() {
-  // We can't use window.location.hash here because it's not
-  // consistent across browsers - Firefox will pre-decode it!
-  var href = window.location.href;
-  var hashIndex = href.indexOf('#');
-  return hashIndex === -1 ? '' : href.substring(hashIndex + 1);
-};
-
-var pushHashPath = function pushHashPath(path) {
-  return window.location.hash = path;
-};
-
-var replaceHashPath = function replaceHashPath(path) {
-  var hashIndex = window.location.href.indexOf('#');
-
-  window.location.replace(window.location.href.slice(0, hashIndex >= 0 ? hashIndex : 0) + '#' + path);
-};
-
-var getCurrentLocation = exports.getCurrentLocation = function getCurrentLocation(pathCoder, queryKey) {
-  var path = pathCoder.decodePath(getHashPath());
-  var key = (0, _PathUtils.getQueryStringValueFromPath)(path, queryKey);
-
-  var state = void 0;
-  if (key) {
-    path = (0, _PathUtils.stripQueryStringValueFromPath)(path, queryKey);
-    state = (0, _DOMStateStorage.readState)(key);
-  }
-
-  var init = (0, _PathUtils.parsePath)(path);
-  init.state = state;
-
-  return (0, _LocationUtils.createLocation)(init, undefined, key);
-};
-
-var prevLocation = void 0;
-
-var startListener = exports.startListener = function startListener(listener, pathCoder, queryKey) {
-  var handleHashChange = function handleHashChange() {
-    var path = getHashPath();
-    var encodedPath = pathCoder.encodePath(path);
-
-    if (path !== encodedPath) {
-      // Always be sure we have a properly-encoded hash.
-      replaceHashPath(encodedPath);
-    } else {
-      var currentLocation = getCurrentLocation(pathCoder, queryKey);
-
-      if (prevLocation && currentLocation.key && prevLocation.key === currentLocation.key) return; // Ignore extraneous hashchange events
-
-      prevLocation = currentLocation;
-
-      listener(currentLocation);
-    }
-  };
-
-  // Ensure the hash is encoded properly.
-  var path = getHashPath();
-  var encodedPath = pathCoder.encodePath(path);
-
-  if (path !== encodedPath) replaceHashPath(encodedPath);
-
-  (0, _DOMUtils.addEventListener)(window, HashChangeEvent, handleHashChange);
-
-  return function () {
-    return (0, _DOMUtils.removeEventListener)(window, HashChangeEvent, handleHashChange);
-  };
-};
-
-var updateLocation = function updateLocation(location, pathCoder, queryKey, updateHash) {
-  var state = location.state;
-  var key = location.key;
-
-
-  var path = pathCoder.encodePath((0, _PathUtils.createPath)(location));
-
-  if (state !== undefined) {
-    path = (0, _PathUtils.addQueryStringValueToPath)(path, queryKey, key);
-    (0, _DOMStateStorage.saveState)(key, state);
-  }
-
-  prevLocation = location;
-
-  updateHash(path);
-};
-
-var pushLocation = exports.pushLocation = function pushLocation(location, pathCoder, queryKey) {
-  return updateLocation(location, pathCoder, queryKey, function (path) {
-    if (getHashPath() !== path) {
-      pushHashPath(path);
-    } else {
-      process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(false, 'You cannot PUSH the same path using hash history') : void 0;
-    }
-  });
-};
-
-var replaceLocation = exports.replaceLocation = function replaceLocation(location, pathCoder, queryKey) {
-  return updateLocation(location, pathCoder, queryKey, function (path) {
-    if (getHashPath() !== path) replaceHashPath(path);
-  });
-};
-}).call(this,require('_process'))
-},{"./BrowserProtocol":97,"./DOMStateStorage":98,"./DOMUtils":99,"./LocationUtils":102,"./PathUtils":103,"_process":279,"warning":497}],102:[function(require,module,exports){
-(function (process){
-'use strict';
-
-exports.__esModule = true;
 exports.locationsAreEqual = exports.statesAreEqual = exports.createLocation = exports.createQuery = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -4634,7 +4495,7 @@ var locationsAreEqual = exports.locationsAreEqual = function locationsAreEqual(a
   a.pathname === b.pathname && a.search === b.search && a.hash === b.hash && statesAreEqual(a.state, b.state);
 };
 }).call(this,require('_process'))
-},{"./Actions":95,"./PathUtils":103,"_process":279,"invariant":110,"warning":497}],103:[function(require,module,exports){
+},{"./Actions":95,"./PathUtils":102,"_process":279,"invariant":110,"warning":497}],102:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -4738,7 +4599,45 @@ var createPath = exports.createPath = function createPath(location) {
   return path;
 };
 }).call(this,require('_process'))
-},{"_process":279,"warning":497}],104:[function(require,module,exports){
+},{"_process":279,"warning":497}],103:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+exports.replaceLocation = exports.pushLocation = exports.getCurrentLocation = exports.go = exports.getUserConfirmation = undefined;
+
+var _BrowserProtocol = require('./BrowserProtocol');
+
+Object.defineProperty(exports, 'getUserConfirmation', {
+  enumerable: true,
+  get: function get() {
+    return _BrowserProtocol.getUserConfirmation;
+  }
+});
+Object.defineProperty(exports, 'go', {
+  enumerable: true,
+  get: function get() {
+    return _BrowserProtocol.go;
+  }
+});
+
+var _LocationUtils = require('./LocationUtils');
+
+var _PathUtils = require('./PathUtils');
+
+var getCurrentLocation = exports.getCurrentLocation = function getCurrentLocation() {
+  return (0, _LocationUtils.createLocation)(window.location);
+};
+
+var pushLocation = exports.pushLocation = function pushLocation(location) {
+  window.location.href = (0, _PathUtils.createPath)(location);
+  return false; // Don't update location
+};
+
+var replaceLocation = exports.replaceLocation = function replaceLocation(location) {
+  window.location.replace((0, _PathUtils.createPath)(location));
+  return false; // Don't update location
+};
+},{"./BrowserProtocol":97,"./LocationUtils":101,"./PathUtils":102}],104:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -4746,21 +4645,21 @@ exports.__esModule = true;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _warning = require('warning');
-
-var _warning2 = _interopRequireDefault(_warning);
-
 var _invariant = require('invariant');
 
 var _invariant2 = _interopRequireDefault(_invariant);
 
 var _ExecutionEnvironment = require('./ExecutionEnvironment');
 
+var _BrowserProtocol = require('./BrowserProtocol');
+
+var BrowserProtocol = _interopRequireWildcard(_BrowserProtocol);
+
+var _RefreshProtocol = require('./RefreshProtocol');
+
+var RefreshProtocol = _interopRequireWildcard(_RefreshProtocol);
+
 var _DOMUtils = require('./DOMUtils');
-
-var _HashProtocol = require('./HashProtocol');
-
-var HashProtocol = _interopRequireWildcard(_HashProtocol);
 
 var _createHistory = require('./createHistory');
 
@@ -4770,84 +4669,44 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var DefaultQueryKey = '_k';
-
-var addLeadingSlash = function addLeadingSlash(path) {
-  return path.charAt(0) === '/' ? path : '/' + path;
-};
-
-var HashPathCoders = {
-  hashbang: {
-    encodePath: function encodePath(path) {
-      return path.charAt(0) === '!' ? path : '!' + path;
-    },
-    decodePath: function decodePath(path) {
-      return path.charAt(0) === '!' ? path.substring(1) : path;
-    }
-  },
-  noslash: {
-    encodePath: function encodePath(path) {
-      return path.charAt(0) === '/' ? path.substring(1) : path;
-    },
-    decodePath: addLeadingSlash
-  },
-  slash: {
-    encodePath: addLeadingSlash,
-    decodePath: addLeadingSlash
-  }
-};
-
-var createHashHistory = function createHashHistory() {
+/**
+ * Creates and returns a history object that uses HTML5's history API
+ * (pushState, replaceState, and the popstate event) to manage history.
+ * This is the recommended method of managing history in browsers because
+ * it provides the cleanest URLs.
+ *
+ * Note: In browsers that do not support the HTML5 history API full
+ * page reloads will be used to preserve clean URLs. You can force this
+ * behavior using { forceRefresh: true } in options.
+ */
+var createBrowserHistory = function createBrowserHistory() {
   var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-  !_ExecutionEnvironment.canUseDOM ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'Hash history needs a DOM') : (0, _invariant2.default)(false) : void 0;
+  !_ExecutionEnvironment.canUseDOM ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'Browser history needs a DOM') : (0, _invariant2.default)(false) : void 0;
 
-  var queryKey = options.queryKey;
-  var hashType = options.hashType;
+  var useRefresh = options.forceRefresh || !(0, _DOMUtils.supportsHistory)();
+  var Protocol = useRefresh ? RefreshProtocol : BrowserProtocol;
 
+  var getUserConfirmation = Protocol.getUserConfirmation;
+  var getCurrentLocation = Protocol.getCurrentLocation;
+  var pushLocation = Protocol.pushLocation;
+  var replaceLocation = Protocol.replaceLocation;
+  var go = Protocol.go;
 
-  process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(queryKey !== false, 'Using { queryKey: false } no longer works. Instead, just don\'t ' + 'use location state if you don\'t want a key in your URL query string') : void 0;
-
-  if (typeof queryKey !== 'string') queryKey = DefaultQueryKey;
-
-  if (hashType == null) hashType = 'slash';
-
-  if (!(hashType in HashPathCoders)) {
-    process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(false, 'Invalid hash type: %s', hashType) : void 0;
-
-    hashType = 'slash';
-  }
-
-  var pathCoder = HashPathCoders[hashType];
-
-  var getUserConfirmation = HashProtocol.getUserConfirmation;
-
-
-  var getCurrentLocation = function getCurrentLocation() {
-    return HashProtocol.getCurrentLocation(pathCoder, queryKey);
-  };
-
-  var pushLocation = function pushLocation(location) {
-    return HashProtocol.pushLocation(location, pathCoder, queryKey);
-  };
-
-  var replaceLocation = function replaceLocation(location) {
-    return HashProtocol.replaceLocation(location, pathCoder, queryKey);
-  };
 
   var history = (0, _createHistory2.default)(_extends({
     getUserConfirmation: getUserConfirmation }, options, {
     getCurrentLocation: getCurrentLocation,
     pushLocation: pushLocation,
     replaceLocation: replaceLocation,
-    go: HashProtocol.go
+    go: go
   }));
 
   var listenerCount = 0,
       stopListener = void 0;
 
   var startListener = function startListener(listener, before) {
-    if (++listenerCount === 1) stopListener = HashProtocol.startListener(history.transitionTo, pathCoder, queryKey);
+    if (++listenerCount === 1) stopListener = BrowserProtocol.startListener(history.transitionTo);
 
     var unlisten = before ? history.listenBefore(listener) : history.listen(listener);
 
@@ -4866,29 +4725,15 @@ var createHashHistory = function createHashHistory() {
     return startListener(listener, false);
   };
 
-  var goIsSupportedWithoutReload = (0, _DOMUtils.supportsGoWithoutReloadUsingHash)();
-
-  var go = function go(n) {
-    process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(goIsSupportedWithoutReload, 'Hash history go(n) causes a full page reload in this browser') : void 0;
-
-    history.go(n);
-  };
-
-  var createHref = function createHref(path) {
-    return '#' + pathCoder.encodePath(history.createHref(path));
-  };
-
   return _extends({}, history, {
     listenBefore: listenBefore,
-    listen: listen,
-    go: go,
-    createHref: createHref
+    listen: listen
   });
 };
 
-exports.default = createHashHistory;
+exports.default = createBrowserHistory;
 }).call(this,require('_process'))
-},{"./DOMUtils":99,"./ExecutionEnvironment":100,"./HashProtocol":101,"./createHistory":105,"_process":279,"invariant":110,"warning":497}],105:[function(require,module,exports){
+},{"./BrowserProtocol":97,"./DOMUtils":99,"./ExecutionEnvironment":100,"./RefreshProtocol":103,"./createHistory":105,"_process":279,"invariant":110}],105:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -5065,7 +4910,7 @@ var createHistory = function createHistory() {
 };
 
 exports.default = createHistory;
-},{"./Actions":95,"./AsyncUtils":96,"./LocationUtils":102,"./PathUtils":103,"./runTransitionHook":106}],106:[function(require,module,exports){
+},{"./Actions":95,"./AsyncUtils":96,"./LocationUtils":101,"./PathUtils":102,"./runTransitionHook":106}],106:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -5201,7 +5046,7 @@ var useBasename = function useBasename(createHistory) {
 };
 
 exports.default = useBasename;
-},{"./PathUtils":103,"./runTransitionHook":106}],108:[function(require,module,exports){
+},{"./PathUtils":102,"./runTransitionHook":106}],108:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -5323,7 +5168,7 @@ var useQueries = function useQueries(createHistory) {
 };
 
 exports.default = useQueries;
-},{"./LocationUtils":102,"./PathUtils":103,"./runTransitionHook":106,"query-string":280}],109:[function(require,module,exports){
+},{"./LocationUtils":101,"./PathUtils":102,"./runTransitionHook":106,"query-string":280}],109:[function(require,module,exports){
 /**
  * Copyright 2015, Yahoo! Inc.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
@@ -20719,7 +20564,7 @@ var Router = _react2.default.createClass({
 exports.default = Router;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./InternalPropTypes":323,"./RouteUtils":327,"./RouterContext":329,"./RouterUtils":330,"./createTransitionManager":334,"./routerWarning":340,"_process":279,"invariant":110,"react":484}],329:[function(require,module,exports){
+},{"./InternalPropTypes":323,"./RouteUtils":327,"./RouterContext":329,"./RouterUtils":330,"./createTransitionManager":335,"./routerWarning":340,"_process":279,"invariant":110,"react":484}],329:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -20855,7 +20700,7 @@ var RouterContext = _react2.default.createClass({
 exports.default = RouterContext;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./ContextUtils":322,"./RouteUtils":327,"./getRouteParams":336,"_process":279,"invariant":110,"react":484}],330:[function(require,module,exports){
+},{"./ContextUtils":322,"./RouteUtils":327,"./getRouteParams":337,"_process":279,"invariant":110,"react":484}],330:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -21045,6 +20890,23 @@ function runLeaveHooks(routes, prevState) {
 
 exports.__esModule = true;
 
+var _createBrowserHistory = require('history/lib/createBrowserHistory');
+
+var _createBrowserHistory2 = _interopRequireDefault(_createBrowserHistory);
+
+var _createRouterHistory = require('./createRouterHistory');
+
+var _createRouterHistory2 = _interopRequireDefault(_createRouterHistory);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _createRouterHistory2.default)(_createBrowserHistory2.default);
+module.exports = exports['default'];
+},{"./createRouterHistory":334,"history/lib/createBrowserHistory":104}],333:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+
 var _PatternUtils = require('./PatternUtils');
 
 function routeParamsChanged(route, prevState, nextState) {
@@ -21118,7 +20980,7 @@ function computeChangedRoutes(prevState, nextState) {
 
 exports.default = computeChangedRoutes;
 module.exports = exports['default'];
-},{"./PatternUtils":324}],333:[function(require,module,exports){
+},{"./PatternUtils":324}],334:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21138,7 +21000,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 
 module.exports = exports['default'];
-},{"./useRouterHistory":341}],334:[function(require,module,exports){
+},{"./useRouterHistory":341}],335:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -21416,7 +21278,7 @@ function createTransitionManager(history, routes) {
 }
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./TransitionUtils":331,"./computeChangedRoutes":332,"./getComponents":335,"./isActive":338,"./matchRoutes":339,"./routerWarning":340,"_process":279}],335:[function(require,module,exports){
+},{"./TransitionUtils":331,"./computeChangedRoutes":333,"./getComponents":336,"./isActive":338,"./matchRoutes":339,"./routerWarning":340,"_process":279}],336:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21457,7 +21319,7 @@ function getComponents(nextState, callback) {
 
 exports.default = getComponents;
 module.exports = exports['default'];
-},{"./AsyncUtils":321,"./PromiseUtils":325}],336:[function(require,module,exports){
+},{"./AsyncUtils":321,"./PromiseUtils":325}],337:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21484,24 +21346,7 @@ function getRouteParams(route, params) {
 
 exports.default = getRouteParams;
 module.exports = exports['default'];
-},{"./PatternUtils":324}],337:[function(require,module,exports){
-'use strict';
-
-exports.__esModule = true;
-
-var _createHashHistory = require('history/lib/createHashHistory');
-
-var _createHashHistory2 = _interopRequireDefault(_createHashHistory);
-
-var _createRouterHistory = require('./createRouterHistory');
-
-var _createRouterHistory2 = _interopRequireDefault(_createRouterHistory);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = (0, _createRouterHistory2.default)(_createHashHistory2.default);
-module.exports = exports['default'];
-},{"./createRouterHistory":333,"history/lib/createHashHistory":104}],338:[function(require,module,exports){
+},{"./PatternUtils":324}],338:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42498,9 +42343,9 @@ exports.editExpense = exports.expenseDatetimeChange = exports.logOut = exports.a
 
 require('whatwg-fetch');
 
-var _hashHistory = require('react-router/lib/hashHistory');
+var _browserHistory = require('react-router/lib/browserHistory');
 
-var _hashHistory2 = _interopRequireDefault(_hashHistory);
+var _browserHistory2 = _interopRequireDefault(_browserHistory);
 
 var _messages = require('constants/messages');
 
@@ -42552,9 +42397,9 @@ function modalBtnClick() {
     var modalMsg = getState().requests.modal.msg;
 
     if ([_messages2.default[_actionTypes.REGISTRATION_REQUEST], _messages2.default[_actionTypes.LOGIN_REQUEST]].includes(modalMsg)) {
-      _hashHistory2.default.push('/');
+      _browserHistory2.default.push('/');
     } else if (modalMsg === _messages2.default[_actionTypes.SESSION_EXPIRED]) {
-      _hashHistory2.default.push('/login');
+      _browserHistory2.default.push('/login');
     }
 
     return dispatch(action(_actionTypes.CLOSE_MODAL));
@@ -42596,7 +42441,7 @@ function editExpense(expenseId) {
  * @return {{type: string}}
  */
 function logOut() {
-  _hashHistory2.default.push('/login');
+  _browserHistory2.default.push('/login');
 
   return { type: _actionTypes.LOG_OUT };
 }
@@ -42610,7 +42455,7 @@ exports.logOut = logOut;
 exports.expenseDatetimeChange = expenseDatetimeChange;
 exports.editExpense = editExpense;
 
-},{"./requestActions":500,"constants/actionTypes":518,"constants/messages":519,"react-router/lib/hashHistory":337,"whatwg-fetch":498}],500:[function(require,module,exports){
+},{"./requestActions":500,"constants/actionTypes":518,"constants/messages":519,"react-router/lib/browserHistory":332,"whatwg-fetch":498}],500:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42933,15 +42778,15 @@ var _Router = require('react-router/lib/Router');
 
 var _Router2 = _interopRequireDefault(_Router);
 
-var _hashHistory = require('react-router/lib/hashHistory');
+var _browserHistory = require('react-router/lib/browserHistory');
 
-var _hashHistory2 = _interopRequireDefault(_hashHistory);
+var _browserHistory2 = _interopRequireDefault(_browserHistory);
 
 var _Route = require('react-router/lib/Route');
 
 var _Route2 = _interopRequireDefault(_Route);
 
-var _store = require('store');
+var _store = require('store/store');
 
 var _store2 = _interopRequireDefault(_store);
 
@@ -42955,29 +42800,37 @@ var _UserExpensesContainer2 = _interopRequireDefault(_UserExpensesContainer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_hashHistory2.default.listen(function (location) {
+/**
+ * Send users to login page if they are not authenticated
+ *
+ * @param {Location} location
+ */
+function sendToLoginIfNoToken(location) {
   var token = _store2.default.getState().authenticated.token;
 
-  // send users to login page if they are not authenticated
-
-
   if (location.pathname !== '/login' && !token) {
-    _hashHistory2.default.push('/login');
+    _browserHistory2.default.push('/login');
   }
-});
+}
+
+// check for authentication when the app is loaded
+sendToLoginIfNoToken(_browserHistory2.default.getCurrentLocation());
+
+// check for authentication whenever the user navigates
+_browserHistory2.default.listen(sendToLoginIfNoToken);
 
 (0, _reactDom.render)(_react2.default.createElement(
   _Provider2.default,
   { store: _store2.default },
   _react2.default.createElement(
     _Router2.default,
-    { history: _hashHistory2.default },
+    { history: _browserHistory2.default },
     _react2.default.createElement(_Route2.default, { path: '/', component: _UserExpensesContainer2.default }),
     _react2.default.createElement(_Route2.default, { path: '/login', component: _LoginRegistrationContainer2.default })
   )
 ), document.getElementById('js-app'));
 
-},{"containers/LoginRegistrationContainer.jsx":520,"containers/UserExpensesContainer.jsx":521,"react":484,"react-dom":306,"react-redux/lib/components/Provider":315,"react-router/lib/Route":326,"react-router/lib/Router":328,"react-router/lib/hashHistory":337,"store":527}],502:[function(require,module,exports){
+},{"containers/LoginRegistrationContainer.jsx":520,"containers/UserExpensesContainer.jsx":521,"react":484,"react-dom":306,"react-redux/lib/components/Provider":315,"react-router/lib/Route":326,"react-router/lib/Router":328,"react-router/lib/browserHistory":332,"store/store":527}],502:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -43778,8 +43631,8 @@ function Filters(props) {
             { className: 'col-xs-2' },
             _react2.default.createElement(
               'p',
-              { className: 'invisible' },
-              'Description'
+              null,
+              '\xA0'
             ),
             _react2.default.createElement(_Input2.default, {
               type: 'text',
@@ -44143,22 +43996,35 @@ function LoginRegistration(props) {
     _react2.default.createElement(_Header2.default, {
       hasLogOutBtn: false
     }),
-    _react2.default.createElement(_RegistrationForm2.default, _extends({
-      form: 'registration'
-    }, props.authenticated.registration, {
-      triggerId: props.requests.triggerId,
-      isDisabled: props.requests.isFetching,
-      inputChangeHandler: props.inputChangeHandler,
-      submitHandler: props.registrationSubmitHandler
-    })),
-    _react2.default.createElement(_LoginForm2.default, _extends({
-      form: 'login'
-    }, props.authenticated.login, {
-      triggerId: props.requests.triggerId,
-      isDisabled: props.requests.isFetching,
-      inputChangeHandler: props.inputChangeHandler,
-      submitHandler: props.loginSubmitHandler
-    })),
+    _react2.default.createElement(
+      'div',
+      { className: 'row' },
+      _react2.default.createElement(
+        'div',
+        { className: 'col-xs-4 col-xs-offset-1' },
+        _react2.default.createElement(_RegistrationForm2.default, _extends({
+          form: 'registration'
+        }, props.authenticated.registration, {
+          triggerId: props.requests.triggerId,
+          isDisabled: props.requests.isFetching,
+          inputChangeHandler: props.inputChangeHandler,
+          submitHandler: props.registrationSubmitHandler
+        }))
+      ),
+      _react2.default.createElement('div', { className: 'col-xs-2' }),
+      _react2.default.createElement(
+        'div',
+        { className: 'col-xs-4' },
+        _react2.default.createElement(_LoginForm2.default, _extends({
+          form: 'login'
+        }, props.authenticated.login, {
+          triggerId: props.requests.triggerId,
+          isDisabled: props.requests.isFetching,
+          inputChangeHandler: props.inputChangeHandler,
+          submitHandler: props.loginSubmitHandler
+        }))
+      )
+    ),
     _react2.default.createElement(_Modal2.default, _extends({}, props.requests.modal, {
       clickHandler: props.modalBtnHandler
     }))
@@ -44544,7 +44410,7 @@ var propTypes = {
       date: _react.PropTypes.string.isRequired,
       description: _react.PropTypes.string.isRequired,
       amount: _react.PropTypes.number.isRequired,
-      comment: _react.PropTypes.string.isRequired
+      comment: _react.PropTypes.string
     })).isRequired,
     expenseIdOnEdition: _react.PropTypes.string,
     expenseIdToDelete: _react.PropTypes.string
@@ -44868,11 +44734,15 @@ function mapDispatchToProps(dispatch) {
     },
 
     registrationSubmitHandler: function registrationSubmitHandler(e) {
-      return dispatch((0, _actions.sendRequest)(_actionTypes.REGISTRATION_REQUEST, { triggerId: e.target.id }));
+      e.preventDefault();
+
+      dispatch((0, _actions.sendRequest)(_actionTypes.REGISTRATION_REQUEST, { triggerId: e.target.id }));
     },
 
     loginSubmitHandler: function loginSubmitHandler(e) {
-      return dispatch((0, _actions.sendRequest)(_actionTypes.LOGIN_REQUEST, { triggerId: e.target.id }));
+      e.preventDefault();
+
+      dispatch((0, _actions.sendRequest)(_actionTypes.LOGIN_REQUEST, { triggerId: e.target.id }));
     },
 
     modalBtnHandler: function modalBtnHandler() {
@@ -44914,6 +44784,10 @@ function mapDispatchToProps(dispatch) {
   // on app start, it's called on componentWillMount@UserExpenses, so there's no e argument and
   // we'll use a constant instead so we know that the loader has to be shown
   function loadUserExpenses(e) {
+    if (e) {
+      e.preventDefault();
+    }
+
     return dispatch((0, _actions.sendRequest)(_actionTypes.GET_EXPENSES_REQUEST, { triggerId: e ? e.target.id : _actionTypes.GET_EXPENSES_REQUEST_ON_LOAD }));
   }
 
@@ -44943,11 +44817,15 @@ function mapDispatchToProps(dispatch) {
     },
 
     createExpenseSubmitHandler: function createExpenseSubmitHandler(e) {
-      return dispatch((0, _actions.sendRequest)(_actionTypes.CREATE_EXPENSE_REQUEST, { triggerId: e.target.id }));
+      e.preventDefault();
+
+      dispatch((0, _actions.sendRequest)(_actionTypes.CREATE_EXPENSE_REQUEST, { triggerId: e.target.id }));
     },
 
     editExpenseSubmitHandler: function editExpenseSubmitHandler(e) {
-      return dispatch((0, _actions.sendRequest)(_actionTypes.EDIT_EXPENSE_REQUEST, { triggerId: e.target.id }));
+      e.preventDefault();
+
+      dispatch((0, _actions.sendRequest)(_actionTypes.EDIT_EXPENSE_REQUEST, { triggerId: e.target.id }));
     },
 
     modalBtnHandler: function modalBtnHandler() {

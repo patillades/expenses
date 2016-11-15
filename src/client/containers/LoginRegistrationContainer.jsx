@@ -26,15 +26,25 @@ function mapDispatchToProps(dispatch) {
       e.target.value
     )),
 
-    registrationSubmitHandler: e => dispatch(sendRequest(
-      REGISTRATION_REQUEST,
-      { triggerId: e.target.id }
-    )),
+    // prevent default so the form submission doesn't force a page reload
+    registrationSubmitHandler: (e) => {
+      e.preventDefault();
 
-    loginSubmitHandler: e => dispatch(sendRequest(
-      LOGIN_REQUEST,
-      { triggerId: e.target.id }
-    )),
+      dispatch(sendRequest(
+        REGISTRATION_REQUEST,
+        { triggerId: e.target.id }
+      ));
+    },
+
+    // prevent default so the form submission doesn't force a page reload
+    loginSubmitHandler: (e) => {
+      e.preventDefault();
+
+      dispatch(sendRequest(
+        LOGIN_REQUEST,
+        { triggerId: e.target.id }
+      ));
+    },
 
     modalBtnHandler: () => dispatch(modalBtnClick()),
   };

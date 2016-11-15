@@ -1,5 +1,5 @@
 import 'whatwg-fetch';
-import hashHistory from 'react-router/lib/hashHistory';
+import browserHistory from 'react-router/lib/browserHistory';
 
 import MODAL_MESSAGES from 'constants/messages';
 import {
@@ -54,9 +54,9 @@ function modalBtnClick() {
       MODAL_MESSAGES[LOGIN_REQUEST],
     ].includes(modalMsg)
     ) {
-      hashHistory.push('/');
+      browserHistory.push('/');
     } else if (modalMsg === MODAL_MESSAGES[SESSION_EXPIRED]) {
-      hashHistory.push('/login');
+      browserHistory.push('/login');
     }
 
     return dispatch(action(CLOSE_MODAL));
@@ -98,7 +98,7 @@ function editExpense(expenseId) {
  * @return {{type: string}}
  */
 function logOut() {
-  hashHistory.push('/login');
+  browserHistory.push('/login');
 
   return { type: LOG_OUT };
 }

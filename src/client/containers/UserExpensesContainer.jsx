@@ -34,6 +34,11 @@ function mapDispatchToProps(dispatch) {
   // on app start, it's called on componentWillMount@UserExpenses, so there's no e argument and
   // we'll use a constant instead so we know that the loader has to be shown
   function loadUserExpenses(e) {
+    if (e) {
+      // prevent default so the form submission doesn't force a page reload
+      e.preventDefault();
+    }
+
     return dispatch(sendRequest(
       GET_EXPENSES_REQUEST,
       { triggerId: e ? e.target.id : GET_EXPENSES_REQUEST_ON_LOAD }
@@ -72,15 +77,25 @@ function mapDispatchToProps(dispatch) {
 
     filterInputChangeHandler: e => dispatchInputChange(e, FILTER_INPUT_CHANGE),
 
-    createExpenseSubmitHandler: e => dispatch(sendRequest(
-      CREATE_EXPENSE_REQUEST,
-      { triggerId: e.target.id }
-    )),
+    createExpenseSubmitHandler: (e) => {
+      // prevent default so the form submission doesn't force a page reload
+      e.preventDefault();
 
-    editExpenseSubmitHandler: e => dispatch(sendRequest(
-      EDIT_EXPENSE_REQUEST,
-      { triggerId: e.target.id }
-    )),
+      dispatch(sendRequest(
+        CREATE_EXPENSE_REQUEST,
+        { triggerId: e.target.id }
+      ));
+    },
+
+    editExpenseSubmitHandler: (e) => {
+      // prevent default so the form submission doesn't force a page reload
+      e.preventDefault();
+
+      dispatch(sendRequest(
+        EDIT_EXPENSE_REQUEST,
+        { triggerId: e.target.id }
+      ));
+    },
 
     modalBtnHandler: () => dispatch(modalBtnClick()),
 

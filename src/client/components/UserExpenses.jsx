@@ -52,7 +52,7 @@ const propTypes = {
       date: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
       amount: PropTypes.number.isRequired,
-      comment: PropTypes.string.isRequired,
+      comment: PropTypes.string,
     })).isRequired,
     expenseIdOnEdition: PropTypes.string,
     expenseIdToDelete: PropTypes.string,

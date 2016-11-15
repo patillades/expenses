@@ -36,9 +36,20 @@ const app = express();
 const apiRoutes = express.Router();
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(`${__dirname}/../../static`));
+app.use(express.static(path.resolve(`${__dirname}/../../static`)));
 
-app.get('/', (req, res) => res.sendFile(path.resolve(`${__dirname}/../../static/index.html`)));
+/**
+ * Send the static index file containing the web app
+ *
+ * @param req
+ * @param res
+ */
+function sendIndexFile(req, res) {
+  return res.sendFile(path.resolve(`${__dirname}/../../static/index.html`));
+}
+
+app.get('/', sendIndexFile);
+app.get('/login', sendIndexFile);
 
 // add prefix to API routes
 app.use('/api', apiRoutes);
