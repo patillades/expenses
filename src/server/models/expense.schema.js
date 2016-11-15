@@ -29,13 +29,13 @@ const expenseSchema = new mongoose.Schema({
 }, {
   toJSON: {
     transform: (doc, ret) => {
-      ret.id = doc._id;
+      const obj = Object.assign({}, ret, { id: doc._id });
 
-      delete ret.userId;
-      delete ret._id;
-      delete ret.__v;
+      delete obj.userId;
+      delete obj._id;
+      delete obj.__v;
 
-      return ret;
+      return obj;
     },
   },
 });

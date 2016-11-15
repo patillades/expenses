@@ -42726,6 +42726,55 @@ function getRequestData(type, state, userId) {
 }
 
 /**
+ * Get the request body for create/edit requests
+ *
+ * @param {CreateExpenseState} expenseData
+ * @return {{date: MomentDate, description: string, amount: number, comment: string }}
+ */
+function getCreateOrEditExpenseBody(expenseData) {
+  var body = Object.assign({}, expenseData);
+  var time = body.time;
+
+
+  body.date.hours(time.hours()).minutes(time.minutes()).seconds(0);
+
+  delete body.time;
+
+  return body;
+}
+
+/**
+ * Get the object to be used as the body of a API POST request
+ *
+ * @param {ActionType} type
+ * @param {object} state
+ * @returns {object}
+ */
+function getBodyObj(type, state) {
+  var _state$authenticated = state.authenticated,
+      registration = _state$authenticated.registration,
+      login = _state$authenticated.login;
+
+
+  switch (type) {
+    case _actionTypes.REGISTRATION_REQUEST:
+      return registration;
+
+    case _actionTypes.LOGIN_REQUEST:
+      return login;
+
+    case _actionTypes.CREATE_EXPENSE_REQUEST:
+      return getCreateOrEditExpenseBody(state.expenses.create);
+
+    case _actionTypes.EDIT_EXPENSE_REQUEST:
+      return getCreateOrEditExpenseBody(state.expenses.edit);
+
+    default:
+      return {};
+  }
+}
+
+/**
  * Fill the fetch request with the options associated to each action type
  *
  * @param {ActionType} type
@@ -42864,55 +42913,6 @@ function sendRequest(type) {
   };
 }
 
-/**
- * Get the request body for create/edit requests
- *
- * @param {CreateExpenseState} expenseData
- * @return {{date: MomentDate, description: string, amount: number, comment: string }}
- */
-function getCreateOrEditExpenseBody(expenseData) {
-  var body = Object.assign({}, expenseData);
-  var time = body.time;
-
-
-  body.date.hours(time.hours()).minutes(time.minutes()).seconds(0);
-
-  delete body.time;
-
-  return body;
-}
-
-/**
- * Get the object to be used as the body of a API POST request
- *
- * @param {ActionType} type
- * @param {object} state
- * @returns {object}
- */
-function getBodyObj(type, state) {
-  var _state$authenticated = state.authenticated,
-      registration = _state$authenticated.registration,
-      login = _state$authenticated.login;
-
-
-  switch (type) {
-    case _actionTypes.REGISTRATION_REQUEST:
-      return registration;
-
-    case _actionTypes.LOGIN_REQUEST:
-      return login;
-
-    case _actionTypes.CREATE_EXPENSE_REQUEST:
-      return getCreateOrEditExpenseBody(state.expenses.create);
-
-    case _actionTypes.EDIT_EXPENSE_REQUEST:
-      return getCreateOrEditExpenseBody(state.expenses.edit);
-
-    default:
-      return {};
-  }
-}
-
 exports.sessionExpired = sessionExpired;
 exports.default = sendRequest;
 
@@ -43036,9 +43036,7 @@ function Button(props) {
 
   // create an object with the optional data key-value pairs to spread as attributes of the button
   var dataset = props.dataset ? Object.keys(props.dataset).reduce(function (data, key) {
-    data['data-' + key] = props.dataset[key];
-
-    return data;
+    return Object.assign({}, data, _defineProperty({}, 'data-' + key, props.dataset[key]));
   }, {}) : {};
 
   return _react2.default.createElement(
@@ -43373,6 +43371,10 @@ var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
 
+var _merge = require('lodash/merge');
+
+var _merge2 = _interopRequireDefault(_merge);
+
 var _sortBy = require('lodash/sortBy');
 
 var _sortBy2 = _interopRequireDefault(_sortBy);
@@ -43402,13 +43404,15 @@ function groupExpensesByWeek(expenseIds, expensesById) {
 
     var weekNum = (0, _moment2.default)(expense.date).week();
 
-    if (!result[weekNum]) {
-      result[weekNum] = { total: 0 };
+    var totalPerWeek = (0, _merge2.default)({}, result);
+
+    if (!totalPerWeek[weekNum]) {
+      totalPerWeek[weekNum] = { total: expense.amount };
+    } else {
+      totalPerWeek[weekNum].total += expense.amount;
     }
 
-    result[weekNum].total += expense.amount;
-
-    return result;
+    return totalPerWeek;
   }, {});
 
   // sort the week numbers descending
@@ -43418,17 +43422,18 @@ function groupExpensesByWeek(expenseIds, expensesById) {
 
   // fill the array with the weeks where the user hasn't spent
   var weekNums = sortedWeekNums.reduce(function (result, el, index, array) {
+    var weeks = [];
     var weekNum = Number(el);
 
-    result.push(weekNum);
+    weeks.push(weekNum);
 
-    weekNum = weekNum - 1;
+    while (index < array.length && weekNum - 1 > Number(array[index + 1])) {
+      weekNum -= 1;
 
-    while (index < array.length && weekNum > Number(array[index + 1])) {
-      result.push(weekNum);
+      weeks.push(weekNum);
     }
 
-    return result;
+    return result.concat(weeks);
   }, []);
 
   return { weekNums: weekNums, totalPerWeekNum: totalPerWeekNum };
@@ -43501,7 +43506,7 @@ ExpensesPerWeek.propTypes = propTypes;
 
 exports.default = ExpensesPerWeek;
 
-},{"./WeeklyExpenseRow.jsx":517,"classnames":9,"lodash/sortBy":273,"moment":277,"react":484}],506:[function(require,module,exports){
+},{"./WeeklyExpenseRow.jsx":517,"classnames":9,"lodash/merge":271,"lodash/sortBy":273,"moment":277,"react":484}],506:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -44104,6 +44109,33 @@ var _Modal2 = _interopRequireDefault(_Modal);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var propTypes = {
+  authenticated: _react.PropTypes.shape({
+    token: _react.PropTypes.string,
+    registration: _react.PropTypes.shape({
+      name: _react.PropTypes.string.isRequired,
+      mail: _react.PropTypes.string.isRequired,
+      password: _react.PropTypes.string.isRequired
+    }).isRequired,
+    login: _react.PropTypes.shape({
+      mail: _react.PropTypes.string.isRequired,
+      password: _react.PropTypes.string.isRequired
+    }).isRequired
+  }).isRequired,
+  requests: _react.PropTypes.shape({
+    triggerId: _react.PropTypes.string,
+    isFetching: _react.PropTypes.bool.isRequired,
+    modal: _react.PropTypes.shape({
+      isOpen: _react.PropTypes.bool.isRequired,
+      txt: _react.PropTypes.string
+    }).isRequired
+  }).isRequired,
+  inputChangeHandler: _react.PropTypes.func.isRequired,
+  registrationSubmitHandler: _react.PropTypes.func.isRequired,
+  loginSubmitHandler: _react.PropTypes.func.isRequired,
+  modalBtnHandler: _react.PropTypes.func.isRequired
+};
+
 function LoginRegistration(props) {
   return _react2.default.createElement(
     'div',
@@ -44132,6 +44164,8 @@ function LoginRegistration(props) {
     }))
   );
 }
+
+LoginRegistration.propTypes = propTypes;
 
 exports.default = LoginRegistration;
 
@@ -44469,6 +44503,80 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var propTypes = {
+  authenticated: _react.PropTypes.shape({
+    token: _react.PropTypes.string,
+    registration: _react.PropTypes.shape({
+      name: _react.PropTypes.string.isRequired,
+      mail: _react.PropTypes.string.isRequired,
+      password: _react.PropTypes.string.isRequired
+    }).isRequired,
+    login: _react.PropTypes.shape({
+      mail: _react.PropTypes.string.isRequired,
+      password: _react.PropTypes.string.isRequired
+    }).isRequired
+  }).isRequired,
+  requests: _react.PropTypes.shape({
+    triggerId: _react.PropTypes.string,
+    isFetching: _react.PropTypes.bool.isRequired,
+    modal: _react.PropTypes.shape({
+      isOpen: _react.PropTypes.bool.isRequired,
+      txt: _react.PropTypes.string
+    }).isRequired
+  }).isRequired,
+  expenses: _react.PropTypes.shape({
+    create: _react.PropTypes.shape({
+      date: _react.PropTypes.object.isRequired,
+      time: _react.PropTypes.object,
+      description: _react.PropTypes.string.isRequired,
+      amount: _react.PropTypes.string.isRequired,
+      comment: _react.PropTypes.string.isRequired
+    }).isRequired,
+    edit: _react.PropTypes.shape({
+      date: _react.PropTypes.object.isRequired,
+      time: _react.PropTypes.object,
+      description: _react.PropTypes.string.isRequired,
+      amount: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.string]).isRequired,
+      comment: _react.PropTypes.string.isRequired
+    }).isRequired,
+    expenseIds: _react.PropTypes.arrayOf(_react.PropTypes.string).isRequired,
+    expensesById: _react.PropTypes.objectOf(_react.PropTypes.shape({
+      date: _react.PropTypes.string.isRequired,
+      description: _react.PropTypes.string.isRequired,
+      amount: _react.PropTypes.number.isRequired,
+      comment: _react.PropTypes.string.isRequired
+    })).isRequired,
+    expenseIdOnEdition: _react.PropTypes.string,
+    expenseIdToDelete: _react.PropTypes.string
+  }).isRequired,
+  filters: _react.PropTypes.shape({
+    $gte_date: _react.PropTypes.object,
+    $lte_date: _react.PropTypes.object,
+    $text: _react.PropTypes.string.isRequired,
+    $gte_amount: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]).isRequired,
+    $lte_amount: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]).isRequired
+  }).isRequired,
+  expensesView: _react.PropTypes.shape({
+    daily: _react.PropTypes.bool.isRequired,
+    weekly: _react.PropTypes.bool.isRequired
+  }).isRequired,
+  loadUserExpenses: _react.PropTypes.func.isRequired,
+  logOutHandler: _react.PropTypes.func.isRequired,
+  dateChangeHandler: _react.PropTypes.func.isRequired,
+  timeChangeHandler: _react.PropTypes.func.isRequired,
+  inputChangeHandler: _react.PropTypes.func.isRequired,
+  createExpenseSubmitHandler: _react.PropTypes.func.isRequired,
+  filterDateChangeHandler: _react.PropTypes.func.isRequired,
+  filterInputChangeHandler: _react.PropTypes.func.isRequired,
+  clearExpensesFilterHandler: _react.PropTypes.func.isRequired,
+  toggleDayWeekExpensesHandler: _react.PropTypes.func.isRequired,
+  deleteExpenseHandler: _react.PropTypes.func.isRequired,
+  editExpenseHandler: _react.PropTypes.func.isRequired,
+  editExpenseSubmitHandler: _react.PropTypes.func.isRequired,
+  cancelEditExpenseHandler: _react.PropTypes.func.isRequired,
+  modalBtnHandler: _react.PropTypes.func.isRequired
+};
+
 var UserExpenses = function (_React$Component) {
   _inherits(UserExpenses, _React$Component);
 
@@ -44504,8 +44612,12 @@ var UserExpenses = function (_React$Component) {
         _react2.default.createElement(_NewExpense2.default, _extends({}, this.props.expenses.create, {
           triggerId: this.props.requests.triggerId,
           isDisabled: this.props.requests.isFetching,
-          dateChangeHandler: this.props.dateChangeHandler.bind(null, 'create'),
-          timeChangeHandler: this.props.timeChangeHandler.bind(null, 'create'),
+          dateChangeHandler: function dateChangeHandler(date) {
+            return _this2.props.dateChangeHandler('create', date);
+          },
+          timeChangeHandler: function timeChangeHandler(date) {
+            return _this2.props.timeChangeHandler('create', date);
+          },
           inputChangeHandler: this.props.inputChangeHandler,
           submitHandler: this.props.createExpenseSubmitHandler
         })),
@@ -44559,6 +44671,8 @@ var UserExpenses = function (_React$Component) {
 
   return UserExpenses;
 }(_react2.default.Component);
+
+UserExpenses.propTypes = propTypes;
 
 exports.default = UserExpenses;
 
@@ -44998,9 +45112,9 @@ var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
 
-var _merge4 = require('lodash/merge');
+var _merge5 = require('lodash/merge');
 
-var _merge5 = _interopRequireDefault(_merge4);
+var _merge6 = _interopRequireDefault(_merge5);
 
 var _sortBy = require('lodash/sortBy');
 
@@ -45072,18 +45186,23 @@ var initialState = {
  * Add an expense to the expenseIds array and the expensesById object
  *
  * @param {Expense} obj
- * @param {ObjectId[]} expenseIds
- * @param {ExpensesById} expensesById
+ * @param {ObjectId[]} expenseIdsArr
+ * @param {ExpensesById} expensesByIdObj
+ * @return {{expenseIds: ObjectId[], expensesById: ExpensesById}}
  */
-function addExpense(obj, expenseIds, expensesById) {
-  var expense = (0, _merge5.default)({}, obj);
+function addExpense(obj, expenseIdsArr, expensesByIdObj) {
+  var expense = (0, _merge6.default)({}, obj);
   var id = expense.id;
 
 
   delete expense.id;
 
+  var expenseIds = expenseIdsArr.slice();
   expenseIds.push(id);
-  expensesById[id] = expense;
+
+  var expensesById = (0, _merge6.default)({}, expensesByIdObj, _defineProperty({}, id, expense));
+
+  return { expenseIds: expenseIds, expensesById: expensesById };
 }
 
 function expenses() {
@@ -45092,10 +45211,10 @@ function expenses() {
 
   switch (action.type) {
     case _actionTypes.EXPENSE_DATE_CHANGE:
-      return (0, _merge5.default)({}, state, _defineProperty({}, action.form, { date: action.date }));
+      return (0, _merge6.default)({}, state, _defineProperty({}, action.form, { date: action.date }));
 
     case _actionTypes.EXPENSE_TIME_CHANGE:
-      return (0, _merge5.default)({}, state, _defineProperty({}, action.form, { time: action.date }));
+      return (0, _merge6.default)({}, state, _defineProperty({}, action.form, { time: action.date }));
 
     case _actionTypes.EXPENSES_INPUT_CHANGE:
       {
@@ -45104,13 +45223,13 @@ function expenses() {
             value = action.value;
 
 
-        return (0, _merge5.default)({}, state, _defineProperty({}, form, _defineProperty({}, field, value)));
+        return (0, _merge6.default)({}, state, _defineProperty({}, form, _defineProperty({}, field, value)));
       }
 
     case _actionTypes.EDIT_EXPENSE:
       {
         // merge the expense to edit to prevent mutations
-        var expense = (0, _merge5.default)({}, state.expensesById[action.expenseId]);
+        var expense = (0, _merge6.default)({}, state.expensesById[action.expenseId]);
 
         var date = (0, _moment2.default)(expense.date);
         var time = (0, _moment2.default)(expense.date);
@@ -45126,7 +45245,7 @@ function expenses() {
       }
 
     case _actionTypes.CANCEL_EDIT_EXPENSE:
-      return (0, _merge5.default)({}, state, {
+      return (0, _merge6.default)({}, state, {
         expenseIdOnEdition: null,
         edit: initialState.edit
       });
@@ -45144,15 +45263,14 @@ function expenses() {
     case _actionTypes.CREATE_EXPENSE_REQUEST_SUCC:
       {
         var _ret = function () {
-          // clone the state objects to prevent mutations
-          var unsortedIds = state.expenseIds.slice();
-          var expensesById = (0, _merge5.default)({}, state.expensesById);
-
           // add the created expense
-          addExpense(action.expense, unsortedIds, expensesById);
+          var newExpenses = addExpense(action.expense, state.expenseIds, state.expensesById);
+
+          var expensesById = newExpenses.expensesById;
 
           // sort by descending date
-          var expenseIds = (0, _sortBy2.default)(unsortedIds, function (id) {
+
+          var expenseIds = (0, _sortBy2.default)(newExpenses.expenseIds, function (id) {
             return expensesById[id].date;
           }).reverse();
 
@@ -45173,23 +45291,16 @@ function expenses() {
 
     case _actionTypes.GET_EXPENSES_REQUEST_SUCC:
       {
-        var _ret2 = function () {
-          var expenseIds = [];
-          var expensesById = {};
+        var _action$expenses$redu = action.expenses.reduce(function (result, expense) {
+          return addExpense(expense, result.expenseIds, result.expensesById);
+        }, { expenseIds: [], expensesById: {} }),
+            _expenseIds = _action$expenses$redu.expenseIds,
+            _expensesById = _action$expenses$redu.expensesById;
 
-          action.expenses.forEach(function (el) {
-            return addExpense(el, expenseIds, expensesById);
-          });
-
-          return {
-            v: Object.assign({}, state, {
-              expenseIds: expenseIds,
-              expensesById: expensesById
-            })
-          };
-        }();
-
-        if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
+        return Object.assign({}, state, {
+          expenseIds: _expenseIds,
+          expensesById: _expensesById
+        });
       }
 
     case _actionTypes.DELETE_EXPENSE_REQUEST_SUCC:
@@ -45197,24 +45308,24 @@ function expenses() {
         // remove the deleted expense from cloned state objects
         var index = state.expenseIds.indexOf(state.expenseIdToDelete);
 
-        var _expenseIds = state.expenseIds.slice(0, index).concat(state.expenseIds.slice(index + 1));
+        var _expenseIds2 = state.expenseIds.slice(0, index).concat(state.expenseIds.slice(index + 1));
 
-        var _expensesById = (0, _merge5.default)({}, state.expensesById);
+        var _expensesById2 = (0, _merge6.default)({}, state.expensesById);
 
-        delete _expensesById[state.expenseIdToDelete];
+        delete _expensesById2[state.expenseIdToDelete];
 
         return Object.assign({}, state, {
-          expenseIds: _expenseIds,
-          expensesById: _expensesById,
+          expenseIds: _expenseIds2,
+          expensesById: _expensesById2,
           expenseIdToDelete: null
         });
       }
 
     case _actionTypes.EDIT_EXPENSE_REQUEST_SUCC:
       {
-        var _ret3 = function () {
+        var _ret2 = function () {
           // merge the edit object to store it on expensesById
-          var expense = (0, _merge5.default)({}, state.edit);
+          var expense = (0, _merge6.default)({}, state.edit);
 
           // cast amount to number so it doesn't cause issues when calculating weekly totals
           expense.amount = Number(expense.amount);
@@ -45232,7 +45343,7 @@ function expenses() {
 
           // clone the state objects
           var unsortedIds = state.expenseIds.slice();
-          var expensesById = (0, _merge5.default)({}, state.expensesById);
+          var expensesById = (0, _merge6.default)({}, state.expensesById);
 
           // add the new expense
           expensesById[state.expenseIdOnEdition] = expense;
@@ -45255,7 +45366,7 @@ function expenses() {
           };
         }();
 
-        if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
+        if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
       }
 
     default:
@@ -45540,6 +45651,9 @@ exports.default = store;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 /**
  * Convert an object to a query string so it can be sent along with an HTTP request
  *
@@ -45560,16 +45674,14 @@ function objToQueryString() {
         return result;
       }
 
-      result[key] = obj[key];
-
-      return result;
+      return Object.assign({}, result, _defineProperty({}, key, obj[key]));
     }, {});
   } else {
     params = obj;
   }
 
   return Object.keys(params).map(function (key) {
-    return encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]);
+    return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
   }).join('&');
 }
 

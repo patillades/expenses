@@ -57,10 +57,10 @@ function queryParamsToConditions(conditions, value, key) {
       date.hours(23).minutes(59).seconds(59);
     }
 
-    value = date.format();
+    return _.merge({}, conditions, { [field]: { [operator]: date.format() } });
   }
 
-  return _.merge({ [field]: { [operator]: value } }, conditions);
+  return _.merge({}, conditions, { [field]: { [operator]: value } });
 }
 
 /**

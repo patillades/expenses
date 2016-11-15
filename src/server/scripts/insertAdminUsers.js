@@ -1,5 +1,5 @@
 // add this file's directory to the node modules search path
-require('app-module-path').addPath(__dirname + '/..');
+require('app-module-path').addPath(`${__dirname}/..`);
 
 const mongoose = require('mongoose');
 const config = require('config');

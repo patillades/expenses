@@ -1,4 +1,4 @@
-module.exports = function (grunt) {
+module.exports = (grunt) => {
   grunt.initConfig({
     browserify: {
       default: {
@@ -12,18 +12,18 @@ module.exports = function (grunt) {
           transform: ['babelify'],
         },
       },
-      test: {
-        files: {
-          'src/client/tests/dest/expenses.reducer.test.browserify.js':
-            'src/client/tests/src/expenses.reducer.test.js',
-        },
-        options: {
-          browserifyOptions: {
-            paths: ['src/client'],
-          },
-          transform: ['babelify'],
-        },
-      },
+      // test: {
+      //   files: {
+      //     'src/client/tests/dest/expenses.reducer.test.browserify.js':
+      //       'src/client/tests/src/expenses.reducer.test.js',
+      //   },
+      //   options: {
+      //     browserifyOptions: {
+      //       paths: ['src/client'],
+      //     },
+      //     transform: ['babelify'],
+      //   },
+      // },
     },
     uglify: {
       default: {
@@ -56,8 +56,8 @@ module.exports = function (grunt) {
     'default',
     [
       'browserify',
-      'uglify',
-      'cssmin',
+      // 'uglify',
+      // 'cssmin',
     ]
   );
 };

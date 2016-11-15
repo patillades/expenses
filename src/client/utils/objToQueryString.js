@@ -15,16 +15,14 @@ function objToQueryString(obj = {}, excludeEmpty = false) {
         return result;
       }
 
-      result[key] = obj[key];
-
-      return result;
+      return Object.assign({}, result, { [key]: obj[key] });
     }, {});
   } else {
     params = obj;
   }
 
   return Object.keys(params).map(key =>
-    `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`
+    `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
   ).join('&');
 }
 

@@ -109,7 +109,7 @@ describe('User controller', () => {
     });
   });
 
-  describe('login', function () {
+  describe('login', () => {
     it('should return 201 if it worked', (done) => {
       testUtils.request('POST', '/api/users/login', { mail, password }, (status, body) => {
         expect(status).toBe(201);
@@ -122,7 +122,7 @@ describe('User controller', () => {
     });
 
     it('should return 400 if password is wrong', (done) => {
-      testUtils.request('POST', '/api/users/login', { mail, password: 'wrong' }, status => {
+      testUtils.request('POST', '/api/users/login', { mail, password: 'wrong' }, (status) => {
         expect(status).toBe(400);
 
         done();
@@ -130,7 +130,7 @@ describe('User controller', () => {
     });
 
     it('should return 400 if mail is wrong', (done) => {
-      testUtils.request('POST', '/api/users/login', { mail: 'notamail', password }, status => {
+      testUtils.request('POST', '/api/users/login', { mail: 'notamail', password }, (status) => {
         expect(status).toBe(400);
 
         done();
@@ -138,7 +138,7 @@ describe('User controller', () => {
     });
 
     it('should return 400 if missing params', (done) => {
-      testUtils.request('POST', '/api/users/login', {}, status => {
+      testUtils.request('POST', '/api/users/login', {}, (status) => {
         expect(status).toBe(400);
 
         done();

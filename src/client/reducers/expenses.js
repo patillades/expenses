@@ -76,17 +76,22 @@ const initialState = {
  * Add an expense to the expenseIds array and the expensesById object
  *
  * @param {Expense} obj
- * @param {ObjectId[]} expenseIds
- * @param {ExpensesById} expensesById
+ * @param {ObjectId[]} expenseIdsArr
+ * @param {ExpensesById} expensesByIdObj
+ * @return {{expenseIds: ObjectId[], expensesById: ExpensesById}}
  */
-function addExpense(obj, expenseIds, expensesById) {
+function addExpense(obj, expenseIdsArr, expensesByIdObj) {
   const expense = merge({}, obj);
   const { id } = expense;
 
   delete expense.id;
 
+  const expenseIds = expenseIdsArr.slice();
   expenseIds.push(id);
-  expensesById[id] = expense;
+
+  const expensesById = merge({}, expensesByIdObj, { [id]: expense });
+
+  return { expenseIds, expensesById };
 }
 
 function expenses(state = initialState, action) {
@@ -140,15 +145,17 @@ function expenses(state = initialState, action) {
       });
 
     case CREATE_EXPENSE_REQUEST_SUCC: {
-      // clone the state objects to prevent mutations
-      const unsortedIds = state.expenseIds.slice();
-      const expensesById = merge({}, state.expensesById);
-
       // add the created expense
-      addExpense(action.expense, unsortedIds, expensesById);
+      const newExpenses = addExpense(
+        action.expense,
+        state.expenseIds,
+        state.expensesById
+      );
+
+      const { expensesById } = newExpenses;
 
       // sort by descending date
-      const expenseIds = sortBy(unsortedIds, id => expensesById[id].date)
+      const expenseIds = sortBy(newExpenses.expenseIds, id => expensesById[id].date)
         .reverse();
 
       // merge initial state to prevent mutations
@@ -162,10 +169,10 @@ function expenses(state = initialState, action) {
     }
 
     case GET_EXPENSES_REQUEST_SUCC: {
-      const expenseIds = [];
-      const expensesById = {};
-
-      action.expenses.forEach(el => addExpense(el, expenseIds, expensesById));
+      const { expenseIds, expensesById } = action.expenses.reduce(
+        (result, expense) => addExpense(expense, result.expenseIds, result.expensesById),
+        { expenseIds: [], expensesById: {} }
+      );
 
       return Object.assign({}, state, {
         expenseIds,

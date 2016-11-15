@@ -4,7 +4,7 @@ const config = require('config');
 
 const testUtils = require('./testUtils');
 
-describe('Expense controller', function () {
+describe('Expense controller', () => {
   let testUser;
   let id;
   let token;
@@ -20,10 +20,10 @@ describe('Expense controller', function () {
 
       ({ id, token } = body);
 
-      testUtils.request('POST', '/api/users/login', config.get('admin'), (status, body) => {
-        expect(status).toBe(201);
+      testUtils.request('POST', '/api/users/login', config.get('admin'), (newStatus, newBody) => {
+        expect(newStatus).toBe(201);
 
-        adminToken = body.token;
+        adminToken = newBody.token;
 
         done();
       });
@@ -64,7 +64,7 @@ describe('Expense controller', function () {
     });
 
     it('should return 401 if the token subject does not match the user id', (done) => {
-      testUtils.request('POST', `/api/users/notanid/expenses`, {}, (status) => {
+      testUtils.request('POST', '/api/users/notanid/expenses', {}, (status) => {
         expect(status).toBe(401);
 
         done();
@@ -104,7 +104,7 @@ describe('Expense controller', function () {
     });
   });
 
-  describe('create', function () {
+  describe('create', () => {
     it('should return 201 if everything ok', (done) => {
       testUtils.request('POST', `/api/users/${id}/expenses`, {
         amount: 10,
@@ -141,7 +141,7 @@ describe('Expense controller', function () {
     });
   });
 
-  describe('read', function () {
+  describe('read', () => {
     it('should return 200 and an array of expenses', (done) => {
       testUtils.request('GET', `/api/users/${id}/expenses`, {}, (status, body) => {
         expect(status).toBe(200);
@@ -329,7 +329,7 @@ describe('Expense controller', function () {
     });
   });
 
-  describe('delete', function () {
+  describe('delete', () => {
     it('should return 200 if expense found', (done) => {
       const uri = `/api/users/${id}/expenses/${expenseIds[0]}`;
 
@@ -364,7 +364,7 @@ describe('Expense controller', function () {
     });
   });
 
-  describe('update', function () {
+  describe('update', () => {
     it('should return 404 if expense not found', (done) => {
       const uri = `/api/users/${id}/expenses/${expenseIds[0]}`;
 
@@ -432,7 +432,7 @@ describe('Expense controller', function () {
     });
   });
 
-  describe('admin access', function () {
+  describe('admin access', () => {
     it('should be able to create an expense on the user\'s behalf', (done) => {
       testUtils.request('POST', `/api/users/${id}/expenses`, {
         amount: 30,

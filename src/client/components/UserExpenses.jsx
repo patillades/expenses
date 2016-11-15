@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import Header from './Header.jsx';
 import NewExpense from './NewExpense.jsx';
@@ -7,6 +7,89 @@ import ToggleDayWeekExpenses from './ToggleDayWeekExpenses.jsx';
 import ExpensesPerWeek from './ExpensesPerWeek.jsx';
 import ExpensesTable from './ExpensesTable.jsx';
 import Modal from './Modal.jsx';
+
+const propTypes = {
+  authenticated: PropTypes.shape({
+    token: PropTypes.string,
+    registration: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      mail: PropTypes.string.isRequired,
+      password: PropTypes.string.isRequired,
+    }).isRequired,
+    login: PropTypes.shape({
+      mail: PropTypes.string.isRequired,
+      password: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  requests: PropTypes.shape({
+    triggerId: PropTypes.string,
+    isFetching: PropTypes.bool.isRequired,
+    modal: PropTypes.shape({
+      isOpen: PropTypes.bool.isRequired,
+      txt: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+  expenses: PropTypes.shape({
+    create: PropTypes.shape({
+      date: PropTypes.object.isRequired,
+      time: PropTypes.object,
+      description: PropTypes.string.isRequired,
+      amount: PropTypes.string.isRequired,
+      comment: PropTypes.string.isRequired,
+    }).isRequired,
+    edit: PropTypes.shape({
+      date: PropTypes.object.isRequired,
+      time: PropTypes.object,
+      description: PropTypes.string.isRequired,
+      amount: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string,
+      ]).isRequired,
+      comment: PropTypes.string.isRequired,
+    }).isRequired,
+    expenseIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+    expensesById: PropTypes.objectOf(PropTypes.shape({
+      date: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      amount: PropTypes.number.isRequired,
+      comment: PropTypes.string.isRequired,
+    })).isRequired,
+    expenseIdOnEdition: PropTypes.string,
+    expenseIdToDelete: PropTypes.string,
+  }).isRequired,
+  filters: PropTypes.shape({
+    $gte_date: PropTypes.object,
+    $lte_date: PropTypes.object,
+    $text: PropTypes.string.isRequired,
+    $gte_amount: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+    ]).isRequired,
+    $lte_amount: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+    ]).isRequired,
+  }).isRequired,
+  expensesView: PropTypes.shape({
+    daily: PropTypes.bool.isRequired,
+    weekly: PropTypes.bool.isRequired,
+  }).isRequired,
+  loadUserExpenses: PropTypes.func.isRequired,
+  logOutHandler: PropTypes.func.isRequired,
+  dateChangeHandler: PropTypes.func.isRequired,
+  timeChangeHandler: PropTypes.func.isRequired,
+  inputChangeHandler: PropTypes.func.isRequired,
+  createExpenseSubmitHandler: PropTypes.func.isRequired,
+  filterDateChangeHandler: PropTypes.func.isRequired,
+  filterInputChangeHandler: PropTypes.func.isRequired,
+  clearExpensesFilterHandler: PropTypes.func.isRequired,
+  toggleDayWeekExpensesHandler: PropTypes.func.isRequired,
+  deleteExpenseHandler: PropTypes.func.isRequired,
+  editExpenseHandler: PropTypes.func.isRequired,
+  editExpenseSubmitHandler: PropTypes.func.isRequired,
+  cancelEditExpenseHandler: PropTypes.func.isRequired,
+  modalBtnHandler: PropTypes.func.isRequired,
+};
 
 class UserExpenses extends React.Component {
   // if the user is authenticated (state or preloaded through localStorage), get the user's expenses
@@ -30,8 +113,8 @@ class UserExpenses extends React.Component {
           {...this.props.expenses.create}
           triggerId={this.props.requests.triggerId}
           isDisabled={this.props.requests.isFetching}
-          dateChangeHandler={this.props.dateChangeHandler.bind(null, 'create')}
-          timeChangeHandler={this.props.timeChangeHandler.bind(null, 'create')}
+          dateChangeHandler={date => this.props.dateChangeHandler('create', date)}
+          timeChangeHandler={date => this.props.timeChangeHandler('create', date)}
           inputChangeHandler={this.props.inputChangeHandler}
           submitHandler={this.props.createExpenseSubmitHandler}
         />
@@ -85,5 +168,7 @@ class UserExpenses extends React.Component {
     );
   }
 }
+
+UserExpenses.propTypes = propTypes;
 
 export default UserExpenses;

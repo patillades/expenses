@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
+import merge from 'lodash/merge';
 import sortBy from 'lodash/sortBy';
 
 import WeeklyExpenseRow from './WeeklyExpenseRow.jsx';
@@ -24,13 +25,15 @@ function groupExpensesByWeek(expenseIds, expensesById) {
 
     const weekNum = moment(expense.date).week();
 
-    if (!result[weekNum]) {
-      result[weekNum] = { total: 0 };
+    const totalPerWeek = merge({}, result);
+
+    if (!totalPerWeek[weekNum]) {
+      totalPerWeek[weekNum] = { total: expense.amount };
+    } else {
+      totalPerWeek[weekNum].total += expense.amount;
     }
 
-    result[weekNum].total += expense.amount;
-
-    return result;
+    return totalPerWeek;
   }, {});
 
   // sort the week numbers descending
@@ -41,20 +44,21 @@ function groupExpensesByWeek(expenseIds, expensesById) {
 
   // fill the array with the weeks where the user hasn't spent
   const weekNums = sortedWeekNums.reduce((result, el, index, array) => {
+    const weeks = [];
     let weekNum = Number(el);
 
-    result.push(weekNum);
-
-    weekNum -= 1;
+    weeks.push(weekNum);
 
     while (
       index < array.length
-      && weekNum > Number(array[index + 1])
+      && (weekNum - 1) > Number(array[index + 1])
     ) {
-      result.push(weekNum);
+      weekNum -= 1;
+
+      weeks.push(weekNum);
     }
 
-    return result;
+    return result.concat(weeks);
   }, []);
 
   return { weekNums, totalPerWeekNum };

@@ -40,19 +40,19 @@ const userSchema = new mongoose.Schema({
 }, {
   toObject: {
     transform: (doc, ret) => {
-      ret.id = doc._id;
+      const obj = Object.assign({}, ret, { id: doc._id });
 
-      delete ret._id;
-      delete ret.__v;
-      delete ret.role;
-      delete ret.password;
+      delete obj._id;
+      delete obj.__v;
+      delete obj.role;
+      delete obj.password;
 
-      return ret;
+      return obj;
     },
   },
 });
 
-userSchema.pre('save', function (next) {
+userSchema.pre('save', function userPreSave(next) {
   // only hash the password if it has been modified (or is new)
   if (!this.isModified('password')) {
     return next();

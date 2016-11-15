@@ -15306,6 +15306,55 @@ function getRequestData(type, state, userId) {
 }
 
 /**
+ * Get the request body for create/edit requests
+ *
+ * @param {CreateExpenseState} expenseData
+ * @return {{date: MomentDate, description: string, amount: number, comment: string }}
+ */
+function getCreateOrEditExpenseBody(expenseData) {
+  var body = Object.assign({}, expenseData);
+  var time = body.time;
+
+
+  body.date.hours(time.hours()).minutes(time.minutes()).seconds(0);
+
+  delete body.time;
+
+  return body;
+}
+
+/**
+ * Get the object to be used as the body of a API POST request
+ *
+ * @param {ActionType} type
+ * @param {object} state
+ * @returns {object}
+ */
+function getBodyObj(type, state) {
+  var _state$authenticated = state.authenticated,
+      registration = _state$authenticated.registration,
+      login = _state$authenticated.login;
+
+
+  switch (type) {
+    case _actionTypes.REGISTRATION_REQUEST:
+      return registration;
+
+    case _actionTypes.LOGIN_REQUEST:
+      return login;
+
+    case _actionTypes.CREATE_EXPENSE_REQUEST:
+      return getCreateOrEditExpenseBody(state.expenses.create);
+
+    case _actionTypes.EDIT_EXPENSE_REQUEST:
+      return getCreateOrEditExpenseBody(state.expenses.edit);
+
+    default:
+      return {};
+  }
+}
+
+/**
  * Fill the fetch request with the options associated to each action type
  *
  * @param {ActionType} type
@@ -15444,55 +15493,6 @@ function sendRequest(type) {
   };
 }
 
-/**
- * Get the request body for create/edit requests
- *
- * @param {CreateExpenseState} expenseData
- * @return {{date: MomentDate, description: string, amount: number, comment: string }}
- */
-function getCreateOrEditExpenseBody(expenseData) {
-  var body = Object.assign({}, expenseData);
-  var time = body.time;
-
-
-  body.date.hours(time.hours()).minutes(time.minutes()).seconds(0);
-
-  delete body.time;
-
-  return body;
-}
-
-/**
- * Get the object to be used as the body of a API POST request
- *
- * @param {ActionType} type
- * @param {object} state
- * @returns {object}
- */
-function getBodyObj(type, state) {
-  var _state$authenticated = state.authenticated,
-      registration = _state$authenticated.registration,
-      login = _state$authenticated.login;
-
-
-  switch (type) {
-    case _actionTypes.REGISTRATION_REQUEST:
-      return registration;
-
-    case _actionTypes.LOGIN_REQUEST:
-      return login;
-
-    case _actionTypes.CREATE_EXPENSE_REQUEST:
-      return getCreateOrEditExpenseBody(state.expenses.create);
-
-    case _actionTypes.EDIT_EXPENSE_REQUEST:
-      return getCreateOrEditExpenseBody(state.expenses.edit);
-
-    default:
-      return {};
-  }
-}
-
 exports.sessionExpired = sessionExpired;
 exports.default = sendRequest;
 
@@ -15612,9 +15612,9 @@ var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
 
-var _merge4 = require('lodash/merge');
+var _merge5 = require('lodash/merge');
 
-var _merge5 = _interopRequireDefault(_merge4);
+var _merge6 = _interopRequireDefault(_merge5);
 
 var _sortBy = require('lodash/sortBy');
 
@@ -15686,18 +15686,23 @@ var initialState = {
  * Add an expense to the expenseIds array and the expensesById object
  *
  * @param {Expense} obj
- * @param {ObjectId[]} expenseIds
- * @param {ExpensesById} expensesById
+ * @param {ObjectId[]} expenseIdsArr
+ * @param {ExpensesById} expensesByIdObj
+ * @return {{expenseIds: ObjectId[], expensesById: ExpensesById}}
  */
-function addExpense(obj, expenseIds, expensesById) {
-  var expense = (0, _merge5.default)({}, obj);
+function addExpense(obj, expenseIdsArr, expensesByIdObj) {
+  var expense = (0, _merge6.default)({}, obj);
   var id = expense.id;
 
 
   delete expense.id;
 
+  var expenseIds = expenseIdsArr.slice();
   expenseIds.push(id);
-  expensesById[id] = expense;
+
+  var expensesById = (0, _merge6.default)({}, expensesByIdObj, _defineProperty({}, id, expense));
+
+  return { expenseIds: expenseIds, expensesById: expensesById };
 }
 
 function expenses() {
@@ -15706,10 +15711,10 @@ function expenses() {
 
   switch (action.type) {
     case _actionTypes.EXPENSE_DATE_CHANGE:
-      return (0, _merge5.default)({}, state, _defineProperty({}, action.form, { date: action.date }));
+      return (0, _merge6.default)({}, state, _defineProperty({}, action.form, { date: action.date }));
 
     case _actionTypes.EXPENSE_TIME_CHANGE:
-      return (0, _merge5.default)({}, state, _defineProperty({}, action.form, { time: action.date }));
+      return (0, _merge6.default)({}, state, _defineProperty({}, action.form, { time: action.date }));
 
     case _actionTypes.EXPENSES_INPUT_CHANGE:
       {
@@ -15718,13 +15723,13 @@ function expenses() {
             value = action.value;
 
 
-        return (0, _merge5.default)({}, state, _defineProperty({}, form, _defineProperty({}, field, value)));
+        return (0, _merge6.default)({}, state, _defineProperty({}, form, _defineProperty({}, field, value)));
       }
 
     case _actionTypes.EDIT_EXPENSE:
       {
         // merge the expense to edit to prevent mutations
-        var expense = (0, _merge5.default)({}, state.expensesById[action.expenseId]);
+        var expense = (0, _merge6.default)({}, state.expensesById[action.expenseId]);
 
         var date = (0, _moment2.default)(expense.date);
         var time = (0, _moment2.default)(expense.date);
@@ -15740,7 +15745,7 @@ function expenses() {
       }
 
     case _actionTypes.CANCEL_EDIT_EXPENSE:
-      return (0, _merge5.default)({}, state, {
+      return (0, _merge6.default)({}, state, {
         expenseIdOnEdition: null,
         edit: initialState.edit
       });
@@ -15758,14 +15763,14 @@ function expenses() {
     case _actionTypes.CREATE_EXPENSE_REQUEST_SUCC:
       {
         var _ret = function () {
-          // clone the state objects to prevent mutations
-          var unsortedIds = state.expenseIds.slice();
-          var expensesById = (0, _merge5.default)({}, state.expensesById);
-
           // add the created expense
-          addExpense(action.expense, unsortedIds, expensesById);
+          var _addExpense = addExpense(action.expense, state.expenseIds, state.expensesById),
+              unsortedIds = _addExpense.unsortedIds,
+              expensesById = _addExpense.expensesById;
 
           // sort by descending date
+
+
           var expenseIds = (0, _sortBy2.default)(unsortedIds, function (id) {
             return expensesById[id].date;
           }).reverse();
@@ -15787,23 +15792,16 @@ function expenses() {
 
     case _actionTypes.GET_EXPENSES_REQUEST_SUCC:
       {
-        var _ret2 = function () {
-          var expenseIds = [];
-          var expensesById = {};
+        var _action$expenses$redu = action.expenses.reduce(function (result, expense) {
+          return addExpense(expense, result.expenseIds, result.expensesById);
+        }, { expenseIds: [], expensesById: {} }),
+            _expenseIds = _action$expenses$redu.expenseIds,
+            _expensesById = _action$expenses$redu.expensesById;
 
-          action.expenses.forEach(function (el) {
-            return addExpense(el, expenseIds, expensesById);
-          });
-
-          return {
-            v: Object.assign({}, state, {
-              expenseIds: expenseIds,
-              expensesById: expensesById
-            })
-          };
-        }();
-
-        if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
+        return Object.assign({}, state, {
+          expenseIds: _expenseIds,
+          expensesById: _expensesById
+        });
       }
 
     case _actionTypes.DELETE_EXPENSE_REQUEST_SUCC:
@@ -15811,24 +15809,24 @@ function expenses() {
         // remove the deleted expense from cloned state objects
         var index = state.expenseIds.indexOf(state.expenseIdToDelete);
 
-        var _expenseIds = state.expenseIds.slice(0, index).concat(state.expenseIds.slice(index + 1));
+        var _expenseIds2 = state.expenseIds.slice(0, index).concat(state.expenseIds.slice(index + 1));
 
-        var _expensesById = (0, _merge5.default)({}, state.expensesById);
+        var _expensesById2 = (0, _merge6.default)({}, state.expensesById);
 
-        delete _expensesById[state.expenseIdToDelete];
+        delete _expensesById2[state.expenseIdToDelete];
 
         return Object.assign({}, state, {
-          expenseIds: _expenseIds,
-          expensesById: _expensesById,
+          expenseIds: _expenseIds2,
+          expensesById: _expensesById2,
           expenseIdToDelete: null
         });
       }
 
     case _actionTypes.EDIT_EXPENSE_REQUEST_SUCC:
       {
-        var _ret3 = function () {
+        var _ret2 = function () {
           // merge the edit object to store it on expensesById
-          var expense = (0, _merge5.default)({}, state.edit);
+          var expense = (0, _merge6.default)({}, state.edit);
 
           // cast amount to number so it doesn't cause issues when calculating weekly totals
           expense.amount = Number(expense.amount);
@@ -15846,7 +15844,7 @@ function expenses() {
 
           // clone the state objects
           var unsortedIds = state.expenseIds.slice();
-          var expensesById = (0, _merge5.default)({}, state.expensesById);
+          var expensesById = (0, _merge6.default)({}, state.expensesById);
 
           // add the new expense
           expensesById[state.expenseIdOnEdition] = expense;
@@ -15869,7 +15867,7 @@ function expenses() {
           };
         }();
 
-        if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
+        if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
       }
 
     default:
@@ -15952,16 +15950,14 @@ function objToQueryString() {
         return result;
       }
 
-      result[key] = obj[key];
-
-      return result;
+      return Object.assign({}, result, { key: obj[key] });
     }, {});
   } else {
     params = obj;
   }
 
   return Object.keys(params).map(function (key) {
-    return encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]);
+    return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
   }).join('&');
 }
 

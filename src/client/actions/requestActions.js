@@ -103,6 +103,26 @@ function getRequestData(type, state, userId) {
 }
 
 /**
+ * Get the request body for create/edit requests
+ *
+ * @param {CreateExpenseState} expenseData
+ * @return {{date: MomentDate, description: string, amount: number, comment: string }}
+ */
+function getCreateOrEditExpenseBody(expenseData) {
+  const body = Object.assign({}, expenseData);
+  const { time } = body;
+
+  body.date
+    .hours(time.hours())
+    .minutes(time.minutes())
+    .seconds(0);
+
+  delete body.time;
+
+  return body;
+}
+
+/**
  * Get the object to be used as the body of a API POST request
  *
  * @param {ActionType} type
@@ -276,26 +296,6 @@ function sendRequest(type, data = {}) {
       () => dispatch(internalError(type))
     );
   };
-}
-
-/**
- * Get the request body for create/edit requests
- *
- * @param {CreateExpenseState} expenseData
- * @return {{date: MomentDate, description: string, amount: number, comment: string }}
- */
-function getCreateOrEditExpenseBody(expenseData) {
-  const body = Object.assign({}, expenseData);
-  const { time } = body;
-
-  body.date
-    .hours(time.hours())
-    .minutes(time.minutes())
-    .seconds(0);
-
-  delete body.time;
-
-  return body;
 }
 
 export { sessionExpired };

@@ -13,12 +13,12 @@ const querystring = require('querystring');
  * Shorthand http request function used to run assertions on the response's status and body
  *
  * @param {string} method
- * @param {string} path
+ * @param {string} uri
  * @param {object} params
  * @param {requestCb} cb
  * @param {object.<string, string>} additionalHeaders
  */
-function request(method, path, params, cb, additionalHeaders = {}) {
+function request(method, uri, params, cb, additionalHeaders = {}) {
   const content = ['POST', 'PUT'].includes(method)
     ? { 'Content-Type': 'application/x-www-form-urlencoded' }
     : {};
@@ -27,8 +27,10 @@ function request(method, path, params, cb, additionalHeaders = {}) {
 
   const paramString = querystring.stringify(params);
 
+  let path = uri;
+
   if (method === 'GET') {
-    path += '?' + paramString;
+    path += `?${paramString}`;
   }
 
   const req = http.request({

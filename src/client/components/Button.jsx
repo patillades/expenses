@@ -39,11 +39,10 @@ function Button(props) {
 
   // create an object with the optional data key-value pairs to spread as attributes of the button
   const dataset = props.dataset
-    ? Object.keys(props.dataset).reduce((data, key) => {
-      data[`data-${key}`] = props.dataset[key];
-
-      return data;
-    }, {})
+    ? Object.keys(props.dataset).reduce(
+        (data, key) => Object.assign({}, data, { [`data-${key}`]: props.dataset[key] }),
+        {}
+      )
     : {};
 
   return (
