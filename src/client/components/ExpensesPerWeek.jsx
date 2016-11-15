@@ -2,9 +2,10 @@ import React, { PropTypes } from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
 import merge from 'lodash/merge';
-import sortBy from 'lodash/sortBy';
 
 import WeeklyExpenseRow from './WeeklyExpenseRow.jsx';
+
+const has = Object.prototype.hasOwnProperty;
 
 const propTypes = {
   isVisible: PropTypes.bool.isRequired,
@@ -13,69 +14,119 @@ const propTypes = {
 };
 
 /**
+ * @typedef {number} YearKey
+ */
+
+/**
+ * @typedef {number} IsoWeekKey
+ */
+
+/**
+ * @typedef {object.<YearKey, object.<IsoWeekKey, {total: number}>>} YearWeekTotals
+ */
+
+/**
+ * @typedef {object} TotalPerWeek
+ * @property {number} year
+ * @property {number} isoWeek
+ * @property {number} total
+ */
+
+/**
+ * Starting from the last known date where the user had an expense, iterate until the first known
+ * date in order to get the weeks where the user didn't make expenses. While getting the weeks, fill
+ * them with the total amount spent calculated previously
+ *
+ * @param {YearWeekTotals} yearWeekTotals
+ * @param {MomentDate} lastDate
+ * @param {MomentDate} firstDate
+ * @param {TotalPerWeek[]} [weeklyTotalsArr=[]]
+ * @return {TotalPerWeek[]}
+ */
+function setTotalsPerWeek(yearWeekTotals, lastDate, firstDate, weeklyTotalsArr = []) {
+  const weeklyTotals = weeklyTotalsArr.slice();
+
+  const year = lastDate.year();
+  const isoWeek = lastDate.isoWeek();
+  let total = 0;
+
+  if (
+    has.call(yearWeekTotals, year)
+    && has.call(yearWeekTotals[year], isoWeek)
+  ) {
+    ({ total } = yearWeekTotals[year][isoWeek]);
+  }
+
+  weeklyTotals.push({
+    year,
+    isoWeek,
+    total,
+  });
+
+  const prevWeek = moment(lastDate).subtract(1, 'w');
+
+  if (prevWeek.isBefore(firstDate, 'isoWeek')) {
+    return weeklyTotals;
+  }
+
+  return setTotalsPerWeek(yearWeekTotals, prevWeek, firstDate, weeklyTotals);
+}
+
+/**
  *
  * @param {ObjectId[]} expenseIds
  * @param {ExpensesById} expensesById
- * @return {{weekNums: number[], totalPerWeekNum: object.<string, {total: number}>}}
+ * @return {TotalPerWeek[]}
  */
-function groupExpensesByWeek(expenseIds, expensesById) {
-  // get the total amount spent per week number
-  const totalPerWeekNum = expenseIds.reduce((result, id) => {
+function getWeeklyTotals(expenseIds, expensesById) {
+  if (!expenseIds.length) {
+    return [];
+  }
+
+  /**
+   * Iterate the expense ids to group them by total amount spent per isoWeek and year
+   *
+   * @type {YearWeekTotals}
+   */
+  const yearWeekTotals = expenseIds.reduce((resultObj, id) => {
+    const result = merge({}, resultObj);
+
     const expense = expensesById[id];
+    const date = moment(expense.date);
+    const year = date.year();
+    const isoWeek = date.isoWeek();
 
-    const weekNum = moment(expense.date).week();
-
-    const totalPerWeek = merge({}, result);
-
-    if (!totalPerWeek[weekNum]) {
-      totalPerWeek[weekNum] = { total: expense.amount };
-    } else {
-      totalPerWeek[weekNum].total += expense.amount;
+    if (!has.call(result, year)) {
+      result[year] = {};
     }
 
-    return totalPerWeek;
+    if (!has.call(result[year], isoWeek)) {
+      result[year][isoWeek] = { total: 0 };
+    }
+
+    result[year][isoWeek].total += expense.amount;
+
+    return result;
   }, {});
 
-  // sort the week numbers descending
-  const sortedWeekNums = sortBy(
-    Object.keys(totalPerWeekNum),
-    weekNum => -Number(weekNum)
+  return setTotalsPerWeek(
+    yearWeekTotals,
+    moment(expensesById[expenseIds[0]].date),
+    moment(expensesById[expenseIds[expenseIds.length - 1]].date)
   );
-
-  // fill the array with the weeks where the user hasn't spent
-  const weekNums = sortedWeekNums.reduce((result, el, index, array) => {
-    const weeks = [];
-    let weekNum = Number(el);
-
-    weeks.push(weekNum);
-
-    while (
-      index < array.length
-      && (weekNum - 1) > Number(array[index + 1])
-    ) {
-      weekNum -= 1;
-
-      weeks.push(weekNum);
-    }
-
-    return result.concat(weeks);
-  }, []);
-
-  return { weekNums, totalPerWeekNum };
 }
 
 function ExpensesPerWeek(props) {
   const tblClass = classnames('table', { hidden: !props.isVisible });
 
-  const { weekNums, totalPerWeekNum } = groupExpensesByWeek(props.expenseIds, props.expensesById);
+  const weeklyTotals = getWeeklyTotals(props.expenseIds, props.expensesById);
 
   let body;
 
-  if (weekNums.length) {
-    body = weekNums.map(weekNum => <WeeklyExpenseRow
-      key={`week_${weekNum}`}
-      weekNum={weekNum}
-      expenses={totalPerWeekNum[weekNum]}
+  if (weeklyTotals.length) {
+    body = weeklyTotals.map(el => <WeeklyExpenseRow
+      key={`${el.year}_${el.isoWeek}`}
+      {...el}
     />);
   } else {
     body = (
