@@ -1,7 +1,17 @@
+// add this file's directory to the node modules search path
+require('app-module-path').addPath(`${__dirname}/..`);
+
 const expect = require('expect');
 const config = require('config');
+const mongoose = require('mongoose');
+
+// Use native promises
+mongoose.Promise = global.Promise;
+mongoose.connect(`mongodb://localhost/${config.get('db')}`);
 
 const testUtils = require('./testUtils');
+const User = require('models/user.schema');
+const usersModel = require('models/users.model');
 
 describe('User controller', () => {
   let testUser;
@@ -205,6 +215,20 @@ describe('User controller', () => {
 
         done();
       }, { Authorization: `Bearer ${managerToken}` });
+    });
+
+    it('should have no effect if attempting to update role', (done) => {
+      testUtils.request('PUT', `/api/users/${id}`, { role: usersModel.ROLES.ADMIN },
+        (status, body) => {
+          expect(status).toBe(204);
+          expect(body).toNotExist();
+
+          User.findById(id).then((result) => {
+            expect(result.role).toBe(usersModel.ROLES.USER);
+
+            done();
+          });
+        }, { Authorization: `Bearer ${managerToken}` });
     });
 
     it('should get err when updating with wrong mail', (done) => {

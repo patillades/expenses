@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const winston = require('winston');
+const _ = require('lodash');
 
 const User = require('models/user.schema');
 const Expense = require('models/expense.schema');
@@ -68,8 +69,11 @@ function read() {
  * @return {Promise.<User, RespObj>}
  */
 function update(_id, params) {
+  // restrict the fields that can be updated
+  const fields = _.pick(params, ['name', 'mail', 'password']);
+
   return User
-    .findByIdAndUpdate(_id, params, { runValidators: true })
+    .findByIdAndUpdate(_id, fields, { runValidators: true })
     .then(
       result => result,
 

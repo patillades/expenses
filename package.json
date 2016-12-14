@@ -11,7 +11,7 @@
     "insert_test_user_on_test": "NODE_ENV=test npm run insert_test_user",
     "stop": "pkill --signal SIGINT expenses",
     "start_test_env": "NODE_ENV=test npm start",
-    "test": "mocha src/server/tests",
+    "test": "NODE_ENV=test mocha src/server/tests",
     "test_reducers": "grunt browserify:test && mocha src/client/tests/dest"
   },
   "author": "gorkamunya@hotmail.com",
