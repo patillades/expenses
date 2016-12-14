@@ -3,17 +3,17 @@
   "secret": "HkePmy55FX9MEg0DiZQc",
   "admin": {
     "name": "admin",
-    "mail": "admin@toptal.com",
-    "password": "toptal_admin"
+    "mail": "admin@example.com",
+    "password": "example_admin"
   },
   "user_manager": {
     "name": "user manager",
-    "mail": "user_manager@toptal.com",
-    "password": "toptal_user_manager"
+    "mail": "user_manager@example.com",
+    "password": "example_user_manager"
   },
   "test_user": {
     "name": "test user",
-    "mail": "test_user@toptal.com",
-    "password": "toptal_test_user"
+    "mail": "test_user@example.com",
+    "password": "example_test_user"
   }
 }
