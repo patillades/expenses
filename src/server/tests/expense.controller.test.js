@@ -21,7 +21,7 @@ describe('Expense controller', () => {
       ({ id, token } = body);
 
       testUtils.request('POST', '/api/users/login', config.get('admin'), (newStatus, newBody) => {
-        expect(newStatus).toBe(201);
+        expect(newStatus).toBe(201, `ERR MSG: ${newBody.msg}`);
 
         adminToken = newBody.token;
 
