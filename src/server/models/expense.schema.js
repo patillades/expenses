@@ -25,6 +25,12 @@ const expenseSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: [true, '{PATH} is required!'],
+  },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ExpenseCategory',
+    // required: [true, '{PATH} is required!'],
   },
 }, {
   toJSON: {

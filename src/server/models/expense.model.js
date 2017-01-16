@@ -87,7 +87,7 @@ function read(userId, queryParams) {
           );
         }
 
-        winston.error('Unhandled error on read@expenses.model', err);
+        winston.error('Unhandled error on read@expense.model', err);
 
         return Promise.reject(
           respObj.getInternalErrResp()
@@ -123,7 +123,7 @@ function update(_id, userId, params) {
           );
         }
 
-        winston.error('Unhandled error on update@expenses.model', err);
+        winston.error('Unhandled error on update@expense.model', err);
 
         return Promise.reject(
           respObj.getInternalErrResp()
