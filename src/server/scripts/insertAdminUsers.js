@@ -6,7 +6,7 @@ const config = require('config');
 const winston = require('winston');
 const expect = require('expect');
 
-const usersModel = require('models/users.model');
+const userModel = require('models/user.model');
 
 // Use native promises
 mongoose.Promise = global.Promise;
@@ -26,13 +26,13 @@ describe('admin users setup', () => {
 
   it('should insert two users or fail if already registered', (done) => {
     Promise.all([
-      usersModel.create(
+      userModel.create(
         config.get('admin'),
-        usersModel.ROLES.ADMIN
+        userModel.ROLES.ADMIN
       ),
-      usersModel.create(
+      userModel.create(
         config.get('user_manager'),
-        usersModel.ROLES.USER_MANAGER
+        userModel.ROLES.USER_MANAGER
       ),
     ]).then(
       (results) => {

@@ -1,17 +1,17 @@
 const winston = require('winston');
 
-const usersModel = require('models/users.model');
+const userModel = require('models/user.model');
 const respObj = require('utils/respObj');
 const errMsgs = require('utils/errMsgs');
 
 function create(req, res) {
   let user;
 
-  usersModel.create(req.body).then(
+  userModel.create(req.body).then(
     (result) => {
       user = result;
 
-      return usersModel.signToken({ id: user.id, role: user.role });
+      return userModel.signToken({ id: user.id, role: user.role });
     },
 
     msg => Promise.reject(respObj.getBadReqResp(msg))
@@ -27,7 +27,7 @@ function create(req, res) {
 }
 
 function read(req, res) {
-  usersModel.read().then(
+  userModel.read().then(
     result => res.status(200).json(
       result.map(user => user.toObject())
     ),
@@ -41,7 +41,7 @@ function read(req, res) {
 }
 
 function update(req, res) {
-  usersModel.update(req.params.userId, req.body).then(
+  userModel.update(req.params.userId, req.body).then(
     (result) => {
       if (!result) {
         return res.status(404).json({ msg: errMsgs.USER_NOT_FOUND });
@@ -55,7 +55,7 @@ function update(req, res) {
 }
 
 function remove(req, res) {
-  usersModel.remove(req.params.userId).then(
+  userModel.remove(req.params.userId).then(
     (result) => {
       if (!result) {
         return res.status(404).json({ msg: errMsgs.USER_NOT_FOUND });
@@ -80,10 +80,10 @@ function remove(req, res) {
 }
 
 function login(req, res) {
-  usersModel.authenticate(req.body.mail, req.body.password).then(
+  userModel.authenticate(req.body.mail, req.body.password).then(
     (result) => {
       if (result) {
-        return usersModel.signToken(result);
+        return userModel.signToken(result);
       }
 
       return Promise.reject(respObj.getBadReqResp('wrong combination of user and password'));

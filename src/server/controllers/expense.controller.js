@@ -1,11 +1,11 @@
 const winston = require('winston');
 
-const expensesModel = require('models/expenses.model');
+const expenseModel = require('models/expense.model');
 const respObj = require('utils/respObj');
 const errMsgs = require('utils/errMsgs');
 
 function create(req, res) {
-  expensesModel.create(req.body, req.params.userId).then(
+  expenseModel.create(req.body, req.params.userId).then(
     expense => res.status(201).json(expense),
 
     msg => res.status(400).json({ msg })
@@ -15,7 +15,7 @@ function create(req, res) {
 function read(req, res) {
   const { $gte_date, $lte_date, $gte_amount, $lte_amount, $text } = req.query;
 
-  expensesModel.read(
+  expenseModel.read(
     req.params.userId,
     { $gte_date, $lte_date, $gte_amount, $lte_amount, $text }
   ).then(
@@ -28,7 +28,7 @@ function read(req, res) {
 function update(req, res) {
   const { expenseId, userId } = req.params;
 
-  expensesModel.update(expenseId, userId, req.body).then(
+  expenseModel.update(expenseId, userId, req.body).then(
     (result) => {
       if (!result) {
         return res.status(404).json({ msg: errMsgs.EXPENSE_NOT_FOUND });
@@ -44,7 +44,7 @@ function update(req, res) {
 function remove(req, res) {
   const { expenseId, userId } = req.params;
 
-  expensesModel.remove(expenseId, userId).then(
+  expenseModel.remove(expenseId, userId).then(
     (result) => {
       if (!result) {
         return res.status(404).json({ msg: errMsgs.EXPENSE_NOT_FOUND });

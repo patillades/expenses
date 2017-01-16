@@ -11,7 +11,7 @@ mongoose.connect(`mongodb://localhost/${config.get('db')}`);
 
 const testUtils = require('./testUtils');
 const User = require('models/user.schema');
-const usersModel = require('models/users.model');
+const userModel = require('models/user.model');
 
 describe('User controller', () => {
   let testUser;
@@ -218,13 +218,13 @@ describe('User controller', () => {
     });
 
     it('should have no effect if attempting to update role', (done) => {
-      testUtils.request('PUT', `/api/users/${id}`, { role: usersModel.ROLES.ADMIN },
+      testUtils.request('PUT', `/api/users/${id}`, { role: userModel.ROLES.ADMIN },
         (status, body) => {
           expect(status).toBe(204);
           expect(body).toNotExist();
 
           User.findById(id).then((result) => {
-            expect(result.role).toBe(usersModel.ROLES.USER);
+            expect(result.role).toBe(userModel.ROLES.USER);
 
             done();
           });

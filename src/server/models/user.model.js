@@ -90,7 +90,7 @@ function update(_id, params) {
           );
         }
 
-        winston.error('Unhandled error on update@users.model', err);
+        winston.error('Unhandled error on update@user.model', err);
 
         return Promise.reject(
           respObj.getInternalErrResp()
@@ -161,7 +161,7 @@ function signToken(user) {
 
     jwt.sign(payload, config.get('secret'), { expiresIn: '1d' }, (err, token) => {
       if (err) {
-        winston.error('Unhandled error on signToken@users.model', err);
+        winston.error('Unhandled error on signToken@user.model', err);
 
         return reject(respObj.getInternalErrResp());
       }

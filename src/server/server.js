@@ -14,7 +14,7 @@ const path = require('path');
 const userController = require('controllers/user.controller');
 const expenseController = require('controllers/expense.controller');
 const authorize = require('rules/authorize');
-const ROLES = require('models/users.model').ROLES;
+const ROLES = require('models/user.model').ROLES;
 
 // Use native promises
 mongoose.Promise = global.Promise;
