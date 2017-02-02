@@ -34,21 +34,6 @@ const propTypes = {
   cancelEditHandler: PropTypes.func.isRequired,
 };
 
-/**
- * Format the expense's date
- *
- * @param {MomentDate} date
- * @return {{date: string, time: string}}
- */
-function formatDate(date) {
-  const dateObj = moment(date);
-
-  return {
-    date: dateObj.format('M/D/YYYY'),
-    time: dateObj.format('HH:mm'),
-  };
-}
-
 function ExpenseRow(props) {
   if (props.isOnEdition) {
     return (
@@ -85,14 +70,12 @@ function ExpenseRow(props) {
     );
   }
 
-  const { date, time } = formatDate(props.expense.date);
-
   return (
     <tr>
-      <td>{date}</td>
-      <td>{time}</td>
+      <td>{moment(props.expense.date).format('M/D/YYYY')}</td>
       <td>{props.expense.description}</td>
       <td>{props.expense.amount}</td>
+      <td>&nbsp;</td>
       <td>{props.expense.comment}</td>
       <td>
         <InlineButton

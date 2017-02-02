@@ -12,6 +12,7 @@ import {
   GET_EXPENSES_REQUEST,
   DELETE_EXPENSE_REQUEST,
   EDIT_EXPENSE_REQUEST,
+  CREATE_CATEGORY_REQUEST,
 } from 'constants/actionTypes';
 
 // regexp for HTTP success' status
@@ -57,7 +58,7 @@ function sessionExpired() {
  * @param {ActionType} type
  * @param {object} state - The state of redux's store
  * @param {?ObjectId} userId
- * @returns {string}
+ * @returns {{method: string, uri: string}}
  */
 function getRequestData(type, state, userId) {
   switch (type) {
@@ -98,6 +99,12 @@ function getRequestData(type, state, userId) {
       return {
         method: 'PUT',
         uri: `/api/users/${userId}/expenses/${state.expenses.expenseIdOnEdition}`,
+      };
+
+    case CREATE_CATEGORY_REQUEST:
+      return {
+        method: 'POST',
+        uri: `/api/users/${userId}/expenseCategories`,
       };
   }
 }
@@ -147,6 +154,9 @@ function getBodyObj(type, state) {
 
     case EDIT_EXPENSE_REQUEST:
       return getCreateOrEditExpenseBody(state.expenses.edit);
+
+    case CREATE_CATEGORY_REQUEST:
+      return { title: state.modals.inputModal.inputValue };
 
     default:
       return {};
@@ -269,6 +279,7 @@ function sendRequest(type, data = {}) {
         GET_EXPENSES_REQUEST,
         DELETE_EXPENSE_REQUEST,
         EDIT_EXPENSE_REQUEST,
+        CREATE_CATEGORY_REQUEST,
       ].includes(type)
     ) {
       try {

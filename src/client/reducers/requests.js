@@ -1,4 +1,6 @@
 import {
+  ERROR,
+  SUCCESS,
   SESSION_EXPIRED,
   REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,
@@ -19,6 +21,7 @@ import {
   EDIT_EXPENSE_REQUEST_ERR,
   EDIT_EXPENSE_REQUEST_SUCC,
   CLOSE_MODAL,
+  CREATE_CATEGORY_REQUEST,
 } from 'constants/actionTypes';
 
 /**
@@ -54,6 +57,7 @@ function requests(state = initialState, action) {
     case EDIT_EXPENSE_REQUEST:
     case GET_EXPENSES_REQUEST:
     case DELETE_EXPENSE_REQUEST:
+    case CREATE_CATEGORY_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
         triggerId: action.data.triggerId,
@@ -70,6 +74,8 @@ function requests(state = initialState, action) {
     case EDIT_EXPENSE_REQUEST_SUCC:
     case DELETE_EXPENSE_REQUEST_ERR:
     case DELETE_EXPENSE_REQUEST_SUCC:
+    case CREATE_CATEGORY_REQUEST + ERROR:
+    case CREATE_CATEGORY_REQUEST + SUCCESS:
     case SESSION_EXPIRED:
       return Object.assign({}, state, {
         isFetching: false,

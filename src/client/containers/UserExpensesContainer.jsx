@@ -13,7 +13,6 @@ import {
 import {
   EXPENSES_INPUT_CHANGE,
   EXPENSE_DATE_CHANGE,
-  EXPENSE_TIME_CHANGE,
   FILTER_DATE_CHANGE,
   FILTER_INPUT_CHANGE,
   CLEAR_EXPENSES_FILTER,
@@ -24,6 +23,9 @@ import {
   DELETE_EXPENSE_REQUEST,
   CANCEL_EDIT_EXPENSE,
   EDIT_EXPENSE_REQUEST,
+  OPEN_INPUT_MODAL,
+  MODAL_INPUT_CHANGE,
+  CREATE_CATEGORY_REQUEST,
 } from 'constants/actionTypes';
 
 function mapStateToProps(state) {
@@ -57,12 +59,6 @@ function mapDispatchToProps(dispatch) {
   return {
     dateChangeHandler: (form, date) => dispatch(expenseDatetimeChange(
       EXPENSE_DATE_CHANGE,
-      form,
-      date
-    )),
-
-    timeChangeHandler: (form, date) => dispatch(expenseDatetimeChange(
-      EXPENSE_TIME_CHANGE,
       form,
       date
     )),
@@ -122,6 +118,20 @@ function mapDispatchToProps(dispatch) {
     toggleDayWeekExpensesHandler: () => dispatch(action(TOGGLE_DAY_WEEK_EXPENSES)),
 
     logOutHandler: () => dispatch(logOut()),
+
+    newCategoryBtnHandler: (e) => {
+      // prevent default so the form submission doesn't force a page reload
+      e.preventDefault();
+
+      dispatch(action(OPEN_INPUT_MODAL));
+    },
+
+    modalInputChangeHandler: e => dispatchInputChange(e, MODAL_INPUT_CHANGE),
+
+    newCategorySubmitHandler: e => dispatch(sendRequest(
+      CREATE_CATEGORY_REQUEST,
+      { triggerId: e.target.id }
+    )),
   };
 }
 

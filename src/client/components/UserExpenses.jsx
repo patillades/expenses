@@ -7,6 +7,7 @@ import ToggleDayWeekExpenses from './ToggleDayWeekExpenses.jsx';
 import ExpensesPerWeek from './ExpensesPerWeek.jsx';
 import ExpensesTable from './ExpensesTable.jsx';
 import Modal from './Modal.jsx';
+import InputModal from './InputModal.jsx';
 
 const propTypes = {
   authenticated: PropTypes.shape({
@@ -74,10 +75,15 @@ const propTypes = {
     daily: PropTypes.bool.isRequired,
     weekly: PropTypes.bool.isRequired,
   }).isRequired,
+  modals: PropTypes.shape({
+    inputModal: PropTypes.shape({
+      isOpen: PropTypes.bool.isRequired,
+      msg: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
   loadUserExpenses: PropTypes.func.isRequired,
   logOutHandler: PropTypes.func.isRequired,
   dateChangeHandler: PropTypes.func.isRequired,
-  timeChangeHandler: PropTypes.func.isRequired,
   inputChangeHandler: PropTypes.func.isRequired,
   createExpenseSubmitHandler: PropTypes.func.isRequired,
   filterDateChangeHandler: PropTypes.func.isRequired,
@@ -89,6 +95,9 @@ const propTypes = {
   editExpenseSubmitHandler: PropTypes.func.isRequired,
   cancelEditExpenseHandler: PropTypes.func.isRequired,
   modalBtnHandler: PropTypes.func.isRequired,
+  newCategoryBtnHandler: PropTypes.func.isRequired,
+  modalInputChangeHandler: PropTypes.func.isRequired,
+  newCategorySubmitHandler: PropTypes.func.isRequired,
 };
 
 class UserExpenses extends React.Component {
@@ -114,9 +123,9 @@ class UserExpenses extends React.Component {
           triggerId={this.props.requests.triggerId}
           isDisabled={this.props.requests.isFetching}
           dateChangeHandler={date => this.props.dateChangeHandler('create', date)}
-          timeChangeHandler={date => this.props.timeChangeHandler('create', date)}
           inputChangeHandler={this.props.inputChangeHandler}
           submitHandler={this.props.createExpenseSubmitHandler}
+          newCategoryBtnHandler={this.props.newCategoryBtnHandler}
         />
 
         <Filters
@@ -148,7 +157,6 @@ class UserExpenses extends React.Component {
           deleteHandler={this.props.deleteExpenseHandler}
           editHandler={this.props.editExpenseHandler}
           dateChangeHandler={date => this.props.dateChangeHandler('edit', date)}
-          timeChangeHandler={date => this.props.timeChangeHandler('edit', date)}
           inputChangeHandler={this.props.inputChangeHandler}
           editSubmitHandler={this.props.editExpenseSubmitHandler}
           cancelEditHandler={this.props.cancelEditExpenseHandler}
@@ -163,6 +171,12 @@ class UserExpenses extends React.Component {
         <Modal
           {...this.props.requests.modal}
           clickHandler={this.props.modalBtnHandler}
+        />
+
+        <InputModal
+          {...this.props.modals.inputModal}
+          clickHandler={this.props.newCategorySubmitHandler}
+          inputChangeHandler={this.props.modalInputChangeHandler}
         />
       </div>
     );

@@ -4,6 +4,7 @@ import {
   CREATE_EXPENSE_REQUEST,
   DELETE_EXPENSE_REQUEST,
   EDIT_EXPENSE_REQUEST,
+  CREATE_CATEGORY_REQUEST,
   SESSION_EXPIRED,
 } from './actionTypes';
 
@@ -15,6 +16,7 @@ const MODAL_MESSAGES = {
   [CREATE_EXPENSE_REQUEST]: 'expense created successfully',
   [DELETE_EXPENSE_REQUEST]: 'expense deleted successfully',
   [EDIT_EXPENSE_REQUEST]: 'expense updated successfully',
+  [CREATE_CATEGORY_REQUEST]: 'category created successfully',
 };
 
 export default MODAL_MESSAGES;
