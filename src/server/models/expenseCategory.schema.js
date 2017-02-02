@@ -3,13 +3,28 @@ const mongoose = require('mongoose');
 /**
  * Mongoose model for an expense's category
  *
- * @typedef {model} Expense
+ * @typedef {model} ExpenseCategory
  */
 const expenseCategorySchema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, '{PATH} is required!'],
-    text: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, '{PATH} is required!'],
+  },
+}, {
+  toJSON: {
+    transform: (doc, ret) => {
+      const obj = Object.assign({}, ret, { id: doc._id });
+
+      delete obj._id;
+      delete obj.__v;
+
+      return obj;
+    },
   },
 });
 

@@ -13,6 +13,7 @@ const path = require('path');
 
 const userController = require('controllers/user.controller');
 const expenseController = require('controllers/expense.controller');
+const expenseCategoryController = require('controllers/expenseCategory.controller');
 const authorize = require('rules/authorize');
 const ROLES = require('models/user.model').ROLES;
 
@@ -69,5 +70,7 @@ apiRoutes.post('/users/:userId/expenses', authAdmin, expenseController.create);
 apiRoutes.get('/users/:userId/expenses', authAdmin, expenseController.read);
 apiRoutes.put('/users/:userId/expenses/:expenseId', authAdmin, expenseController.update);
 apiRoutes.delete('/users/:userId/expenses/:expenseId', authAdmin, expenseController.remove);
+
+apiRoutes.post('/users/:userId/expenseCategories', expenseCategoryController.create);
 
 app.listen(3000, () => winston.info('listening on port 3000'));
