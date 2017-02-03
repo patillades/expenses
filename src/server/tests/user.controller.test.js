@@ -123,6 +123,7 @@ describe('User controller', () => {
     it('should return 201 if it worked', (done) => {
       testUtils.request('POST', '/api/users/login', { mail, password }, (status, body) => {
         expect(status).toBe(201);
+        expect(body.id).toBeA('string');
         expect(body.token).toBeA('string');
 
         token = body.token;

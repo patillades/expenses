@@ -80,9 +80,13 @@ function remove(req, res) {
 }
 
 function login(req, res) {
+  let userData;
+
   userModel.authenticate(req.body.mail, req.body.password).then(
     (result) => {
       if (result) {
+        userData = Object.assign({}, result);
+
         return userModel.signToken(result);
       }
 
@@ -95,7 +99,7 @@ function login(req, res) {
       return Promise.reject(respObj.getInternalErrResp());
     }
   ).then(
-    token => res.status(201).json({ token }),
+    token => res.status(201).json(Object.assign({}, userData, { token })),
 
     resp => res.status(resp.status).json({ msg: resp.msg })
   );
