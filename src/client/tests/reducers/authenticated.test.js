@@ -33,29 +33,32 @@ describe('authenticated reducer', () => {
     expect(newState[form].mail).toBe(initialState[form].mail);
     expect(newState[form].password).toBe(initialState[form].password);
     expect(newState.login).toEqual(initialState.login);
+    expect(newState.id).toBe(initialState.id);
     expect(newState.token).toBe(initialState.token);
 
     state = newState;
   });
 
   it('should reset forms on request success', () => {
+    const id = '1';
     const token = 'token';
 
-    const actionObj = requestSucceeded(REGISTRATION_REQUEST, { token });
+    const actionObj = requestSucceeded(REGISTRATION_REQUEST, { id, token });
 
     const newState = authenticated(state, actionObj);
 
     expect(newState.registration).toEqual(initialState.registration);
     expect(newState.login).toEqual(initialState.login);
+    expect(newState.id).toBe(id);
     expect(newState.token).toBe(token);
 
     state = newState;
   });
 
-  it('should reset token on log out', () => {
+  it('should reset state on log out', () => {
     const newState = authenticated(state, action(LOG_OUT));
 
-    expect(newState.token).toBe(initialState.token);
+    expect(newState).toEqual(initialState);
 
     state = newState;
   });

@@ -1,11 +1,8 @@
-import jwtDecode from 'jwt-decode';
-
 import objToQueryString from 'utils/objToQueryString';
 import MODAL_MESSAGES from 'constants/messages';
 import {
   ERROR,
   SUCCESS,
-  SESSION_EXPIRED,
   REGISTRATION_REQUEST,
   LOGIN_REQUEST,
   CREATE_EXPENSE_REQUEST,
@@ -38,18 +35,6 @@ const successStatus = /^2\d{2}$/;
  */
 function initRequest(type, data = {}) {
   return { type, data };
-}
-
-/**
- * The user's token has expired
- *
- * @return {{type: string, msg: string}}
- */
-function sessionExpired() {
-  return {
-    type: SESSION_EXPIRED,
-    msg: MODAL_MESSAGES[SESSION_EXPIRED],
-  };
 }
 
 /**
@@ -211,7 +196,7 @@ function requestSucceeded(actionType, resp) {
   switch (actionType) {
     case REGISTRATION_REQUEST:
     case LOGIN_REQUEST:
-      return { type, msg, token: resp.token };
+      return { type, msg, user: resp };
 
     case CREATE_EXPENSE_REQUEST:
       return { type, msg, expense: resp };
@@ -266,30 +251,9 @@ function sendRequest(type, data = {}) {
     dispatch(initRequest(type, data));
 
     const state = getState();
-    const { token } = state.authenticated;
+    const { id, token } = state.authenticated;
 
-    let userId = null;
-
-    // when the request needs the user's id, attempt to get it from token and dispatch a
-    // sessionExpired action if there's an exception so the token is cleared from localStorage and
-    // the user logs in again
-    if (
-      [
-        CREATE_EXPENSE_REQUEST,
-        GET_EXPENSES_REQUEST,
-        DELETE_EXPENSE_REQUEST,
-        EDIT_EXPENSE_REQUEST,
-        CREATE_CATEGORY_REQUEST,
-      ].includes(type)
-    ) {
-      try {
-        userId = jwtDecode(token).sub;
-      } catch (e) {
-        return dispatch(sessionExpired());
-      }
-    }
-
-    fetchRequest(type, state, token, userId).then(
+    fetchRequest(type, state, token, id).then(
       (response) => {
         // 204 (no content) comes without a body and JSON parsing woul throw an error
         const bodyData = response.status === 204 ? 'text' : 'json';
@@ -312,5 +276,5 @@ function sendRequest(type, data = {}) {
   };
 }
 
-export { sessionExpired, requestSucceeded };
+export { requestSucceeded };
 export default sendRequest;

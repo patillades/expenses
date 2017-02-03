@@ -10,7 +10,7 @@ import {
   LOGIN_REQUEST,
   EDIT_EXPENSE,
 } from 'constants/actionTypes';
-import sendRequest, { sessionExpired } from './requestActions';
+import sendRequest from './requestActions';
 
 /**
  * Create an action with no payload
@@ -40,6 +40,19 @@ function inputChange(type, form, field, value) {
 }
 
 /**
+ * Log user out and redirect to login page afterwards
+ *
+ * @return {function}
+ */
+function logOut() {
+  return (dispatch) => {
+    dispatch(action(LOG_OUT));
+
+    browserHistory.push('/');
+  };
+}
+
+/**
  * Handle the click of the button on the modal dialog, checking if the state requires a navigation
  * to another page before closing the dialog
  *
@@ -56,7 +69,8 @@ function modalBtnClick() {
     ) {
       browserHistory.push('/');
     } else if (modalMsg === MODAL_MESSAGES[SESSION_EXPIRED]) {
-      browserHistory.push('/login');
+      // log user out when server returns session expired
+      return dispatch(logOut());
     }
 
     return dispatch(action(CLOSE_MODAL));
@@ -92,21 +106,9 @@ function editExpense(expenseId) {
   return { type: EDIT_EXPENSE, expenseId };
 }
 
-/**
- * Log user out and redirect to login page
- *
- * @return {{type: string}}
- */
-function logOut() {
-  browserHistory.push('/login');
-
-  return { type: LOG_OUT };
-}
-
 export {
   inputChange,
   sendRequest,
-  sessionExpired,
   modalBtnClick,
   action,
   logOut,

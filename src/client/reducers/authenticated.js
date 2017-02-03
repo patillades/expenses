@@ -1,16 +1,10 @@
 import merge from 'lodash/merge';
 
-import MODAL_MESSAGES from 'constants/messages';
 import {
   LOGIN_REGISTRATION_INPUT_CHANGE,
-  SESSION_EXPIRED,
-  LOG_OUT,
   REGISTRATION_REQUEST_SUCC,
   LOGIN_REQUEST_SUCC,
-  CREATE_EXPENSE_REQUEST_ERR,
-  GET_EXPENSES_REQUEST_ERR,
-  EDIT_EXPENSE_REQUEST_ERR,
-  DELETE_EXPENSE_REQUEST_ERR,
+  LOG_OUT,
 } from 'constants/actionTypes';
 
 /**
@@ -28,6 +22,7 @@ import {
 
 /**
  * @typedef {object} AuthenticatedState
+ * @property {?string} id - User id, used to generate the API request's links
  * @property {?string} token
  * @property {RegistrationState} registration
  * @property {LoginState} login
@@ -37,6 +32,7 @@ import {
  * @type {AuthenticatedState}
  */
 const initialState = {
+  id: null,
   token: null,
   registration: {
     name: '',
@@ -60,30 +56,14 @@ function authenticated(state = initialState, action) {
     }
 
     case REGISTRATION_REQUEST_SUCC:
-    case LOGIN_REQUEST_SUCC:
-      return Object.assign({}, {
-        registration: initialState.registration,
-        login: initialState.login,
-        token: action.token,
-      });
+    case LOGIN_REQUEST_SUCC: {
+      const { id, token } = action.user;
 
-    case CREATE_EXPENSE_REQUEST_ERR:
-    case GET_EXPENSES_REQUEST_ERR:
-    case EDIT_EXPENSE_REQUEST_ERR:
-    case DELETE_EXPENSE_REQUEST_ERR:
-      if (action.msg !== MODAL_MESSAGES[SESSION_EXPIRED]) {
-        return state;
-      }
+      return merge({}, initialState, { id, token });
+    }
 
-      return Object.assign({}, state, {
-        token: null,
-      });
-
-    case SESSION_EXPIRED:
     case LOG_OUT:
-      return Object.assign({}, state, {
-        token: null,
-      });
+      return merge({}, initialState);
 
     default:
       return state;
