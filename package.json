@@ -12,7 +12,7 @@
     "stop": "pkill --signal SIGINT expenses",
     "start_test_env": "NODE_ENV=test npm start",
     "test": "NODE_ENV=test mocha src/server/tests",
-    "test_reducers": "grunt browserify:test && mocha src/client/tests/dest"
+    "test_reducers": "NODE_PATH=src/client mocha --compilers js:babel-register src/client/tests/reducers/*.js"
   },
   "author": "gorkamunya@hotmail.com",
   "license": "ISC",

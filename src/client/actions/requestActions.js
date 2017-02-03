@@ -312,5 +312,5 @@ function sendRequest(type, data = {}) {
   };
 }
 
-export { sessionExpired };
+export { sessionExpired, requestSucceeded };
 export default sendRequest;

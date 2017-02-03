@@ -23,18 +23,6 @@ module.exports = (grunt) => {
           transform: [['loose-envify', { NODE_ENV: 'production', global: true }], 'babelify'],
         },
       },
-      test: {
-        files: {
-          'src/client/tests/dest/expenses.reducer.test.browserify.js':
-            'src/client/tests/src/expenses.reducer.test.js',
-        },
-        options: {
-          browserifyOptions: {
-            paths: ['src/client'],
-          },
-          transform: ['babelify'],
-        },
-      },
     },
     uglify: {
       default: {
