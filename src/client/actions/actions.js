@@ -1,4 +1,3 @@
-import 'whatwg-fetch';
 import browserHistory from 'react-router/lib/browserHistory';
 
 import MODAL_MESSAGES from 'constants/messages';

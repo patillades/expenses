@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-fetch';
+
 import objToQueryString from 'utils/objToQueryString';
 import MODAL_MESSAGES from 'constants/messages';
 import {
@@ -155,9 +157,10 @@ function getBodyObj(type, state) {
  * @param {object} state - The state of redux's store
  * @param {?string} token
  * @param {?ObjectId} userId
+ * @param {boolean} [isTest=false] - set to true on tests so an absolute URL is used
  * @return {Promise}
  */
-function fetchRequest(type, state, token, userId) {
+function fetchRequest(type, state, token, userId, isTest = false) {
   const { uri, method } = getRequestData(type, state, userId);
 
   const options = {
@@ -173,7 +176,7 @@ function fetchRequest(type, state, token, userId) {
     options.body = objToQueryString(getBodyObj(type, state));
   }
 
-  return fetch(uri, options);
+  return fetch(`${isTest ? 'http://localhost:3000' : ''}${uri}`, options);
 }
 
 /**
@@ -242,23 +245,24 @@ function internalError(type) {
  * Send a request to the API
  *
  * @param {ActionType} type
- * @param {object} [data={}] - Optional payload that can be added when initiating the request
+ * @param {object} [data={}] - payload that can be added when initiating the request
+ * @param {boolean} [isTest=false] - set to true on tests so an absolute URL is used
  * @returns {function: (Promise)} If it worked, dispatch the token found on the response object,
  * or the error message. If it was rejected, dispatch an error message.
  */
-function sendRequest(type, data = {}) {
+function sendRequest(type, data = {}, isTest = false) {
   return (dispatch, getState) => {
     dispatch(initRequest(type, data));
 
     const state = getState();
     const { id, token } = state.authenticated;
 
-    fetchRequest(type, state, token, id).then(
+    return fetchRequest(type, state, token, id, isTest).then(
       (response) => {
-        // 204 (no content) comes without a body and JSON parsing woul throw an error
+        // 204 (no content) comes without a body and JSON parsing would throw an error
         const bodyData = response.status === 204 ? 'text' : 'json';
 
-        response[bodyData]().then(
+        return response[bodyData]().then(
           (resp) => {
             if (successStatus.test(response.status)) {
               return dispatch(requestSucceeded(type, resp));
