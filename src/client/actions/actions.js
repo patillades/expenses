@@ -56,6 +56,15 @@ function submitForm(e, type) {
 }
 
 /**
+ * Redirect to a given URI
+ *
+ * @param {string} uri
+ */
+function redirect(uri) {
+  browserHistory.push(uri);
+}
+
+/**
  * Log user out and redirect to login page afterwards
  *
  * @return {function}
@@ -64,7 +73,7 @@ function logOut() {
   return (dispatch) => {
     dispatch(action(LOG_OUT));
 
-    browserHistory.push('/');
+    redirect('/');
   };
 }
 
@@ -83,7 +92,7 @@ function modalBtnClick() {
       MODAL_MESSAGES[LOGIN_REQUEST],
     ].includes(modalMsg)
     ) {
-      browserHistory.push('/');
+      redirect('/');
     } else if (modalMsg === MODAL_MESSAGES[SESSION_EXPIRED]) {
       // log user out when server returns session expired
       return dispatch(logOut());
@@ -123,12 +132,12 @@ function editExpense(expenseId) {
 }
 
 export {
+  sendRequest,
+  action,
   inputChange,
   submitForm,
-  sendRequest,
-  modalBtnClick,
-  action,
   logOut,
+  modalBtnClick,
   expenseDatetimeChange,
   editExpense,
 };
