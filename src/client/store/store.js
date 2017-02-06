@@ -1,6 +1,5 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import jwtDecode from 'jwt-decode';
 import merge from 'lodash/merge';
 
 import authenticated, { initialState as initialAuthenticatedState } from 'reducers/authenticated';
@@ -10,28 +9,17 @@ import filters from 'reducers/filters';
 import expensesView from 'reducers/expensesView';
 import modals from 'reducers/modals';
 
-// get data on localStorage and use it as preloaded state for redux's store
-const storedVars = {
-  id: localStorage.getItem('id'),
-  token: localStorage.getItem('token'),
-};
+// @todo remove code on production
+let composeEnhancers = compose;
 
-if (storedVars.token) {
-  try {
-    jwtDecode(storedVars.token);
-  } catch (e) {
-    // remove stored data if token is falsy
-    storedVars.id = null;
-    storedVars.token = null;
-    localStorage.removeItem('id');
-    localStorage.removeItem('token');
-  }
+// check window so mocha tests work
+if (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
+  composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 }
 
-// @todo remove code on production
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+// keys to be persisted on localStorage and used as preloaded state for redux's store
+const authKeysToStore = ['id', 'token'];
 
-const { id, token } = storedVars;
 const store = createStore(
   combineReducers({
     authenticated,
@@ -41,36 +29,42 @@ const store = createStore(
     expensesView,
     modals,
   }),
-  { authenticated: merge({}, initialAuthenticatedState, { id, token }) },
+  {
+    authenticated: merge({}, initialAuthenticatedState, authKeysToStore.reduce(
+      (obj, key) => Object.assign({}, obj, { [key]: localStorage.getItem(key) }),
+      {}
+    )),
+  },
   composeEnhancers(applyMiddleware(thunk))
 );
 
 /**
- * Persist a piece of the application state (state[statePart][stateVarName]) to localStorage
+ * Persist a piece of the application state (state[reducer][varName]) to localStorage
  *
- * @param {string} stateVarName
- * @param {string} statePart
+ * @param {Store} appStore
+ * @param {string} reducer
+ * @param {string} varName
  * @return {boolean}
  */
-function shouldUpdateStoredState(stateVarName, statePart) {
-  const stateVar = store.getState()[statePart][stateVarName];
+function shouldUpdateLocalStorage(appStore, reducer, varName) {
+  const value = appStore.getState()[reducer][varName];
 
-  if (storedVars[stateVarName] === stateVar) {
+  if (localStorage.getItem(varName) === value) {
     return false;
   }
 
-  storedVars[stateVarName] = stateVar;
-
-  if (!stateVar) {
-    localStorage.removeItem(stateVarName);
+  if (!value) {
+    localStorage.removeItem(varName);
   } else {
-    localStorage.setItem(stateVarName, stateVar);
+    localStorage.setItem(varName, value);
   }
 
   return true;
 }
 
-store.subscribe(() => shouldUpdateStoredState('id', 'authenticated'));
-store.subscribe(() => shouldUpdateStoredState('token', 'authenticated'));
+const shouldUpdateAuth = varName => shouldUpdateLocalStorage(store, 'authenticated', varName);
 
+authKeysToStore.forEach(key => store.subscribe(() => shouldUpdateAuth(key)));
+
+export { shouldUpdateLocalStorage };
 export default store;
