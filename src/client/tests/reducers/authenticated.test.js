@@ -1,4 +1,5 @@
 import expect from 'expect';
+import merge from 'lodash/merge';
 
 import authenticated, { initialState } from 'reducers/authenticated';
 import { action, inputChange } from 'actions/actions';
@@ -11,6 +12,9 @@ import {
 
 describe('authenticated reducer', () => {
   let state;
+  let initialStateClone;
+
+  before(() => { initialStateClone = merge({}, initialState); });
 
   it('should return initial state on default action', () => {
     const newState = authenticated(undefined, {});
@@ -61,5 +65,9 @@ describe('authenticated reducer', () => {
     expect(newState).toEqual(initialState);
 
     state = newState;
+  });
+
+  it('should not mutate initial state', () => {
+    expect(initialState).toEqual(initialStateClone);
   });
 });
