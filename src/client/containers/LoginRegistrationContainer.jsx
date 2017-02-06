@@ -2,7 +2,7 @@ import connect from 'react-redux/lib/components/connect';
 
 import {
   inputChange,
-  sendRequest,
+  submitForm,
   modalBtnClick,
 } from 'actions/actions';
 import {
@@ -26,25 +26,9 @@ function mapDispatchToProps(dispatch) {
       e.target.value
     )),
 
-    // prevent default so the form submission doesn't force a page reload
-    registrationSubmitHandler: (e) => {
-      e.preventDefault();
+    registrationSubmitHandler: e => dispatch(submitForm(e, REGISTRATION_REQUEST)),
 
-      dispatch(sendRequest(
-        REGISTRATION_REQUEST,
-        { triggerId: e.target.id }
-      ));
-    },
-
-    // prevent default so the form submission doesn't force a page reload
-    loginSubmitHandler: (e) => {
-      e.preventDefault();
-
-      dispatch(sendRequest(
-        LOGIN_REQUEST,
-        { triggerId: e.target.id }
-      ));
-    },
+    loginSubmitHandler: e => dispatch(submitForm(e, LOGIN_REQUEST)),
 
     modalBtnHandler: () => dispatch(modalBtnClick()),
   };

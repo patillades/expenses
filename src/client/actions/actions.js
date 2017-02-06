@@ -40,6 +40,23 @@ function inputChange(type, form, field, value) {
 }
 
 /**
+ * Dispatch the request associated to the form of a given action type
+ *
+ * @param {Event} e
+ * @param {string} type
+ * @return {function}
+ */
+function submitForm(e, type) {
+  // prevent default so the form submission doesn't force a page reload
+  e.preventDefault();
+
+  return sendRequest(
+    type,
+    { triggerId: e.currentTarget.id }
+  );
+}
+
+/**
  * Log user out and redirect to login page afterwards
  *
  * @return {function}
@@ -108,6 +125,7 @@ function editExpense(expenseId) {
 
 export {
   inputChange,
+  submitForm,
   sendRequest,
   modalBtnClick,
   action,
