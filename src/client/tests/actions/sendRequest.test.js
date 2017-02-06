@@ -41,6 +41,7 @@ describe('sendRequest', () => {
         user: { id, token, name, mail },
       }];
 
+      // the user data to be used on the API request must be set on the state
       const store = mockStore({
         authenticated: {
           registration: { name, mail, password },
