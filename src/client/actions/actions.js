@@ -85,7 +85,7 @@ function logOut() {
  */
 function modalBtnClick() {
   return (dispatch, getState) => {
-    const modalMsg = getState().requests.modal.msg;
+    const modalMsg = getState().modals.msgModal.msg;
 
     if ([
       MODAL_MESSAGES[REGISTRATION_REQUEST],
