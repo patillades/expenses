@@ -3,17 +3,17 @@ import merge from 'lodash/merge';
 import sortBy from 'lodash/sortBy';
 
 import {
+  ERROR,
+  SUCCESS,
   EXPENSE_DATE_CHANGE,
   EXPENSE_TIME_CHANGE,
   EXPENSES_INPUT_CHANGE,
-  CREATE_EXPENSE_REQUEST_SUCC,
-  GET_EXPENSES_REQUEST_SUCC,
+  CREATE_EXPENSE_REQUEST,
+  GET_EXPENSES_REQUEST,
   DELETE_EXPENSE_REQUEST,
-  DELETE_EXPENSE_REQUEST_ERR,
-  DELETE_EXPENSE_REQUEST_SUCC,
   EDIT_EXPENSE,
   CANCEL_EDIT_EXPENSE,
-  EDIT_EXPENSE_REQUEST_SUCC,
+  EDIT_EXPENSE_REQUEST,
 } from 'constants/actionTypes';
 
 /**
@@ -139,12 +139,12 @@ function expenses(state = initialState, action) {
         expenseIdToDelete: action.data.expenseId,
       });
 
-    case DELETE_EXPENSE_REQUEST_ERR:
+    case DELETE_EXPENSE_REQUEST + ERROR:
       return Object.assign({}, state, {
         expenseIdToDelete: null,
       });
 
-    case CREATE_EXPENSE_REQUEST_SUCC: {
+    case CREATE_EXPENSE_REQUEST + SUCCESS: {
       // add the created expense
       const newExpenses = addExpense(
         action.expense,
@@ -168,7 +168,7 @@ function expenses(state = initialState, action) {
       });
     }
 
-    case GET_EXPENSES_REQUEST_SUCC: {
+    case GET_EXPENSES_REQUEST + SUCCESS: {
       const { expenseIds, expensesById } = action.expenses.reduce(
         (result, expense) => addExpense(expense, result.expenseIds, result.expensesById),
         { expenseIds: [], expensesById: {} }
@@ -180,7 +180,7 @@ function expenses(state = initialState, action) {
       });
     }
 
-    case DELETE_EXPENSE_REQUEST_SUCC: {
+    case DELETE_EXPENSE_REQUEST + SUCCESS: {
       // remove the deleted expense from cloned state objects
       const index = state.expenseIds.indexOf(state.expenseIdToDelete);
 
@@ -198,7 +198,7 @@ function expenses(state = initialState, action) {
       });
     }
 
-    case EDIT_EXPENSE_REQUEST_SUCC: {
+    case EDIT_EXPENSE_REQUEST + SUCCESS: {
       // merge the edit object to store it on expensesById
       const expense = merge({}, state.edit);
 

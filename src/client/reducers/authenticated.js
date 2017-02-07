@@ -1,9 +1,10 @@
 import merge from 'lodash/merge';
 
 import {
+  SUCCESS,
   LOGIN_REGISTRATION_INPUT_CHANGE,
-  REGISTRATION_REQUEST_SUCC,
-  LOGIN_REQUEST_SUCC,
+  REGISTRATION_REQUEST,
+  LOGIN_REQUEST,
   LOG_OUT,
 } from 'constants/actionTypes';
 
@@ -55,8 +56,8 @@ function authenticated(state = initialState, action) {
       });
     }
 
-    case REGISTRATION_REQUEST_SUCC:
-    case LOGIN_REQUEST_SUCC: {
+    case REGISTRATION_REQUEST + SUCCESS:
+    case LOGIN_REQUEST + SUCCESS: {
       const { id, token } = action.user;
 
       return merge({}, initialState, { id, token });
