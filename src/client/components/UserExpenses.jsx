@@ -25,10 +25,6 @@ const propTypes = {
   requests: PropTypes.shape({
     triggerId: PropTypes.string,
     isFetching: PropTypes.bool.isRequired,
-    modal: PropTypes.shape({
-      isOpen: PropTypes.bool.isRequired,
-      txt: PropTypes.string,
-    }).isRequired,
   }).isRequired,
   expenses: PropTypes.shape({
     create: PropTypes.shape({
@@ -79,6 +75,10 @@ const propTypes = {
     inputModal: PropTypes.shape({
       isOpen: PropTypes.bool.isRequired,
       msg: PropTypes.string.isRequired,
+    }).isRequired,
+    msgModal: PropTypes.shape({
+      isOpen: PropTypes.bool.isRequired,
+      txt: PropTypes.string,
     }).isRequired,
   }).isRequired,
   loadUserExpenses: PropTypes.func.isRequired,
@@ -169,7 +169,7 @@ class UserExpenses extends React.Component {
         />
 
         <Modal
-          {...this.props.requests.modal}
+          {...this.props.modals.msgModal}
           clickHandler={this.props.modalBtnHandler}
         />
 

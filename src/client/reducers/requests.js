@@ -1,7 +1,6 @@
 import {
   ERROR,
   SUCCESS,
-  SESSION_EXPIRED,
   REGISTRATION_REQUEST,
   REGISTRATION_REQUEST_ERR,
   REGISTRATION_REQUEST_SUCC,
@@ -20,21 +19,13 @@ import {
   EDIT_EXPENSE_REQUEST,
   EDIT_EXPENSE_REQUEST_ERR,
   EDIT_EXPENSE_REQUEST_SUCC,
-  CLOSE_MODAL,
   CREATE_CATEGORY_REQUEST,
 } from 'constants/actionTypes';
-
-/**
- * @typedef {object} ModalState
- * @property {boolean} isOpen
- * @property {?string} msg
- */
 
 /**
  * @typedef {object} RequestsState
  * @property {boolean} isFetching
  * @property {?string} triggerId - Id of the element that triggered the API request
- * @property {ModalState} modal
  */
 
 /**
@@ -43,10 +34,6 @@ import {
 const initialState = {
   isFetching: false,
   triggerId: null,
-  modal: {
-    isOpen: false,
-    msg: null,
-  },
 };
 
 function requests(state = initialState, action) {
@@ -76,22 +63,15 @@ function requests(state = initialState, action) {
     case DELETE_EXPENSE_REQUEST_SUCC:
     case CREATE_CATEGORY_REQUEST + ERROR:
     case CREATE_CATEGORY_REQUEST + SUCCESS:
-    case SESSION_EXPIRED:
       return Object.assign({}, state, {
         isFetching: false,
         triggerId: null,
-        modal: { isOpen: true, msg: action.msg },
       });
 
     case GET_EXPENSES_REQUEST_SUCC:
       return Object.assign({}, state, {
         isFetching: false,
         triggerId: null,
-      });
-
-    case CLOSE_MODAL:
-      return Object.assign({}, state, {
-        modal: { isOpen: false, msg: null },
       });
 
     default:

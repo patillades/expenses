@@ -21,7 +21,13 @@ const propTypes = {
   requests: PropTypes.shape({
     triggerId: PropTypes.string,
     isFetching: PropTypes.bool.isRequired,
-    modal: PropTypes.shape({
+  }).isRequired,
+  modals: PropTypes.shape({
+    inputModal: PropTypes.shape({
+      isOpen: PropTypes.bool.isRequired,
+      msg: PropTypes.string.isRequired,
+    }).isRequired,
+    msgModal: PropTypes.shape({
       isOpen: PropTypes.bool.isRequired,
       txt: PropTypes.string,
     }).isRequired,
@@ -67,7 +73,7 @@ function LoginRegistration(props) {
       </div>
 
       <Modal
-        {...props.requests.modal}
+        {...props.modals.msgModal}
         clickHandler={props.modalBtnHandler}
       />
     </div>
