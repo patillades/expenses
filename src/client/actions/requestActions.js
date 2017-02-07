@@ -280,5 +280,5 @@ function sendRequest(type, data = {}, isTest = false) {
   };
 }
 
-export { requestSucceeded };
+export { initRequest, requestSucceeded, requestFailed };
 export default sendRequest;
