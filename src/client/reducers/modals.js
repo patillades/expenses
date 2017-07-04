@@ -30,6 +30,7 @@ function modals(state = initialState, action) {
   if (reqErrRegex.test(action.type) || reqSucRegex.test(action.type)) {
     return Object.assign({}, state, {
       msgModal: { isOpen: true, msg: action.msg },
+      inputModal: { inputValue: '' },
     });
   }
 
@@ -41,7 +42,7 @@ function modals(state = initialState, action) {
 
     case OPEN_INPUT_MODAL:
       return merge({}, state, {
-        inputModal: { isOpen: true },
+        inputModal: { isOpen: true, inputValue: '' },
       });
 
     case MODAL_INPUT_CHANGE:
@@ -51,7 +52,7 @@ function modals(state = initialState, action) {
 
     case CREATE_CATEGORY_REQUEST:
       return merge({}, state, {
-        inputModal: { isOpen: false, inputValue: '' },
+        inputModal: { isOpen: false },
       });
 
     default:
