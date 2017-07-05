@@ -3,3 +3,4 @@ node_modules
 requirements.txt
 curl.txt
 nbproject
+.vscode
