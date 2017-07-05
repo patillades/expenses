@@ -41,4 +41,16 @@ describe('Expense category controller', () => {
       }, { Authorization: `Bearer ${token}` });
     });
   });
+
+  describe('read', () => {
+    it('should return 200 if everything ok', (done) => {
+      testUtils.request('GET', `/api/users/${id}/expenseCategories`, {}, (status, body) => {
+        expect(status).toBe(200);
+        expect(body).toBeAn('array');
+        expect(body.length).toBeGreaterThan(0);
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+  });
 });

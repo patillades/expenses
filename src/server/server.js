@@ -72,5 +72,6 @@ apiRoutes.put('/users/:userId/expenses/:expenseId', authAdmin, expenseController
 apiRoutes.delete('/users/:userId/expenses/:expenseId', authAdmin, expenseController.remove);
 
 apiRoutes.post('/users/:userId/expenseCategories', expenseCategoryController.create);
+apiRoutes.get('/users/:userId/expenseCategories', expenseCategoryController.read);
 
 app.listen(3000, () => winston.info('listening on port 3000'));

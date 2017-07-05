@@ -22,32 +22,26 @@ function create(params, userId) {
   );
 }
 
-// /**
-//  * Read a user's expenses' categories
-//  *
-//  * @param {ObjectId} userId
-//  * @returns {Promise.<ExpenseCategory[], RespObj>}
-//  */
-// function read(userId) {
-//   return ExpenseCategory
-//     .find({ userId }, { category: 1 })
-//     .then(
-//       result => result,
-//
-//       (err) => {
-//         if (err.name === 'CastError') {
-//           return Promise.reject(
-//             errMsgs.getCastErrorMsg(err.path, Expense.modelName)
-//           );
-//         }
-//
-//         winston.error('Unhandled error on read@expense.model', err);
-//
-//         return Promise.reject(
-//           respObj.getInternalErrResp()
-//         );
-//       }
-//     );
-// }
+/**
+ * Read a user's expenses' categories
+ *
+ * @param {ObjectId} userId
+ * @returns {Promise.<ExpenseCategory[], RespObj>}
+ */
+function read(userId) {
+  return ExpenseCategory
+    .find({ userId })
+    .then(
+      result => result,
 
-module.exports = { create, /*read*/ };
+      (err) => {
+        winston.error('Unhandled error on read@expenseCategory.model', err);
+
+        return Promise.reject(
+          respObj.getInternalErrResp()
+        );
+      }
+    );
+}
+
+module.exports = { create, read };

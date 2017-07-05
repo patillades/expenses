@@ -8,4 +8,12 @@ function create(req, res) {
   );
 }
 
-module.exports = { create };
+function read(req, res) {
+  expenseCategoryModel.read(req.params.userId).then(
+    categories => res.status(200).json(categories),
+
+    resp => res.status(resp.status).json({ msg: resp.msg })
+  )
+}
+
+module.exports = { create, read };
