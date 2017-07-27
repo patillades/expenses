@@ -28,7 +28,7 @@ const reqSucRegex = new RegExp(`^(?!GET_EXPENSES).*${REQUEST}${SUCCESS}$`);
 
 function modals(state = initialState, action) {
   if (reqErrRegex.test(action.type) || reqSucRegex.test(action.type)) {
-    return Object.assign({}, state, {
+    return merge({}, state, {
       msgModal: { isOpen: true, msg: action.msg },
       inputModal: { inputValue: '' },
     });
