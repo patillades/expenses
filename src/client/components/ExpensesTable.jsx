@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import Loader from 'halogen/PulseLoader';
+import { PulseLoader } from 'react-spinners';
 
 import { GET_EXPENSES_REQUEST_ON_LOAD } from 'constants/actionTypes';
 import ExpenseRow from './ExpenseRow.jsx';
@@ -23,10 +23,10 @@ function ExpensesTable(props) {
     body = (
       <tr>
         <td colSpan="6" className="text-center">
-          <Loader
+          <PulseLoader
             color="#000"
-            size="14px"
-            margin="4px"
+            size={14}
+            margin={4}
           />
         </td>
       </tr>

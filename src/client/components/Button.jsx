@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Loader from 'halogen/PulseLoader';
 import classnames from 'classnames';
+import { PulseLoader } from 'react-spinners';
 
 const propTypes = {
   // type defaults to "submit", change it to "button" to prevent strange form submissions when there
@@ -60,12 +60,13 @@ function Button(props) {
         {props.txt}
       </span>
 
-      <Loader
-        className={loaderClass}
-        color="#fff"
-        size={`${props.loaderSize ? props.loaderSize : 14}px`}
-        margin="4px"
-      />
+      <div className={loaderClass}>
+        <PulseLoader
+          color="#fff"
+          size={props.loaderSize ? props.loaderSize : 14}
+          margin={4}
+        />
+      </div>
     </button>
   );
 }
