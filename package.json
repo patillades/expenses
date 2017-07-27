@@ -32,7 +32,7 @@
     "prop-types": "^15.5.10",
     "rc-time-picker": "^2.1.0",
     "react": "^15.4.2",
-    "react-datepicker": "^0.34.0",
+    "react-datepicker": "^0.52.0",
     "react-dom": "^15.4.2",
     "react-modal": "^1.5.2",
     "react-redux": "^4.4.5",
