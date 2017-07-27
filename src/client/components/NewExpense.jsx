@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import ExpenseInputs from './ExpenseInputs.jsx';
 import { InlineButton } from './Button.jsx';

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import Header from './Header.jsx';
 import NewExpense from './NewExpense.jsx';
@@ -105,6 +106,7 @@ class UserExpenses extends React.Component {
   componentWillMount() {
     if (this.props.authenticated.token) {
       this.props.loadUserExpenses();
+      // load categories too!
     }
   }
 

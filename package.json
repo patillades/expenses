@@ -30,6 +30,7 @@
     "lodash": "^4.16.6",
     "moment": "^2.15.2",
     "mongoose": "^4.6.6",
+    "prop-types": "^15.5.10",
     "rc-time-picker": "^2.1.0",
     "react": "^15.4.2",
     "react-datepicker": "^0.34.0",
@@ -64,5 +65,7 @@
     "nock": "^9.0.2",
     "redux-mock-store": "^1.2.2"
   },
-  "moduleRoots": [ "src/client" ]
+  "moduleRoots": [
+    "src/client"
+  ]
 }
