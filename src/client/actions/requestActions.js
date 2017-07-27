@@ -12,6 +12,7 @@ import {
   DELETE_EXPENSE_REQUEST,
   EDIT_EXPENSE_REQUEST,
   CREATE_CATEGORY_REQUEST,
+  GET_EXPENSE_CATEGORIES_REQUEST,
 } from 'constants/actionTypes';
 
 // regexp for HTTP success' status
@@ -25,7 +26,9 @@ const successStatus = /^2\d{2}$/;
  * |CREATE_EXPENSE_REQUEST
  * |GET_EXPENSES_REQUEST
  * |DELETE_EXPENSE_REQUEST
- * |EDIT_EXPENSE_REQUEST)} ActionType
+ * |EDIT_EXPENSE_REQUEST
+ * |CREATE_CATEGORY_REQUEST
+ * |GET_EXPENSE_CATEGORIES_REQUEST)} ActionType
  */
 
 /**
@@ -93,6 +96,12 @@ function getRequestData(type, state, userId) {
         method: 'POST',
         uri: `/api/users/${userId}/expenseCategories`,
       };
+
+    case GET_EXPENSE_CATEGORIES_REQUEST:
+      return {
+        method: 'GET',
+        uri: `/api/users/${userId}/expenseCategories`
+      }
   }
 }
 
@@ -206,6 +215,9 @@ function requestSucceeded(actionType, resp) {
 
     case GET_EXPENSES_REQUEST:
       return { type, expenses: resp };
+
+    case GET_EXPENSE_CATEGORIES_REQUEST:
+      return { type, categories: resp };
 
     default:
       return { type, msg };

@@ -8,6 +8,7 @@ import requests from 'reducers/requests';
 import filters from 'reducers/filters';
 import expensesView from 'reducers/expensesView';
 import modals from 'reducers/modals';
+import expenseCategories from 'reducers/expenseCategories';
 
 // @todo remove code on production
 let composeEnhancers = compose;
@@ -28,6 +29,7 @@ const store = createStore(
     filters,
     expensesView,
     modals,
+    expenseCategories,
   }),
   {
     authenticated: merge({}, initialAuthenticatedState, authKeysToStore.reduce(

@@ -83,6 +83,7 @@ const propTypes = {
     }).isRequired,
   }).isRequired,
   loadUserExpenses: PropTypes.func.isRequired,
+  loadUserExpenseCategories: PropTypes.func.isRequired,
   logOutHandler: PropTypes.func.isRequired,
   dateChangeHandler: PropTypes.func.isRequired,
   inputChangeHandler: PropTypes.func.isRequired,
@@ -102,11 +103,11 @@ const propTypes = {
 };
 
 class UserExpenses extends React.Component {
-  // if the user is authenticated (state or preloaded through localStorage), get the user's expenses
+  // if user is authenticated (state or preloaded via localStorage), get expenses and categories
   componentWillMount() {
     if (this.props.authenticated.token) {
       this.props.loadUserExpenses();
-      // load categories too!
+      this.props.loadUserExpenseCategories();
     }
   }
 

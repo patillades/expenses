@@ -17,6 +17,7 @@ const expenseCategorySchema = new mongoose.Schema({
   },
 }, {
   toJSON: {
+    // @todo remove userId from GET user categories response
     transform: (doc, ret) => {
       const obj = Object.assign({}, ret, { id: doc._id });
 

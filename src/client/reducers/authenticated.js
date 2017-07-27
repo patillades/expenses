@@ -23,7 +23,7 @@ import {
 
 /**
  * @typedef {object} AuthenticatedState
- * @property {?string} id - User id, used to generate the API request's links
+ * @property {?ObjectId} id - User id, used to generate the API request's links
  * @property {?string} token
  * @property {RegistrationState} registration
  * @property {LoginState} login

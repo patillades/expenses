@@ -10,6 +10,7 @@ import {
   CREATE_CATEGORY_REQUEST,
 } from 'constants/actionTypes';
 
+// @todo add doc
 const initialState = {
   inputModal: {
     isOpen: false,
@@ -23,8 +24,8 @@ const initialState = {
 };
 
 const reqErrRegex = new RegExp(`${REQUEST}${ERROR}$`);
-// match any action that does not start with "GET_EXPENSES" and ends with "_REQUEST_SUCCESS"
-const reqSucRegex = new RegExp(`^(?!GET_EXPENSES).*${REQUEST}${SUCCESS}$`);
+// match any request success that does not start with "GET_EXPENSE" (GET expenses and categories)
+const reqSucRegex = new RegExp(`^(?!GET_EXPENSE).*${REQUEST}${SUCCESS}$`);
 
 function modals(state = initialState, action) {
   if (reqErrRegex.test(action.type) || reqSucRegex.test(action.type)) {

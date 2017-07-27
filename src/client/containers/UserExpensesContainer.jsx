@@ -26,6 +26,7 @@ import {
   OPEN_INPUT_MODAL,
   MODAL_INPUT_CHANGE,
   CREATE_CATEGORY_REQUEST,
+  GET_EXPENSE_CATEGORIES_REQUEST,
 } from 'constants/actionTypes';
 
 function mapStateToProps(state) {
@@ -132,6 +133,8 @@ function mapDispatchToProps(dispatch) {
       CREATE_CATEGORY_REQUEST,
       { triggerId: e.target.id }
     )),
+
+    loadUserExpenseCategories: () => dispatch(sendRequest(GET_EXPENSE_CATEGORIES_REQUEST)),
   };
 }
 
