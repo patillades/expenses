@@ -29,12 +29,11 @@ describe('Expense category controller', () => {
       testUtils.request('POST', `/api/users/${id}/expenseCategories`, { title }, (status, body) => {
         expect(status).toBe(201);
         expect(body).toIncludeKey('title');
-        expect(body).toIncludeKey('userId');
+        expect(body).toExcludeKey('userId');
         expect(body).toExcludeKey('_id');
         expect(body).toExcludeKey('__v');
 
         expect(body.title).toBe(title);
-        expect(body.userId).toBe(id);
         expect(body.id).toBeA('string');
 
         done();

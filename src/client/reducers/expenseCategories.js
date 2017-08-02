@@ -7,7 +7,6 @@ import {
 /**
  * @typedef {object} ExpenseCategory
  * @property {ObjectId} id
- * @property {ObjectId} userId
  * @property {string} title
  */
 

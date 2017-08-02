@@ -17,12 +17,13 @@ const expenseCategorySchema = new mongoose.Schema({
   },
 }, {
   toJSON: {
-    // @todo remove userId from GET user categories response
     transform: (doc, ret) => {
       const obj = Object.assign({}, ret, { id: doc._id });
 
       delete obj._id;
       delete obj.__v;
+      // since the API call already contains the user id, there's no need for it on the response
+      delete obj.userId;
 
       return obj;
     },
