@@ -139,6 +139,21 @@ describe('Expense controller', () => {
         done();
       }, { Authorization: `Bearer ${token}` });
     });
+
+    it('should return 400 if category is wrong', (done) => {
+      testUtils.request('POST', `/api/users/${id}/expenses`, {
+        amount: 10,
+        description: 'I bought some great stuff on the city center',
+        date: moment().add(1, 'd').format(),
+        expenseCategoryId: '',
+      }, (status, body) => {
+        expect(status).toBe(400);
+
+        expect(body.msg).toInclude('category');
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
   });
 
   describe('read', () => {

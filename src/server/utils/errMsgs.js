@@ -5,6 +5,8 @@ const EXPENSE_NOT_FOUND = `expense${NOT_FOUND}`;
 const USER_NOT_FOUND = `user${NOT_FOUND}`;
 const AMOUNT_SHOULD_BE_NUM = 'amount has to be a number';
 const DATE_SHOULD_BE_DATE = 'date has a wrong format, use "m/d/Y (H:i)" instead';
+const EXPENSE_CATEGORY_NOT_FOUND = 'expense category not found';
+const DEFAULT_CAST_ERROR = 'cast error';
 
 /**
  * Get the msg related to a CastError depending on the field where it happened
@@ -26,6 +28,12 @@ function getCastErrorMsg(field, model = null) {
 
     case 'date':
       return respObj.getBadReqResp(DATE_SHOULD_BE_DATE);
+
+    case 'expenseCategoryId':
+      return respObj.getBadReqResp(EXPENSE_CATEGORY_NOT_FOUND);
+
+    default:
+      return respObj.getBadReqResp(DEFAULT_CAST_ERROR);
   }
 }
 
@@ -51,6 +59,7 @@ module.exports = {
   USER_NOT_FOUND,
   AMOUNT_SHOULD_BE_NUM,
   DATE_SHOULD_BE_DATE,
+  EXPENSE_CATEGORY_NOT_FOUND,
   getCastErrorMsg,
   getValidationErrorMsg,
 };
