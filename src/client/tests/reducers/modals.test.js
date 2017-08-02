@@ -75,7 +75,6 @@ describe('modals reducer', () => {
     ));
 
     expect(newState.inputModal.isOpen).toBe(false);
-    expect(newState.inputModal.inputValue).toBe('');
 
     state = newState;
   });
