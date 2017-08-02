@@ -10,7 +10,32 @@ import {
   CREATE_CATEGORY_REQUEST,
 } from 'constants/actionTypes';
 
-// @todo add doc
+/**
+ * State of the modal dialog where the user can input data
+ *
+ * @typedef {object} InputModalState
+ * @property {boolean} isOpen
+ * @property {string} msg
+ * @property {string} inputValue
+ */
+
+/**
+ * State of the modal dialog that shows success/error messages
+ *
+ * @typedef {object} MsgModalState
+ * @property {boolean} isOpen
+ * @property {?string} msg
+ */
+
+/**
+ * @typedef {object} ModalsState
+ * @property {InputModalState} inputModal
+ * @property {MsgModalState} msgModal
+ */
+
+/**
+ * @type {ModalsState}
+ */
 const initialState = {
   inputModal: {
     isOpen: false,
