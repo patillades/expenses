@@ -15,7 +15,7 @@ const propTypes = {
       PropTypes.number,
       PropTypes.string,
     ]).isRequired,
-    comment: PropTypes.string.isRequired,
+    comment: PropTypes.string,
   }).isRequired,
   expense: PropTypes.shape({
     date: PropTypes.string,

@@ -33,7 +33,7 @@ const propTypes = {
       time: PropTypes.object,
       description: PropTypes.string.isRequired,
       amount: PropTypes.string.isRequired,
-      comment: PropTypes.string.isRequired,
+      comment: PropTypes.string,
     }).isRequired,
     edit: PropTypes.shape({
       date: PropTypes.object.isRequired,
@@ -43,7 +43,7 @@ const propTypes = {
         PropTypes.number,
         PropTypes.string,
       ]).isRequired,
-      comment: PropTypes.string.isRequired,
+      comment: PropTypes.string,
     }).isRequired,
     expenseIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     expensesById: PropTypes.objectOf(PropTypes.shape({
@@ -82,6 +82,12 @@ const propTypes = {
       txt: PropTypes.string,
     }).isRequired,
   }).isRequired,
+  expenseCategories: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+    })
+  ).isRequired,
   loadUserExpenses: PropTypes.func.isRequired,
   loadUserExpenseCategories: PropTypes.func.isRequired,
   logOutHandler: PropTypes.func.isRequired,
@@ -129,6 +135,7 @@ class UserExpenses extends React.Component {
           inputChangeHandler={this.props.inputChangeHandler}
           submitHandler={this.props.createExpenseSubmitHandler}
           newCategoryBtnHandler={this.props.newCategoryBtnHandler}
+          expenseCategories={this.props.expenseCategories}
         />
 
         <Filters

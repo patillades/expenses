@@ -16,6 +16,7 @@ const propTypes = {
   inputChangeHandler: PropTypes.func.isRequired,
   submitHandler: PropTypes.func.isRequired,
   newCategoryBtnHandler: PropTypes.func.isRequired,
+  expenseCategories: PropTypes.array.isRequired,
 };
 
 function NewExpense(props) {
@@ -34,6 +35,7 @@ function NewExpense(props) {
           inputChangeHandler={props.inputChangeHandler}
           dateChangeHandler={props.dateChangeHandler}
           newCategoryBtnHandler={props.newCategoryBtnHandler}
+          expenseCategories={props.expenseCategories}
         >
           <InlineButton
             id="addExpenseBtn"
