@@ -40,7 +40,6 @@ module.exports = (grunt) => {
         files: {
           'static/style.min.css': [
             'node_modules/react-datepicker/dist/react-datepicker.css',
-            'node_modules/rc-time-picker/assets/index.css',
           ],
         },
       },

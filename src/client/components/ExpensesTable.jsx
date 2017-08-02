@@ -43,7 +43,6 @@ function ExpensesTable(props) {
       deleteHandler={props.deleteHandler}
       editHandler={props.editHandler}
       dateChangeHandler={props.dateChangeHandler}
-      timeChangeHandler={props.timeChangeHandler}
       inputChangeHandler={props.inputChangeHandler}
       editSubmitHandler={props.editSubmitHandler}
       cancelEditHandler={props.cancelEditHandler}

@@ -29,7 +29,6 @@ const propTypes = {
   deleteHandler: PropTypes.func.isRequired,
   editHandler: PropTypes.func.isRequired,
   dateChangeHandler: PropTypes.func.isRequired,
-  timeChangeHandler: PropTypes.func.isRequired,
   inputChangeHandler: PropTypes.func.isRequired,
   editSubmitHandler: PropTypes.func.isRequired,
   cancelEditHandler: PropTypes.func.isRequired,
@@ -42,7 +41,6 @@ function ExpenseRow(props) {
         form="edit"
         {...props.editObj}
         dateChangeHandler={props.dateChangeHandler}
-        timeChangeHandler={props.timeChangeHandler}
         inputChangeHandler={props.inputChangeHandler}
       >
         <td>
