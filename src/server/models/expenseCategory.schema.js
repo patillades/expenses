@@ -30,4 +30,6 @@ const expenseCategorySchema = new mongoose.Schema({
   },
 });
 
+expenseCategorySchema.index({ title: 1, userId: 1 }, { unique: true });
+
 module.exports = mongoose.model('ExpenseCategory', expenseCategorySchema);

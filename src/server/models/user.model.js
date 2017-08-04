@@ -8,6 +8,7 @@ const User = require('models/user.schema');
 const Expense = require('models/expense.schema');
 const respObj = require('utils/respObj');
 const errMsgs = require('utils/errMsgs');
+const saveEntity = require('utils/saveEntity');
 
 const ROLES = {
   USER: 0,
@@ -29,27 +30,7 @@ function create(params, role = ROLES.USER) {
     { role }
   ));
 
-  return new Promise((resolve, reject) => {
-    // wrap the save operation with a Promise, even though it already returns one,
-    // in order to be able to catch mongo errors instead of only mongoose ones
-    user.save((err, result) => {
-      if (!err) {
-        return resolve(result);
-      }
-
-      let msg;
-
-      if (err.name === 'MongoError' && err.code === 11000) {
-        // errors due to "unique" schema constraint
-        msg = 'mail already registered';
-      } else {
-        // return the message belonging to the first error key
-        msg = err.errors[Object.keys(err.errors)[0]].message;
-      }
-
-      return reject(msg);
-    });
-  });
+  return saveEntity(user, User.modelName);
 }
 
 /**

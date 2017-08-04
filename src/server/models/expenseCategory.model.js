@@ -1,5 +1,6 @@
 const ExpenseCategory = require('models/expenseCategory.schema');
 const errMsgs = require('utils/errMsgs');
+const saveEntity = require('utils/saveEntity');
 
 /**
  * Create an expense category with the given params and user
@@ -15,11 +16,7 @@ function create(params, userId) {
     { userId }
   ));
 
-  return category.save().then(
-    result => result,
-
-    err => Promise.reject(errMsgs.getValidationErrorMsg(err, ExpenseCategory.modelName))
-  );
+  return saveEntity(category, ExpenseCategory.modelName);
 }
 
 /**

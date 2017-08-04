@@ -23,9 +23,9 @@ describe('Expense category controller', () => {
   });
 
   describe('create', () => {
-    it('should return 201 if everything ok', (done) => {
-      const title = `category_${Date.now()}`;
+    const title = `category_${Date.now()}`;
 
+    it('should return 201 if everything ok', (done) => {
       testUtils.request('POST', `/api/users/${id}/expenseCategories`, { title }, (status, body) => {
         expect(status).toBe(201);
         expect(body).toIncludeKey('title');
@@ -35,6 +35,16 @@ describe('Expense category controller', () => {
 
         expect(body.title).toBe(title);
         expect(body.id).toBeA('string');
+
+        done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
+    it('should return 400 if title already exists', (done) => {
+      testUtils.request('POST', `/api/users/${id}/expenseCategories`, { title }, (status, body) => {
+        expect(status).toBe(400);
+
+        expect(body.msg).toContain('exists');
 
         done();
       }, { Authorization: `Bearer ${token}` });
