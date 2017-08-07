@@ -65,7 +65,7 @@ describe('Test user setup', () => {
       (categories) => Promise.all(
         expenses.map((expense, i) => {
           const exp = _.merge(
-            { expenseCategoryId: categories[i % 2].id },
+            { expenseCategory: categories[i % 2].id },
             expense
           );
 
