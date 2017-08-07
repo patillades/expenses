@@ -28,6 +28,7 @@ describe('Expense category controller', () => {
     it('should return 201 if everything ok', (done) => {
       testUtils.request('POST', `/api/users/${id}/expenseCategories`, { title }, (status, body) => {
         expect(status).toBe(201);
+        expect(body).toIncludeKey('id');
         expect(body).toIncludeKey('title');
         expect(body).toExcludeKey('userId');
         expect(body).toExcludeKey('_id');
