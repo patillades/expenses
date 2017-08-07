@@ -10,7 +10,7 @@ const userModel = require('models/user.model');
 
 // Use native promises
 mongoose.Promise = global.Promise;
-mongoose.connect(`mongodb://localhost/${config.get('db')}`);
+mongoose.connect(`mongodb://localhost/${config.get('db')}`, { useMongoClient: true });
 
 mongoose.connection.on('error', err => winston.error('MongoDB error: %s', err));
 

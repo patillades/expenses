@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 
 // Use native promises
 mongoose.Promise = global.Promise;
-mongoose.connect(`mongodb://localhost/${config.get('db')}`);
+mongoose.connect(`mongodb://localhost/${config.get('db')}`, { useMongoClient: true });
 
 const testUtils = require('./testUtils');
 const User = require('models/user.schema');
