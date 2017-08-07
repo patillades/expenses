@@ -51,9 +51,7 @@ function getCastErrorMsg(field, modelName = null) {
  * @return {string}
  */
 function getValidationErrorMsg(err, modelName) {
-  console.log('err', err)
   const errField = Object.keys(err.errors)[0];
-  console.log('errField', errField)
 
   if (err.errors[errField].name === 'CastError') {
     return getCastErrorMsg(errField, modelName).msg;
@@ -69,7 +67,6 @@ function getValidationErrorMsg(err, modelName) {
  * @return {string}
  */
 function getUniqueErrorMsg(modelName) {
-  console.log('getUniqueErrorMsg',modelName)
   switch (modelName) {
     case User.modelName:
       return DUPLICATE_MAIL;
