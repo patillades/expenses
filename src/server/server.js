@@ -19,7 +19,7 @@ const ROLES = require('models/user.model').ROLES;
 
 // Use native promises
 mongoose.Promise = global.Promise;
-mongoose.connect(`mongodb://localhost/${config.get('db')}`);
+mongoose.connect(`mongodb://localhost/${config.get('db')}`, { useMongoClient: true });
 
 // set mongoose debugging ON
 mongoose.set('debug', true);
