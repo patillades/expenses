@@ -71,7 +71,7 @@ apiRoutes.get('/users/:userId/expenses', authAdmin, expenseController.read);
 apiRoutes.put('/users/:userId/expenses/:expenseId', authAdmin, expenseController.update);
 apiRoutes.delete('/users/:userId/expenses/:expenseId', authAdmin, expenseController.remove);
 
-apiRoutes.post('/users/:userId/expenseCategories', expenseCategoryController.create);
-apiRoutes.get('/users/:userId/expenseCategories', expenseCategoryController.read);
+apiRoutes.post('/users/:userId/expenseCategories', authAdmin, expenseCategoryController.create);
+apiRoutes.get('/users/:userId/expenseCategories', authAdmin, expenseCategoryController.read);
 
 app.listen(3000, () => winston.info('listening on port 3000'));
