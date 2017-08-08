@@ -15,6 +15,8 @@ import {
   GET_EXPENSE_CATEGORIES_REQUEST,
 } from 'constants/actionTypes';
 
+// @todo add tests on this file
+
 // regexp for HTTP success' status
 const successStatus = /^2\d{2}$/;
 
@@ -114,6 +116,11 @@ function getRequestData(type, state, userId) {
 function getCreateOrEditExpenseBody(expenseData) {
   const body = Object.assign({}, expenseData);
   const { time } = body;
+
+  // the category is optional, so leave it out of the request if empty
+  if (!body.expenseCategoryId) {
+    delete body.expenseCategoryId;
+  }
 
   // time can be null if the user clicks on the "X" that closes the timepicker
   if (time) {
