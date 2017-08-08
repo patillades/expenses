@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import { InlineInput } from './Input.jsx';
 import { InlineButton } from './Button.jsx';
 import ExpenseCategoryOption from './ExpenseCategoryOption.jsx';
+import Select from './Select.jsx';
 
 const propTypes = {
   form: PropTypes.string.isRequired,
@@ -16,12 +17,14 @@ const propTypes = {
     PropTypes.number,
   ]).isRequired,
   comment: PropTypes.string,
+  expenseCategoryId: PropTypes.string,
   children: PropTypes.element,
   isDisabled: PropTypes.bool.isRequired,
   inputChangeHandler: PropTypes.func.isRequired,
   dateChangeHandler: PropTypes.func.isRequired,
   newCategoryBtnHandler: PropTypes.func.isRequired,
   expenseCategories: PropTypes.array.isRequired,
+  expenseCategoryChangeHandler: PropTypes.func.isRequired,
 };
 
 function ExpenseInputs(props) {
@@ -50,12 +53,13 @@ function ExpenseInputs(props) {
         </div>
 
         <div className="col-xs-6">
-          <select>
-            {props.expenseCategories.map(category => <ExpenseCategoryOption
-              key={category.id}
-              {...category}
-            />)}
-          </select>
+          <Select
+            changeHandler={props.expenseCategoryChangeHandler}
+            value={props.expenseCategoryId}
+            form={props.form}
+            field="expenseCategoryId"
+            options={props.expenseCategories}
+          />
         </div>
 
         <div className="col-xs-2">

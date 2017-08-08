@@ -27,6 +27,7 @@ import {
   MODAL_INPUT_CHANGE,
   CREATE_CATEGORY_REQUEST,
   GET_EXPENSE_CATEGORIES_REQUEST,
+  CHANGE_CATEGORY_EXPENSE,
 } from 'constants/actionTypes';
 
 function mapStateToProps(state) {
@@ -135,6 +136,8 @@ function mapDispatchToProps(dispatch) {
     )),
 
     loadUserExpenseCategories: () => dispatch(sendRequest(GET_EXPENSE_CATEGORIES_REQUEST)),
+
+    expenseCategoryChangeHandler: e => dispatchInputChange(e, CHANGE_CATEGORY_EXPENSE),
   };
 }
 

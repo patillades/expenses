@@ -14,6 +14,7 @@ import {
   EDIT_EXPENSE,
   CANCEL_EDIT_EXPENSE,
   EDIT_EXPENSE_REQUEST,
+  CHANGE_CATEGORY_EXPENSE,
 } from 'constants/actionTypes';
 
 /**
@@ -23,6 +24,7 @@ import {
  * @property {string} description
  * @property {number} amount
  * @property {string} comment
+ * @property {string} expenseCategoryId
  */
 
 /**
@@ -58,6 +60,7 @@ const initialState = {
     description: '',
     amount: '',
     comment: '',
+    expenseCategoryId: '',
   },
   edit: {
     date: moment(),
@@ -65,6 +68,7 @@ const initialState = {
     description: '',
     amount: '',
     comment: '',
+    expenseCategoryId: '',
   },
   expenseIds: [],
   expensesById: {},
@@ -106,7 +110,8 @@ function expenses(state = initialState, action) {
         [action.form]: { time: action.date },
       });
 
-    case EXPENSES_INPUT_CHANGE: {
+    case EXPENSES_INPUT_CHANGE:
+    case CHANGE_CATEGORY_EXPENSE: {
       const { form, field, value } = action;
 
       return merge({}, state, {

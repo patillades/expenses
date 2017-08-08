@@ -10,6 +10,7 @@ const propTypes = {
   description: PropTypes.string.isRequired,
   amount: PropTypes.string.isRequired,
   comment: PropTypes.string.isRequired,
+  expenseCategoryId: PropTypes.string,
   triggerId: PropTypes.string,
   isDisabled: PropTypes.bool.isRequired,
   dateChangeHandler: PropTypes.func.isRequired,
@@ -17,6 +18,7 @@ const propTypes = {
   submitHandler: PropTypes.func.isRequired,
   newCategoryBtnHandler: PropTypes.func.isRequired,
   expenseCategories: PropTypes.array.isRequired,
+  expenseCategoryChangeHandler: PropTypes.func.isRequired,
 };
 
 function NewExpense(props) {
@@ -31,11 +33,13 @@ function NewExpense(props) {
           description={props.description}
           amount={props.amount}
           comment={props.comment}
+          expenseCategoryId={props.expenseCategoryId}
           isDisabled={props.isDisabled}
           inputChangeHandler={props.inputChangeHandler}
           dateChangeHandler={props.dateChangeHandler}
           newCategoryBtnHandler={props.newCategoryBtnHandler}
           expenseCategories={props.expenseCategories}
+          expenseCategoryChangeHandler={props.expenseCategoryChangeHandler}
         >
           <InlineButton
             id="addExpenseBtn"
