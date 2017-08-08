@@ -5,6 +5,7 @@ import {
   ERROR,
   SUCCESS,
   CLOSE_MODAL,
+  LOG_OUT,
   OPEN_INPUT_MODAL,
   MODAL_INPUT_CHANGE,
   CREATE_CATEGORY_REQUEST,
@@ -80,6 +81,9 @@ function modals(state = initialState, action) {
       return merge({}, state, {
         inputModal: { isOpen: false },
       });
+
+    case LOG_OUT:
+      return merge({}, initialState);
 
     default:
       return state;

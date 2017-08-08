@@ -7,6 +7,7 @@ import { initRequest, requestSucceeded, requestFailed } from 'actions/requestAct
 import {
   GET_EXPENSES_REQUEST,
   CLOSE_MODAL,
+  LOG_OUT,
   OPEN_INPUT_MODAL,
   MODAL_INPUT_CHANGE,
   CREATE_CATEGORY_REQUEST,
@@ -77,6 +78,12 @@ describe('modals reducer', () => {
     expect(newState.inputModal.isOpen).toBe(false);
 
     state = newState;
+  });
+
+  it('should return initial state on LOG_OUT', () => {
+    const newState = modals(state, action(LOG_OUT));
+
+    expect(newState).toEqual(initialState);
   });
 
   it('should not mutate initial state', () => {
