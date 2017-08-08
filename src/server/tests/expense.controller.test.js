@@ -117,6 +117,7 @@ describe('Expense controller', () => {
         expect(body).toExcludeKey('userId');
         expect(body).toExcludeKey('_id');
         expect(body).toExcludeKey('__v');
+        expect(body).toExcludeKey('expenseCategoryId');
 
         expenseIds.push(body.id);
 
@@ -137,6 +138,33 @@ describe('Expense controller', () => {
         expenseIds.push(body.id);
 
         done();
+      }, { Authorization: `Bearer ${token}` });
+    });
+
+    it('should return 201 and category if everything ok', (done) => {
+      const title = `category_${Date.now()}`;
+      let expenseCategoryId;
+
+      testUtils.request('POST', `/api/users/${id}/expenseCategories`, { title }, (status, body) => {
+        expect(status).toBe(201);
+
+        expenseCategoryId = body.id;
+
+        testUtils.request('POST', `/api/users/${id}/expenses`, {
+          amount: 15,
+          description: 'Testing category',
+          date: moment().subtract(1, 'd').format(),
+          expenseCategoryId,
+        }, (status, body) => {
+          expect(status).toBe(201);
+
+          expect(body).toIncludeKey('expenseCategoryId');
+          expect(body.expenseCategoryId).toBe(expenseCategoryId);
+
+          expenseIds.push(body.id);
+
+          done();
+        }, { Authorization: `Bearer ${token}` });
       }, { Authorization: `Bearer ${token}` });
     });
 
@@ -202,42 +230,42 @@ describe('Expense controller', () => {
         );
       });
 
-      it('should return one expense with an amount >= 15', (done) => {
+      it('should return 2 expenses with an amount >= 15', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $gte_amount: 15 },
           (status, body) => {
             expect(status).toBe(200);
             expect(body).toBeAn('array');
-            expect(body.length).toBe(1);
+            expect(body.length).toBe(2);
 
             done();
           }, { Authorization: `Bearer ${token}` }
         );
       });
 
-      it('should return one expense with an amount <= 18', (done) => {
+      it('should return 2 expenses with an amount <= 18', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $lte_amount: 18 },
           (status, body) => {
             expect(status).toBe(200);
             expect(body).toBeAn('array');
-            expect(body.length).toBe(1);
+            expect(body.length).toBe(2);
 
             done();
           }, { Authorization: `Bearer ${token}` }
         );
       });
 
-      it('should return two expenses with amount >=10 <= 20', (done) => {
+      it('should return 3 expenses with amount >=10 <= 20', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $gte_amount: 10, $lte_amount: 20 },
           (status, body) => {
             expect(status).toBe(200);
             expect(body).toBeAn('array');
-            expect(body.length).toBe(2);
+            expect(body.length).toBe(3);
 
             done();
           }, { Authorization: `Bearer ${token}` }
@@ -258,14 +286,14 @@ describe('Expense controller', () => {
         );
       });
 
-      it('should return one expense with date <= -1days', (done) => {
+      it('should return 2 expenses with date <= -1days', (done) => {
         testUtils.request(
           'GET', `/api/users/${id}/expenses`,
           { $lte_date: moment().subtract(1, 'd').format() },
           (status, body) => {
             expect(status).toBe(200);
             expect(body).toBeAn('array');
-            expect(body.length).toBe(1);
+            expect(body.length).toBe(2);
 
             done();
           }, { Authorization: `Bearer ${token}` }

@@ -35,7 +35,7 @@ function getCastErrorMsg(field, modelName = null) {
     case 'date':
       return respObj.getBadReqResp(DATE_SHOULD_BE_DATE);
 
-    case 'expenseCategory':
+    case 'expenseCategoryId':
       return respObj.getBadReqResp(EXPENSE_CATEGORY_NOT_FOUND);
 
     default:
