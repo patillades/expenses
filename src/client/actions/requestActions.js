@@ -212,6 +212,7 @@ function requestSucceeded(actionType, resp) {
   // the action to be dispatched is the SUCCESS version of the current request
   const type = actionType + SUCCESS;
 
+  // @todo join the cases returning a common "entity" property
   switch (actionType) {
     case REGISTRATION_REQUEST:
     case LOGIN_REQUEST:
@@ -222,6 +223,9 @@ function requestSucceeded(actionType, resp) {
 
     case GET_EXPENSES_REQUEST:
       return { type, expenses: resp };
+
+    case CREATE_EXPENSE_CATEGORY_REQUEST:
+      return { type, msg, category: resp };
 
     case GET_EXPENSE_CATEGORIES_REQUEST:
       return { type, categories: resp };

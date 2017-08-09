@@ -130,11 +130,7 @@ function expenses(state = initialState, action) {
 
     case CREATE_EXPENSE_REQUEST + SUCCESS: {
       // add the created expense
-      const newExpenses = addEntity(
-        action.expense,
-        state.ids,
-        state.byId
-      );
+      const newExpenses = addEntity(state, action.expense);
 
       const { byId } = newExpenses;
 
