@@ -10,7 +10,7 @@ import {
   LOG_OUT,
   OPEN_INPUT_MODAL,
   MODAL_INPUT_CHANGE,
-  CREATE_CATEGORY_REQUEST,
+  CREATE_EXPENSE_CATEGORY_REQUEST,
 } from 'constants/actionTypes';
 
 describe('modals reducer', () => {
@@ -69,9 +69,9 @@ describe('modals reducer', () => {
     state = newState;
   });
 
-  it('should close the input modal on CREATE_CATEGORY_REQUEST', () => {
+  it('should close the input modal on CREATE_EXPENSE_CATEGORY_REQUEST', () => {
     const newState = modals(state, initRequest(
-      CREATE_CATEGORY_REQUEST,
+      CREATE_EXPENSE_CATEGORY_REQUEST,
       { triggerId: 'inputModalBtn' }
     ));
 

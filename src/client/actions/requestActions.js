@@ -11,7 +11,7 @@ import {
   GET_EXPENSES_REQUEST,
   DELETE_EXPENSE_REQUEST,
   EDIT_EXPENSE_REQUEST,
-  CREATE_CATEGORY_REQUEST,
+  CREATE_EXPENSE_CATEGORY_REQUEST,
   GET_EXPENSE_CATEGORIES_REQUEST,
 } from 'constants/actionTypes';
 
@@ -29,7 +29,7 @@ const successStatus = /^2\d{2}$/;
  * |GET_EXPENSES_REQUEST
  * |DELETE_EXPENSE_REQUEST
  * |EDIT_EXPENSE_REQUEST
- * |CREATE_CATEGORY_REQUEST
+ * |CREATE_EXPENSE_CATEGORY_REQUEST
  * |GET_EXPENSE_CATEGORIES_REQUEST)} ActionType
  */
 
@@ -93,7 +93,7 @@ function getRequestData(type, state, userId) {
         uri: `/api/users/${userId}/expenses/${state.expenses.expenseIdOnEdition}`,
       };
 
-    case CREATE_CATEGORY_REQUEST:
+    case CREATE_EXPENSE_CATEGORY_REQUEST:
       return {
         method: 'POST',
         uri: `/api/users/${userId}/expenseCategories`,
@@ -158,7 +158,7 @@ function getBodyObj(type, state) {
     case EDIT_EXPENSE_REQUEST:
       return getCreateOrEditExpenseBody(state.expenses.edit);
 
-    case CREATE_CATEGORY_REQUEST:
+    case CREATE_EXPENSE_CATEGORY_REQUEST:
       return { title: state.modals.inputModal.inputValue };
 
     default:

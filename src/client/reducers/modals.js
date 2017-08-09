@@ -8,7 +8,7 @@ import {
   LOG_OUT,
   OPEN_INPUT_MODAL,
   MODAL_INPUT_CHANGE,
-  CREATE_CATEGORY_REQUEST,
+  CREATE_EXPENSE_CATEGORY_REQUEST,
 } from 'constants/actionTypes';
 
 /**
@@ -77,7 +77,7 @@ function modals(state = initialState, action) {
         inputModal: { inputValue: action.value },
       });
 
-    case CREATE_CATEGORY_REQUEST:
+    case CREATE_EXPENSE_CATEGORY_REQUEST:
       return merge({}, state, {
         inputModal: { isOpen: false },
       });

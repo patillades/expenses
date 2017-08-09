@@ -25,7 +25,7 @@ import {
   EDIT_EXPENSE_REQUEST,
   OPEN_INPUT_MODAL,
   MODAL_INPUT_CHANGE,
-  CREATE_CATEGORY_REQUEST,
+  CREATE_EXPENSE_CATEGORY_REQUEST,
   GET_EXPENSE_CATEGORIES_REQUEST,
   CHANGE_CATEGORY_EXPENSE,
 } from 'constants/actionTypes';
@@ -131,7 +131,7 @@ function mapDispatchToProps(dispatch) {
     modalInputChangeHandler: e => dispatchInputChange(e, MODAL_INPUT_CHANGE),
 
     newCategorySubmitHandler: e => dispatch(sendRequest(
-      CREATE_CATEGORY_REQUEST,
+      CREATE_EXPENSE_CATEGORY_REQUEST,
       { triggerId: e.target.id }
     )),
 
