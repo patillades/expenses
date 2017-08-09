@@ -166,6 +166,7 @@ class UserExpenses extends React.Component {
           editObj={this.props.expenses.edit}
           expenseIds={this.props.expenses.ids}
           expensesById={this.props.expenses.byId}
+          expenseCategories={this.props.expenseCategories}
           triggerId={this.props.requests.triggerId}
           expenseIdOnEdition={this.props.expenses.expenseIdOnEdition}
           isDisabled={this.props.requests.isFetching}

@@ -12,6 +12,7 @@ const propTypes = {
   isDisabled: PropTypes.bool.isRequired,
   expenseIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   expensesById: PropTypes.object.isRequired,
+  expenseCategories: PropTypes.object.isRequired,
   cancelEditHandler: PropTypes.func.isRequired,
 };
 
@@ -38,6 +39,7 @@ function ExpensesTable(props) {
       id={id}
       editObj={props.editObj}
       expense={props.expensesById[id]}
+      expenseCategories={props.expenseCategories}
       triggerId={props.triggerId}
       isDisabled={props.isDisabled}
       isOnEdition={props.expenseIdOnEdition === id}

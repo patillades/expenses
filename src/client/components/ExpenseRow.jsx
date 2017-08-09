@@ -18,11 +18,13 @@ const propTypes = {
     comment: PropTypes.string,
   }).isRequired,
   expense: PropTypes.shape({
+    expenseCategoryId: PropTypes.string,
     date: PropTypes.string,
     amount: PropTypes.number,
     description: PropTypes.string,
     comment: PropTypes.string,
   }).isRequired,
+  expenseCategories: PropTypes.object.isRequired,
   triggerId: PropTypes.string,
   isDisabled: PropTypes.bool.isRequired,
   isOnEdition: PropTypes.bool.isRequired,
@@ -74,7 +76,13 @@ function ExpenseRow(props) {
       <td>{moment(props.expense.date).format('M/D/YYYY')}</td>
       <td>{props.expense.description}</td>
       <td>{props.expense.amount}</td>
-      <td>&nbsp;</td>
+      <td>
+        {
+          props.expenseCategories.byId[props.expense.expenseCategoryId]
+            ? props.expenseCategories.byId[props.expense.expenseCategoryId].title
+            : ''
+        }
+      </td>
       <td>{props.expense.comment}</td>
       <td>
         <InlineButton
