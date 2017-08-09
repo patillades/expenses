@@ -47,8 +47,8 @@ const propTypes = {
       comment: PropTypes.string,
       expenseCategoryId: PropTypes.string,
     }).isRequired,
-    expenseIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-    expensesById: PropTypes.objectOf(PropTypes.shape({
+    ids: PropTypes.arrayOf(PropTypes.string).isRequired,
+    byId: PropTypes.objectOf(PropTypes.shape({
       date: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
       amount: PropTypes.number.isRequired,
@@ -164,8 +164,8 @@ class UserExpenses extends React.Component {
         <ExpensesTable
           isVisible={this.props.expensesView.daily}
           editObj={this.props.expenses.edit}
-          expenseIds={this.props.expenses.expenseIds}
-          expensesById={this.props.expenses.expensesById}
+          expenseIds={this.props.expenses.ids}
+          expensesById={this.props.expenses.byId}
           triggerId={this.props.requests.triggerId}
           expenseIdOnEdition={this.props.expenses.expenseIdOnEdition}
           isDisabled={this.props.requests.isFetching}
@@ -179,8 +179,8 @@ class UserExpenses extends React.Component {
 
         <ExpensesPerWeek
           isVisible={this.props.expensesView.weekly}
-          expenseIds={this.props.expenses.expenseIds}
-          expensesById={this.props.expenses.expensesById}
+          expenseIds={this.props.expenses.ids}
+          expensesById={this.props.expenses.byId}
         />
 
         <Modal

@@ -38,4 +38,5 @@ function normalize(entities) {
   );
 }
 
+export { addEntity };
 export default normalize;

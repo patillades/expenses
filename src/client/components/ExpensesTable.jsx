@@ -11,6 +11,7 @@ const propTypes = {
   triggerId: PropTypes.string,
   isDisabled: PropTypes.bool.isRequired,
   expenseIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  expensesById: PropTypes.object.isRequired,
   cancelEditHandler: PropTypes.func.isRequired,
 };
 

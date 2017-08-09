@@ -2,6 +2,7 @@ import moment from 'moment';
 import merge from 'lodash/merge';
 import sortBy from 'lodash/sortBy';
 
+import normalize, { addEntity } from 'utils/normalize';
 import {
   ERROR,
   SUCCESS,
@@ -44,8 +45,8 @@ import {
  * @typedef {object} ExpensesState
  * @property {CreateExpenseState} create
  * @property {CreateExpenseState} edit
- * @property {ObjectId[]} expenseIds
- * @property {ExpensesById} expensesById
+ * @property {ObjectId[]} ids
+ * @property {ExpensesById} byId
  * @property {?ObjectId} expenseIdToDelete
  * @property {?ObjectId} expenseIdOnEdition
  */
@@ -70,33 +71,11 @@ const initialState = {
     comment: '',
     expenseCategoryId: '',
   },
-  expenseIds: [],
-  expensesById: {},
+  ids: [],
+  byId: {},
   expenseIdToDelete: null,
   expenseIdOnEdition: null,
 };
-
-/**
- * Add an expense to the expenseIds array and the expensesById object
- *
- * @param {Expense} obj
- * @param {ObjectId[]} expenseIdsArr
- * @param {ExpensesById} expensesByIdObj
- * @return {{expenseIds: ObjectId[], expensesById: ExpensesById}}
- */
-function addExpense(obj, expenseIdsArr, expensesByIdObj) {
-  const expense = merge({}, obj);
-  const { id } = expense;
-
-  delete expense.id;
-
-  const expenseIds = expenseIdsArr.slice();
-  expenseIds.push(id);
-
-  const expensesById = merge({}, expensesByIdObj, { [id]: expense });
-
-  return { expenseIds, expensesById };
-}
 
 function expenses(state = initialState, action) {
   switch (action.type) {
@@ -121,7 +100,7 @@ function expenses(state = initialState, action) {
 
     case EDIT_EXPENSE: {
       // merge the expense to edit to prevent mutations
-      const expense = merge({}, state.expensesById[action.expenseId]);
+      const expense = merge({}, state.byId[action.expenseId]);
 
       const date = moment(expense.date);
       const time = moment(expense.date);
@@ -151,16 +130,16 @@ function expenses(state = initialState, action) {
 
     case CREATE_EXPENSE_REQUEST + SUCCESS: {
       // add the created expense
-      const newExpenses = addExpense(
+      const newExpenses = addEntity(
         action.expense,
-        state.expenseIds,
-        state.expensesById
+        state.ids,
+        state.byId
       );
 
-      const { expensesById } = newExpenses;
+      const { byId } = newExpenses;
 
       // sort by descending date
-      const expenseIds = sortBy(newExpenses.expenseIds, id => expensesById[id].date)
+      const ids = sortBy(newExpenses.ids, id => byId[id].date)
         .reverse();
 
       // merge initial state to prevent mutations
@@ -168,43 +147,35 @@ function expenses(state = initialState, action) {
 
       return Object.assign({}, state, {
         create,
-        expenseIds,
-        expensesById,
+        ids,
+        byId,
       });
     }
 
     case GET_EXPENSES_REQUEST + SUCCESS: {
-      const { expenseIds, expensesById } = action.expenses.reduce(
-        (result, expense) => addExpense(expense, result.expenseIds, result.expensesById),
-        { expenseIds: [], expensesById: {} }
-      );
-
-      return Object.assign({}, state, {
-        expenseIds,
-        expensesById,
-      });
+      return Object.assign({}, state, normalize(action.expenses));
     }
 
     case DELETE_EXPENSE_REQUEST + SUCCESS: {
       // remove the deleted expense from cloned state objects
-      const index = state.expenseIds.indexOf(state.expenseIdToDelete);
+      const index = state.ids.indexOf(state.expenseIdToDelete);
 
-      const expenseIds = state.expenseIds.slice(0, index)
-        .concat(state.expenseIds.slice(index + 1));
+      const ids = state.ids.slice(0, index)
+        .concat(state.ids.slice(index + 1));
 
-      const expensesById = merge({}, state.expensesById);
+      const byId = merge({}, state.byId);
 
-      delete expensesById[state.expenseIdToDelete];
+      delete byId[state.expenseIdToDelete];
 
       return Object.assign({}, state, {
-        expenseIds,
-        expensesById,
+        ids,
+        byId,
         expenseIdToDelete: null,
       });
     }
 
     case EDIT_EXPENSE_REQUEST + SUCCESS: {
-      // merge the edit object to store it on expensesById
+      // merge the edit object to store it on byId
       const expense = merge({}, state.edit);
 
       // cast amount to number so it doesn't cause issues when calculating weekly totals
@@ -227,14 +198,14 @@ function expenses(state = initialState, action) {
       delete expense.time;
 
       // clone the state objects
-      const unsortedIds = state.expenseIds.slice();
-      const expensesById = merge({}, state.expensesById);
+      const unsortedIds = state.ids.slice();
+      const byId = merge({}, state.byId);
 
       // add the new expense
-      expensesById[state.expenseIdOnEdition] = expense;
+      byId[state.expenseIdOnEdition] = expense;
 
       // sort by descending date
-      const expenseIds = sortBy(unsortedIds, id => expensesById[id].date)
+      const ids = sortBy(unsortedIds, id => byId[id].date)
         .reverse();
 
       // merge initial state to prevent mutations
@@ -243,8 +214,8 @@ function expenses(state = initialState, action) {
       return Object.assign({}, state, {
         expenseIdOnEdition: null,
         edit,
-        expenseIds,
-        expensesById,
+        ids,
+        byId,
       });
     }
 
