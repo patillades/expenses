@@ -23,7 +23,7 @@ const propTypes = {
   inputChangeHandler: PropTypes.func.isRequired,
   dateChangeHandler: PropTypes.func.isRequired,
   newCategoryBtnHandler: PropTypes.func.isRequired,
-  expenseCategories: PropTypes.array.isRequired,
+  expenseCategories: PropTypes.object.isRequired,
   expenseCategoryChangeHandler: PropTypes.func.isRequired,
 };
 
@@ -58,7 +58,8 @@ function ExpenseInputs(props) {
             value={props.expenseCategoryId}
             form={props.form}
             field="expenseCategoryId"
-            options={props.expenseCategories}
+            optionIds={props.expenseCategories.ids}
+            optionsById={props.expenseCategories.byId}
           />
         </div>
 

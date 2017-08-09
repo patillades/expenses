@@ -1,3 +1,4 @@
+import normalize from 'utils/normalize';
 import {
   SUCCESS,
   GET_EXPENSE_CATEGORIES_REQUEST,
@@ -11,21 +12,27 @@ import {
  */
 
 /**
- * @typedef {ExpenseCategory[]} ExpenseCategoriesState
+ * @typedef {object.<ObjectId, ExpenseCategory>} ExpenseCategoriesById
+ */
+
+/**
+ * @typedef {object} ExpenseCategoriesState
+ * @property {ObjectId[]} ids
+ * @property {ExpenseCategoriesById} byId
  */
 
 /**
  * @type {ExpenseCategoriesState}
  */
-const initialState = [];
+const initialState = {
+  ids: [],
+  byId: {},
+};
 
 function expenseCategories(state = initialState, action) {
   switch (action.type) {
-    case GET_EXPENSE_CATEGORIES_REQUEST + SUCCESS: {
-      const { categories } = action;
-
-      return categories;
-    }
+    case GET_EXPENSE_CATEGORIES_REQUEST + SUCCESS:
+      return Object.assign({}, state, normalize(action.categories));
 
     case LOG_OUT:
       return initialState;

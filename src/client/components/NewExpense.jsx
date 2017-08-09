@@ -17,7 +17,7 @@ const propTypes = {
   inputChangeHandler: PropTypes.func.isRequired,
   submitHandler: PropTypes.func.isRequired,
   newCategoryBtnHandler: PropTypes.func.isRequired,
-  expenseCategories: PropTypes.array.isRequired,
+  expenseCategories: PropTypes.object.isRequired,
   expenseCategoryChangeHandler: PropTypes.func.isRequired,
 };
 

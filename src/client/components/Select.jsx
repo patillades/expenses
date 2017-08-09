@@ -8,7 +8,8 @@ const propTypes = {
   value: PropTypes.string.isRequired,
   form: PropTypes.string.isRequired,
   field: PropTypes.string.isRequired,
-  options: PropTypes.array.isRequired,
+  optionIds: PropTypes.array.isRequired,
+  optionsById: PropTypes.object.isRequired,
 };
 
 const emptyOption = <ExpenseCategoryOption
@@ -19,9 +20,9 @@ const emptyOption = <ExpenseCategoryOption
 
 function Select(props) {
   const options = [emptyOption].concat(
-    props.options.map(category => <ExpenseCategoryOption
-      key={category.id}
-      {...category}
+    props.optionIds.map(id => <ExpenseCategoryOption
+      key={id}
+      {...props.optionsById[id]}
     />)
   );
 

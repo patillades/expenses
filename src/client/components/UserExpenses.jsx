@@ -84,12 +84,13 @@ const propTypes = {
       txt: PropTypes.string,
     }).isRequired,
   }).isRequired,
-  expenseCategories: PropTypes.arrayOf(
-    PropTypes.shape({
+  expenseCategories: PropTypes.shape({
+    ids: PropTypes.arrayOf(PropTypes.string).isRequired,
+    byId: PropTypes.objectOf(PropTypes.shape({
       id: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
-    })
-  ).isRequired,
+    })).isRequired,
+  }).isRequired,
   loadUserExpenses: PropTypes.func.isRequired,
   loadUserExpenseCategories: PropTypes.func.isRequired,
   logOutHandler: PropTypes.func.isRequired,
