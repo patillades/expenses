@@ -199,40 +199,19 @@ function fetchRequest(type, state, token, userId, isTest = false) {
  * The API request ended successfully
  *
  * @param {ActionType} actionType
- * @param {object|array} resp
+ * @param {object|array} data
  * @returns {{type: string,
- * msg:string|undefined,
- * token: string|undefined,
- * expense: Expense|undefined,
- * expenses: Expense[]|undefined}}
+ * msg: string,
+ * data: object|array}}
  */
-function requestSucceeded(actionType, resp) {
-  const msg = MODAL_MESSAGES[actionType];
+function requestSucceeded(actionType, data) {
+  const msg = MODAL_MESSAGES.hasOwnProperty(actionType)
+    ? MODAL_MESSAGES[actionType]
+    : '';
 
-  // the action to be dispatched is the SUCCESS version of the current request
   const type = actionType + SUCCESS;
 
-  // @todo join the cases returning a common "entity" property
-  switch (actionType) {
-    case REGISTRATION_REQUEST:
-    case LOGIN_REQUEST:
-      return { type, msg, user: resp };
-
-    case CREATE_EXPENSE_REQUEST:
-      return { type, msg, expense: resp };
-
-    case GET_EXPENSES_REQUEST:
-      return { type, expenses: resp };
-
-    case CREATE_EXPENSE_CATEGORY_REQUEST:
-      return { type, msg, category: resp };
-
-    case GET_EXPENSE_CATEGORIES_REQUEST:
-      return { type, categories: resp };
-
-    default:
-      return { type, msg };
-  }
+  return { type, msg, data };
 }
 
 /**
@@ -243,7 +222,6 @@ function requestSucceeded(actionType, resp) {
  * @returns {{type: string, msg: string}}
  */
 function requestFailed(type, msg) {
-  // the action to be dispatched is the ERROR version of the current request
   return {
     type: type + ERROR,
     msg,

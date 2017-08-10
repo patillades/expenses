@@ -34,10 +34,10 @@ const initialState = {
 function expenseCategories(state = initialState, action) {
   switch (action.type) {
     case CREATE_EXPENSE_CATEGORY_REQUEST + SUCCESS:
-      return Object.assign({}, addEntity(state, action.category));
+      return Object.assign({}, addEntity(state, action.data));
 
     case GET_EXPENSE_CATEGORIES_REQUEST + SUCCESS:
-      return Object.assign({}, normalize(action.categories));
+      return Object.assign({}, normalize(action.data));
 
     case LOG_OUT:
       return initialState;

@@ -130,7 +130,7 @@ function expenses(state = initialState, action) {
 
     case CREATE_EXPENSE_REQUEST + SUCCESS: {
       // add the created expense
-      const newExpenses = addEntity(state, action.expense);
+      const newExpenses = addEntity(state, action.data);
 
       const { byId } = newExpenses;
 
@@ -149,7 +149,7 @@ function expenses(state = initialState, action) {
     }
 
     case GET_EXPENSES_REQUEST + SUCCESS: {
-      return Object.assign({}, state, normalize(action.expenses));
+      return Object.assign({}, state, normalize(action.data));
     }
 
     case DELETE_EXPENSE_REQUEST + SUCCESS: {

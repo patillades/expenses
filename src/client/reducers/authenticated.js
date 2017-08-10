@@ -58,7 +58,7 @@ function authenticated(state = initialState, action) {
 
     case REGISTRATION_REQUEST + SUCCESS:
     case LOGIN_REQUEST + SUCCESS: {
-      const { id, token } = action.user;
+      const { id, token } = action.data;
 
       return merge({}, initialState, { id, token });
     }

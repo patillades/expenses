@@ -38,7 +38,7 @@ describe('sendRequest', () => {
       }, {
         type: REGISTRATION_REQUEST + SUCCESS,
         msg: MODAL_MESSAGES[REGISTRATION_REQUEST],
-        user: { id, token, name, mail },
+        data: { id, token, name, mail },
       }];
 
       // the user data to be used on the API request must be set on the state
