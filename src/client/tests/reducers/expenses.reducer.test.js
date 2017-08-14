@@ -4,12 +4,11 @@ import moment from 'moment';
 import expenses, { initialState } from 'reducers/expenses';
 import {
   inputChange,
-  expenseDatetimeChange,
+  expenseDateChange,
 } from 'actions/actions';
 import {
   EXPENSES_INPUT_CHANGE,
   EXPENSE_DATE_CHANGE,
-  EXPENSE_TIME_CHANGE,
 } from 'constants/actionTypes';
 
 describe('Expenses reducer', () => {
@@ -25,23 +24,14 @@ describe('Expenses reducer', () => {
     expect(newState.create[field]).toBe(value);
   });
 
-  it('should reflect changes on the create date/time inputs', () => {
+  it('should reflect changes on the create date input', () => {
     const date = moment().add({ days: 1, months: 1, years: 1 });
 
     let newState = expenses(
       initialState,
-      expenseDatetimeChange(EXPENSE_DATE_CHANGE, 'create', date)
+      expenseDateChange(EXPENSE_DATE_CHANGE, 'create', date)
     );
 
     expect(newState.create.date.format('M/D/YYYY')).toBe(date.format('M/D/YYYY'));
-
-    const time = moment().add({ hours: 1, minutes: 1 });
-
-    newState = expenses(
-      initialState,
-      expenseDatetimeChange(EXPENSE_TIME_CHANGE, 'create', time)
-    );
-
-    expect(newState.create.time.format('HH:mm')).toBe(time.format('HH:mm'));
   });
 });

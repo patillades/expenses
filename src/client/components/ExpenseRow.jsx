@@ -9,7 +9,6 @@ const propTypes = {
   id: PropTypes.string.isRequired,
   editObj: PropTypes.shape({
     date: PropTypes.object.isRequired,
-    time: PropTypes.object,
     description: PropTypes.string.isRequired,
     amount: PropTypes.oneOfType([
       PropTypes.number,

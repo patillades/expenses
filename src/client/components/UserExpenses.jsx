@@ -30,7 +30,6 @@ const propTypes = {
   expenses: PropTypes.shape({
     create: PropTypes.shape({
       date: PropTypes.object.isRequired,
-      time: PropTypes.object,
       description: PropTypes.string.isRequired,
       amount: PropTypes.string.isRequired,
       comment: PropTypes.string,
@@ -38,7 +37,6 @@ const propTypes = {
     }).isRequired,
     edit: PropTypes.shape({
       date: PropTypes.object.isRequired,
-      time: PropTypes.object,
       description: PropTypes.string.isRequired,
       amount: PropTypes.oneOfType([
         PropTypes.number,

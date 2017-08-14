@@ -109,7 +109,7 @@ function modalBtnClick() {
  */
 
 /**
- * The date selected on the date or time pickers used to create/edit expenses has been changed
+ * The date selected on the date picker used to create/edit expenses has been changed
  *
  * @param {string} type
  * @param {('create'|'edit'|'$gte_date'|'$lte_date')} form - The form or filter input where the
@@ -117,7 +117,7 @@ function modalBtnClick() {
  * @param {MomentDate} date
  * @returns {{type: string, form: ('create'|'edit'|'$gte_date'|'$lte_date'), date: MomentDate}}
  */
-function expenseDatetimeChange(type, form, date) {
+function expenseDateChange(type, form, date) {
   return { type, form, date };
 }
 
@@ -138,6 +138,6 @@ export {
   submitForm,
   logOut,
   modalBtnClick,
-  expenseDatetimeChange,
+  expenseDateChange,
   editExpense,
 };

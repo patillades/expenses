@@ -7,7 +7,6 @@ import {
   ERROR,
   SUCCESS,
   EXPENSE_DATE_CHANGE,
-  EXPENSE_TIME_CHANGE,
   EXPENSES_INPUT_CHANGE,
   CREATE_EXPENSE_REQUEST,
   GET_EXPENSES_REQUEST,
@@ -21,7 +20,6 @@ import {
 /**
  * @typedef {object} CreateExpenseState
  * @property {MomentDate} date
- * @property {MomentDate} time
  * @property {string} description
  * @property {number} amount
  * @property {string} comment
@@ -57,7 +55,6 @@ import {
 const initialState = {
   create: {
     date: moment(),
-    time: moment().hours(0).minutes(0),
     description: '',
     amount: '',
     comment: '',
@@ -65,7 +62,6 @@ const initialState = {
   },
   edit: {
     date: moment(),
-    time: moment().hours(0).minutes(0),
     description: '',
     amount: '',
     comment: '',
@@ -82,11 +78,6 @@ function expenses(state = initialState, action) {
     case EXPENSE_DATE_CHANGE:
       return merge({}, state, {
         [action.form]: { date: action.date },
-      });
-
-    case EXPENSE_TIME_CHANGE:
-      return merge({}, state, {
-        [action.form]: { time: action.date },
       });
 
     case EXPENSES_INPUT_CHANGE:
@@ -108,12 +99,11 @@ function expenses(state = initialState, action) {
       );
 
       const date = moment(expense.date);
-      const time = moment(expense.date);
       const { description, amount, comment, expenseCategoryId } = expense;
 
       return Object.assign({}, state, {
         expenseIdOnEdition: action.expenseId,
-        edit: { date, time, description, amount, comment, expenseCategoryId },
+        edit: { date, description, amount, comment, expenseCategoryId },
       });
     }
 
@@ -182,21 +172,8 @@ function expenses(state = initialState, action) {
       // cast amount to number so it doesn't cause issues when calculating weekly totals
       expense.amount = Number(expense.amount);
 
-      // set the time on the MomentDate date property, and format to string like the expenses sent
-      // by API
-      const { time } = expense;
-
-      // time can be null if the user clicks on the "X" that closes the timepicker
-      if (time) {
-        expense.date
-          .hours(time.hours())
-          .minutes(time.minutes())
-          .seconds(0);
-      }
-
+      // format to string like the expenses sent by the API
       expense.date = expense.date.format();
-
-      delete expense.time;
 
       // clone the state objects
       const unsortedIds = state.ids.slice();

@@ -2,7 +2,7 @@ import connect from 'react-redux/lib/components/connect';
 
 import UserExpenses from 'components/UserExpenses.jsx';
 import {
-  expenseDatetimeChange,
+  expenseDateChange,
   inputChange,
   sendRequest,
   modalBtnClick,
@@ -59,13 +59,13 @@ function mapDispatchToProps(dispatch) {
   }
 
   return {
-    dateChangeHandler: (form, date) => dispatch(expenseDatetimeChange(
+    dateChangeHandler: (form, date) => dispatch(expenseDateChange(
       EXPENSE_DATE_CHANGE,
       form,
       date
     )),
 
-    filterDateChangeHandler: (field, date) => dispatch(expenseDatetimeChange(
+    filterDateChangeHandler: (field, date) => dispatch(expenseDateChange(
       FILTER_DATE_CHANGE,
       field,
       date

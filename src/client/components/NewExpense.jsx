@@ -6,7 +6,6 @@ import { InlineButton } from './Button.jsx';
 
 const propTypes = {
   date: PropTypes.object.isRequired,
-  time: PropTypes.object,
   description: PropTypes.string.isRequired,
   amount: PropTypes.string.isRequired,
   comment: PropTypes.string.isRequired,
@@ -29,7 +28,6 @@ function NewExpense(props) {
           form="create"
           triggerId={props.triggerId}
           date={props.date}
-          time={props.time}
           description={props.description}
           amount={props.amount}
           comment={props.comment}
