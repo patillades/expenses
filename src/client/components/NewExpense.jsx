@@ -37,6 +37,7 @@ function NewExpense(props) {
           isDisabled={props.isDisabled}
           inputChangeHandler={props.inputChangeHandler}
           dateChangeHandler={props.dateChangeHandler}
+          hasNewCategoryBtn
           newCategoryBtnHandler={props.newCategoryBtnHandler}
           expenseCategories={props.expenseCategories}
           expenseCategoryChangeHandler={props.expenseCategoryChangeHandler}

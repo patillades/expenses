@@ -22,7 +22,8 @@ const propTypes = {
   isDisabled: PropTypes.bool.isRequired,
   inputChangeHandler: PropTypes.func.isRequired,
   dateChangeHandler: PropTypes.func.isRequired,
-  newCategoryBtnHandler: PropTypes.func.isRequired,
+  hasNewCategoryBtn: PropTypes.bool.isRequired,
+  newCategoryBtnHandler: PropTypes.func,
   expenseCategories: PropTypes.object.isRequired,
   expenseCategoryChangeHandler: PropTypes.func.isRequired,
 };
@@ -63,18 +64,22 @@ function ExpenseInputs(props) {
           />
         </div>
 
-        <div className="col-xs-2">
-          <InlineButton
-            id="newCategoryBtn"
-            triggerId={props.triggerId}
-            className="btn-success btn-xs"
-            title="new category"
-            icon="plus"
-            loaderSize={6}
-            isLoading={props.isDisabled}
-            clickHandler={props.newCategoryBtnHandler}
-          />
-        </div>
+        {
+          props.hasNewCategoryBtn
+            ?  <div className="col-xs-2">
+              <InlineButton
+                id="newCategoryBtn"
+                triggerId={props.triggerId}
+                className="btn-success btn-xs"
+                title="new category"
+                icon="plus"
+                loaderSize={6}
+                isLoading={props.isDisabled}
+                clickHandler={props.newCategoryBtnHandler}
+              />
+            </div>
+            : null
+        }
       </div>
 
       <InlineInput
@@ -94,7 +99,7 @@ function ExpenseInputs(props) {
         label="comment"
         isRequired={false}
         changeHandler={props.inputChangeHandler}
-        value={props.comment}
+        value={props.comment ? props.comment : ''}
         form={props.form}
         field="comment"
       />
