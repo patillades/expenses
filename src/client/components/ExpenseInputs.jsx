@@ -91,7 +91,11 @@ function ExpenseInputs(props) {
   if (props.isOnEdition) {
     return (
       <tr>
-        <td>{DateInput(props)}</td>
+        <td>
+          <div style={{ position: 'relative' }}>
+            {DateInput(props)}
+          </div>
+        </td>
         <td>{FormInput(props, 'amount', true, 'number')}</td>
         <td>{ExpenseCategorySelect(props)}</td>
         <td>{FormInput(props, 'description', true)}</td>
