@@ -117,7 +117,8 @@ describe('Expense controller', () => {
         expect(body).toExcludeKey('userId');
         expect(body).toExcludeKey('_id');
         expect(body).toExcludeKey('__v');
-        expect(body).toExcludeKey('expenseCategoryId');
+        expect(body).toIncludeKey('expenseCategoryId');
+        expect(body.expenseCategoryId).toBe(null);
 
         expenseIds.push(body.id);
 
@@ -173,7 +174,7 @@ describe('Expense controller', () => {
         amount: 10,
         description: 'I bought some great stuff on the city center',
         date: moment().add(1, 'd').format(),
-        expenseCategoryId: '',
+        expenseCategoryId: 'not an object id',
       }, (status, body) => {
         expect(status).toBe(400);
 
