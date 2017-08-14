@@ -45,10 +45,10 @@ function ExpenseRow(props) {
         form="edit"
         {...props.editObj}
         expenseCategories={props.expenseCategories}
+        isOnEdition={props.isOnEdition}
         isDisabled={props.isDisabled}
         dateChangeHandler={props.dateChangeHandler}
         inputChangeHandler={props.inputChangeHandler}
-        hasNewCategoryBtn={false}
         expenseCategoryChangeHandler={props.expenseCategoryChangeHandler}
       >
         <td>
