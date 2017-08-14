@@ -60,9 +60,21 @@ describe('modals reducer', () => {
     state = newState;
   });
 
+  it('should close the input modal on CLOSE_MODAL', () => {
+    const newState = modals(state, action(CLOSE_MODAL));
+
+    expect(newState.inputModal.isOpen).toBe(false);
+
+    state = newState;
+  });
+
   it('should update the input modal on MODAL_INPUT_CHANGE', () => {
+    // reopen
+    let newState = modals(state, action(OPEN_INPUT_MODAL));
+    expect(newState.inputModal.isOpen).toBe(true);
+
     const value = 'test';
-    const newState = modals(state, inputChange(MODAL_INPUT_CHANGE, null, null, value));
+    newState = modals(state, inputChange(MODAL_INPUT_CHANGE, null, null, value));
 
     expect(newState.inputModal.inputValue).toBe(value);
 
