@@ -5,6 +5,7 @@ const winston = require('winston');
 const Expense = require('models/expense.schema');
 const respObj = require('utils/respObj');
 const errMsgs = require('utils/errMsgs');
+const getOrNull = require('utils/getOrNull');
 
 /**
  * Create an expense with the given params and user
@@ -17,10 +18,12 @@ const errMsgs = require('utils/errMsgs');
  * @returns {Promise.<Expense, string>}
  */
 function create(params, userId) {
+  const expenseCategoryId = getOrNull(params, 'expenseCategoryId');
+
   const expense = new Expense(Object.assign(
     {},
     params,
-    { userId }
+    { expenseCategoryId, userId }
   ));
 
   return expense.save().then(
@@ -105,8 +108,14 @@ function read(userId, queryParams) {
  * @return {Promise.<Expense, RespObj>}
  */
 function update(_id, userId, params) {
+  const expenseCategoryId = getOrNull(params, 'expenseCategoryId');
+
   return Expense
-    .findOneAndUpdate({ _id, userId }, params, { runValidators: true })
+    .findOneAndUpdate(
+      { _id, userId },
+      Object.assign({}, params, { expenseCategoryId }),
+      { runValidators: true }
+    )
     .then(
       result => result,
 

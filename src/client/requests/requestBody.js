@@ -8,23 +8,6 @@ import {
 } from 'constants/actionTypes';
 
 /**
- * Get the body for create/edit requests
- *
- * @param {CreateExpenseState} expenseData
- * @return {{date: MomentDate, description: string, amount: number, comment: string }}
- */
-function getCreateOrEditExpenseBody(expenseData) {
-  const body = Object.assign({}, expenseData);
-
-  // the category is optional, so leave it out of the request if empty
-  if (!body.expenseCategoryId) {
-    delete body.expenseCategoryId;
-  }
-
-  return body;
-}
-
-/**
  * Get the object to be used as the body of a API POST request
  *
  * @param {ActionType} type
@@ -33,6 +16,7 @@ function getCreateOrEditExpenseBody(expenseData) {
  */
 function requestBody(type, state) {
   const { registration, login } = state.authenticated;
+  const { create, edit } = state.expenses;
 
   switch (type) {
     case REGISTRATION_REQUEST:
@@ -42,10 +26,10 @@ function requestBody(type, state) {
       return login;
 
     case CREATE_EXPENSE_REQUEST:
-      return getCreateOrEditExpenseBody(state.expenses.create);
+      return create;
 
     case EDIT_EXPENSE_REQUEST:
-      return getCreateOrEditExpenseBody(state.expenses.edit);
+      return edit;
 
     case CREATE_EXPENSE_CATEGORY_REQUEST:
       return { title: state.modals.inputModal.inputValue };
