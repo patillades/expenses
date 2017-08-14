@@ -4,3 +4,4 @@ requirements.txt
 curl.txt
 nbproject
 .vscode
+npm-debug.log
