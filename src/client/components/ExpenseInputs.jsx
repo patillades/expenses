@@ -125,11 +125,12 @@ function ExpenseInputs(props) {
             id="newCategoryBtn"
             triggerId={props.triggerId}
             className="btn-success btn-xs"
-            title="new category"
+            title="New category"
             icon="plus"
             loaderSize={6}
             isLoading={props.isDisabled}
             clickHandler={props.newCategoryBtnHandler}
+            type="button"
           />
         </div>
       </div>
