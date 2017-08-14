@@ -66,7 +66,6 @@ function Filters(props) {
               <p>&nbsp;</p>
 
               <Input
-                isRequired={false}
                 changeHandler={props.inputChangeHandler}
                 value={props.$text}
                 form={props.form}
@@ -78,7 +77,6 @@ function Filters(props) {
               <p className="text-center">From</p>
 
               <Input
-                isRequired={false}
                 changeHandler={props.inputChangeHandler}
                 value={props.$gte_amount}
                 form={props.form}
@@ -90,7 +88,6 @@ function Filters(props) {
               <p className="text-center">To</p>
 
               <Input
-                isRequired={false}
                 changeHandler={props.inputChangeHandler}
                 value={props.$lte_amount}
                 form={props.form}

@@ -6,7 +6,7 @@ const propTypes = {
   labelClass: PropTypes.string,
   type: PropTypes.string,
   placeholder: PropTypes.string,
-  isRequired: PropTypes.bool.isRequired,
+  isRequired: PropTypes.bool,
   changeHandler: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([
     PropTypes.string,
