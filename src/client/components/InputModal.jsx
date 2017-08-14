@@ -35,7 +35,6 @@ function InputModal(props) {
       <h2 className="text-center">{props.msg}</h2>
 
       <Input
-        type="text"
         isRequired
         changeHandler={props.inputChangeHandler}
         value={props.inputValue}

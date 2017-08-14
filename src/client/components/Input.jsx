@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const propTypes = {
   label: PropTypes.string,
   labelClass: PropTypes.string,
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string,
   placeholder: PropTypes.string,
   isRequired: PropTypes.bool.isRequired,
   changeHandler: PropTypes.func.isRequired,
@@ -37,7 +37,7 @@ function Input(props) {
       {label}
 
       <input
-        type={props.type}
+        type={props.type ? props.type : 'text'}
         className="form-control"
         id={`${props.form}_${props.field}`}
         placeholder={props.placeholder}

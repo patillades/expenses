@@ -25,7 +25,6 @@ function RegistrationForm(props) {
           <fieldset disabled={props.isDisabled}>
             <Input
               label="Your name"
-              type="text"
               placeholder="Name"
               isRequired
               changeHandler={props.inputChangeHandler}
