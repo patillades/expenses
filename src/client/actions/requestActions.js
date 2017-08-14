@@ -1,5 +1,7 @@
 import fetch from 'isomorphic-fetch';
 
+import apiData from 'requests/apiData';
+import requestBody from 'requests/requestBody';
 import objToQueryString from 'utils/objToQueryString';
 import MODAL_MESSAGES from 'constants/messages';
 import {
@@ -45,128 +47,6 @@ function initRequest(type, data = {}) {
 }
 
 /**
- * Get the API endpoint URI related to the given action type
- *
- * @param {ActionType} type
- * @param {object} state - The state of redux's store
- * @param {?ObjectId} userId
- * @returns {{method: string, uri: string}}
- */
-function getRequestData(type, state, userId) {
-  switch (type) {
-    case REGISTRATION_REQUEST:
-      return {
-        method: 'POST',
-        uri: '/api/users',
-      };
-
-    case LOGIN_REQUEST:
-      return {
-        method: 'POST',
-        uri: '/api/users/login',
-      };
-
-    case CREATE_EXPENSE_REQUEST:
-      return {
-        method: 'POST',
-        uri: `/api/users/${userId}/expenses`,
-      };
-
-    case GET_EXPENSES_REQUEST: {
-      const query = objToQueryString(state.filters, true);
-
-      return {
-        method: 'GET',
-        uri: `/api/users/${userId}/expenses?${query}`,
-      };
-    }
-
-    case DELETE_EXPENSE_REQUEST:
-      return {
-        method: 'DELETE',
-        uri: `/api/users/${userId}/expenses/${state.expenses.expenseIdToDelete}`,
-      };
-
-    case EDIT_EXPENSE_REQUEST:
-      return {
-        method: 'PUT',
-        uri: `/api/users/${userId}/expenses/${state.expenses.expenseIdOnEdition}`,
-      };
-
-    case CREATE_EXPENSE_CATEGORY_REQUEST:
-      return {
-        method: 'POST',
-        uri: `/api/users/${userId}/expenseCategories`,
-      };
-
-    case GET_EXPENSE_CATEGORIES_REQUEST:
-      return {
-        method: 'GET',
-        uri: `/api/users/${userId}/expenseCategories`
-      }
-  }
-}
-
-/**
- * Get the body for create/edit requests
- *
- * @param {CreateExpenseState} expenseData
- * @return {{date: MomentDate, description: string, amount: number, comment: string }}
- */
-function getCreateOrEditExpenseBody(expenseData) {
-  const body = Object.assign({}, expenseData);
-  const { time } = body;
-
-  // the category is optional, so leave it out of the request if empty
-  if (!body.expenseCategoryId) {
-    delete body.expenseCategoryId;
-  }
-
-  // time can be null if the user clicks on the "X" that closes the timepicker
-  if (time) {
-    body.date
-      .hours(time.hours())
-      .minutes(time.minutes())
-      .seconds(0);
-  }
-
-  delete body.time;
-
-  return body;
-}
-
-/**
- * Get the object to be used as the body of a API POST request
- *
- * @param {ActionType} type
- * @param {object} state
- * @returns {object}
- */
-function getBodyObj(type, state) {
-  const { registration, login } = state.authenticated;
-
-  switch (type) {
-    case REGISTRATION_REQUEST:
-      return registration;
-
-    case LOGIN_REQUEST:
-      return login;
-
-    case CREATE_EXPENSE_REQUEST:
-      return getCreateOrEditExpenseBody(state.expenses.create);
-
-    case EDIT_EXPENSE_REQUEST:
-      return getCreateOrEditExpenseBody(state.expenses.edit);
-
-    case CREATE_EXPENSE_CATEGORY_REQUEST:
-      return { title: state.modals.inputModal.inputValue };
-
-    default:
-      return {};
-  }
-}
-
-/**
  * Fill the fetch request with the options associated to each action type
  *
  * @param {ActionType} type
@@ -177,7 +57,7 @@ function getBodyObj(type, state) {
  * @return {Promise}
  */
 function fetchRequest(type, state, token, userId, isTest = false) {
-  const { uri, method } = getRequestData(type, state, userId);
+  const { uri, method } = apiData(type, state, userId);
 
   const options = {
     method,
@@ -189,7 +69,7 @@ function fetchRequest(type, state, token, userId, isTest = false) {
   if (['POST', 'PUT'].includes(method)) {
     options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
-    options.body = objToQueryString(getBodyObj(type, state));
+    options.body = objToQueryString(requestBody(type, state));
   }
 
   return fetch(`${isTest ? 'http://localhost:3000' : ''}${uri}`, options);
