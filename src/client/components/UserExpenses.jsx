@@ -106,7 +106,7 @@ const propTypes = {
   modalBtnHandler: PropTypes.func.isRequired,
   newCategoryBtnHandler: PropTypes.func.isRequired,
   modalInputChangeHandler: PropTypes.func.isRequired,
-  newCategorySubmitHandler: PropTypes.func.isRequired,
+  newCategoryModalEventHandler: PropTypes.func.isRequired,
   expenseCategoryChangeHandler: PropTypes.func.isRequired,
 };
 
@@ -190,7 +190,7 @@ class UserExpenses extends React.Component {
 
         <InputModal
           {...this.props.modals.inputModal}
-          clickHandler={this.props.newCategorySubmitHandler}
+          clickHandler={this.props.newCategoryModalEventHandler}
           inputChangeHandler={this.props.modalInputChangeHandler}
         />
       </div>

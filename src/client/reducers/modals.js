@@ -62,11 +62,6 @@ function modals(state = initialState, action) {
   }
 
   switch (action.type) {
-    case CLOSE_MODAL:
-      return Object.assign({}, state, {
-        msgModal: { isOpen: false, msg: null },
-      });
-
     case OPEN_INPUT_MODAL:
       return merge({}, state, {
         inputModal: { isOpen: true, inputValue: '' },
@@ -82,6 +77,7 @@ function modals(state = initialState, action) {
         inputModal: { isOpen: false },
       });
 
+    case CLOSE_MODAL:
     case LOG_OUT:
       return merge({}, initialState);
 

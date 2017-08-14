@@ -17,6 +17,7 @@ import {
   FILTER_INPUT_CHANGE,
   CLEAR_EXPENSES_FILTER,
   TOGGLE_DAY_WEEK_EXPENSES,
+  CLOSE_MODAL,
   CREATE_EXPENSE_REQUEST,
   GET_EXPENSES_REQUEST,
   GET_EXPENSES_REQUEST_ON_LOAD,
@@ -130,10 +131,17 @@ function mapDispatchToProps(dispatch) {
 
     modalInputChangeHandler: e => dispatchInputChange(e, MODAL_INPUT_CHANGE),
 
-    newCategorySubmitHandler: e => dispatch(sendRequest(
-      CREATE_EXPENSE_CATEGORY_REQUEST,
-      { triggerId: e.target.id }
-    )),
+    newCategoryModalEventHandler: (e) => {
+      // close on ESC or click on overlay
+      if (e.keyCode === 27 || e.target.className.includes('ReactModal__Overlay')) {
+        return dispatch(action(CLOSE_MODAL));
+      }
+
+      return dispatch(sendRequest(
+        CREATE_EXPENSE_CATEGORY_REQUEST,
+        { triggerId: e.target.id }
+      ))
+    },
 
     loadUserExpenseCategories: () => dispatch(sendRequest(GET_EXPENSE_CATEGORIES_REQUEST)),
 
