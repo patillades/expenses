@@ -105,10 +105,13 @@ function expenses(state = initialState, action) {
       const date = moment(expense.date);
       const time = moment(expense.date);
       const { description, amount, comment } = expense;
+      const expenseCategoryId = expense.hasOwnProperty('expenseCategoryId')
+        ? expense.expenseCategoryId
+        : '';
 
       return Object.assign({}, state, {
         expenseIdOnEdition: action.expenseId,
-        edit: { date, time, description, amount, comment },
+        edit: { date, time, description, amount, comment, expenseCategoryId },
       });
     }
 

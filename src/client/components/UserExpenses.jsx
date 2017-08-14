@@ -176,6 +176,7 @@ class UserExpenses extends React.Component {
           inputChangeHandler={this.props.inputChangeHandler}
           editSubmitHandler={this.props.editExpenseSubmitHandler}
           cancelEditHandler={this.props.cancelEditExpenseHandler}
+          expenseCategoryChangeHandler={this.props.expenseCategoryChangeHandler}
         />
 
         <ExpensesPerWeek

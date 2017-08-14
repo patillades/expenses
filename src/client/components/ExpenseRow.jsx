@@ -16,6 +16,7 @@ const propTypes = {
       PropTypes.string,
     ]).isRequired,
     comment: PropTypes.string,
+    expenseCategoryId: PropTypes.string,
   }).isRequired,
   expense: PropTypes.shape({
     expenseCategoryId: PropTypes.string,
@@ -34,6 +35,7 @@ const propTypes = {
   inputChangeHandler: PropTypes.func.isRequired,
   editSubmitHandler: PropTypes.func.isRequired,
   cancelEditHandler: PropTypes.func.isRequired,
+  expenseCategoryChangeHandler: PropTypes.func.isRequired,
 };
 
 function ExpenseRow(props) {
@@ -42,8 +44,12 @@ function ExpenseRow(props) {
       <ExpenseInputs
         form="edit"
         {...props.editObj}
+        expenseCategories={props.expenseCategories}
+        isDisabled={props.isDisabled}
         dateChangeHandler={props.dateChangeHandler}
         inputChangeHandler={props.inputChangeHandler}
+        hasNewCategoryBtn={false}
+        expenseCategoryChangeHandler={props.expenseCategoryChangeHandler}
       >
         <td>
           <InlineButton

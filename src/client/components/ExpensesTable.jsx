@@ -8,12 +8,14 @@ import ExpenseRow from './ExpenseRow.jsx';
 
 const propTypes = {
   isVisible: PropTypes.bool.isRequired,
+  editObj: PropTypes.object.isRequired,
   triggerId: PropTypes.string,
   isDisabled: PropTypes.bool.isRequired,
   expenseIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   expensesById: PropTypes.object.isRequired,
   expenseCategories: PropTypes.object.isRequired,
   cancelEditHandler: PropTypes.func.isRequired,
+  expenseCategoryChangeHandler: PropTypes.func.isRequired,
 };
 
 function ExpensesTable(props) {
@@ -49,6 +51,7 @@ function ExpensesTable(props) {
       inputChangeHandler={props.inputChangeHandler}
       editSubmitHandler={props.editSubmitHandler}
       cancelEditHandler={props.cancelEditHandler}
+      expenseCategoryChangeHandler={props.expenseCategoryChangeHandler}
     />);
   } else {
     body = (
