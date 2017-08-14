@@ -41,11 +41,13 @@ describe('sendRequest', () => {
         data: { id, token, name, mail },
       }];
 
-      // the user data to be used on the API request must be set on the state
+      // the user data to be used on the API request must be set on the state;
+      // also the expenses store has to be initialised or the requestBody function will throw
       const store = mockStore({
         authenticated: {
           registration: { name, mail, password },
         },
+        expenses: {},
       });
 
       return store.dispatch(sendRequest(
