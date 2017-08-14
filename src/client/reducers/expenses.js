@@ -99,15 +99,17 @@ function expenses(state = initialState, action) {
     }
 
     case EDIT_EXPENSE: {
-      // merge the expense to edit to prevent mutations
-      const expense = merge({}, state.byId[action.expenseId]);
+      // clone the expense on edition to prevent mutations; add empty category and comment
+      // so they are not read as undefined by the destructuring assignment if not set
+      const expense = merge(
+        {},
+        { expenseCategoryId: '', comment: '' },
+        state.byId[action.expenseId]
+      );
 
       const date = moment(expense.date);
       const time = moment(expense.date);
-      const { description, amount, comment } = expense;
-      const expenseCategoryId = expense.hasOwnProperty('expenseCategoryId')
-        ? expense.expenseCategoryId
-        : '';
+      const { description, amount, comment, expenseCategoryId } = expense;
 
       return Object.assign({}, state, {
         expenseIdOnEdition: action.expenseId,
